@@ -8,7 +8,7 @@ editor_options:
 ---
 
 1.a)
-Suppose \mu\ is the population mean change in score after using the hair product.
+Suppose mu is the population mean change in score after using the hair product.
 We would like to test:
 
 H_o: mu = 0
@@ -59,7 +59,7 @@ ggplot(data=mydata, aes(y=Cholesterol))+
 c)	Is there any evidence that cholesterol levels of sedentary students differ from the previously reported average? To answer the question, write down the null and alternative hypotheses, clearly defining any notation you use. Compute the relevant test statistic and its degrees of freedom. Compute the p-value and provide a conclusion under the context of the problem.
 
 
-Suppose μ denote the population average of cholesterol levels of the sedentary female undergraduates in Baylor university. We want to test if H0:μ=168 vs HA:μ≠168.
+Suppose mu denote the population average of cholesterol levels of the sedentary female undergraduates in Baylor university. We want to test if H0:mu=168 vs HA:mu does not equal 168.
 
 ```{r}
 t.test(mydata$Cholesterol, mu = 168)

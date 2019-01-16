@@ -24,7 +24,7 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{hyperref}
 \hypersetup{unicode=true,
-            pdftitle={Week 1},
+            pdftitle={Week 1 - Lab0},
             pdfauthor={Marty Simonson},
             pdfborder={0 0 0},
             breaklinks=true}
@@ -114,7 +114,7 @@
 
 \setlength{\droptitle}{-2em}
 
-  \title{Week 1}
+  \title{Week 1 - Lab0}
     \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
     \author{Marty Simonson}
@@ -128,8 +128,8 @@
 \begin{document}
 \maketitle
 
-1.a) Suppose \%mu\% is the population mean change in score after using
-the hair product. We would like to test:
+1.a) Suppose mu is the population mean change in score after using the
+hair product. We would like to test:
 
 H\_o: mu = 0 vs H\_a: mu is not equal to 0; the hair score changed.
 
@@ -236,9 +236,9 @@ symetrically distributed about the mean.
   context of the problem.
 \end{enumerate}
 
-Suppose μ denote the population average of cholesterol levels of the
+Suppose mu denote the population average of cholesterol levels of the
 sedentary female undergraduates in Baylor university. We want to test if
-H0:μ=168 vs HA:μ≠168.
+H0:mu=168 vs HA:mu does not equal 168.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -362,6 +362,33 @@ most informative thing from the plots is the effect of low sample sizes.
   relevant test statistic and its degrees of freedom. Compute the
   p-value and provide a conclusion under the context of the problem.
 \end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{t.test}\NormalTok{(deely}\OperatorTok{$}\NormalTok{conc, }\DataTypeTok{mu =} \FloatTok{0.86}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  One Sample t-test
+## 
+## data:  deely$conc
+## t = -7.8293, df = 9, p-value = 2.629e-05
+## alternative hypothesis: true mean is not equal to 0.86
+## 95 percent confidence interval:
+##  0.8350333 0.8462267
+## sample estimates:
+## mean of x 
+##   0.84063
+\end{verbatim}
+
+-Note that the p-value \textless{} 0.0001 gives very strong evidence
+against the null hypothesis.
+
+-Conclusion: There is strong evidence in the data that the concentration
+of the active ingredient is significantly less (because the sample mean
+is smaller than 0.86) than 0.86g/l.
 
 
 \end{document}
