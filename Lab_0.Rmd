@@ -1,0 +1,105 @@
+---
+title: "Week 1 - Lab0"
+author: "Marty Simonson"
+date: "January 16, 2019"
+output: pdf_document
+editor_options: 
+  chunk_output_type: inline
+---
+
+1.a)
+Suppose \mu\ is the population mean change in score after using the hair product.
+We would like to test:
+
+H_o: mu = 0
+vs
+H_a: mu is not equal to 0; the hair score changed.
+
+The T-ratio is T = (-0.05) - 0 / [1.428/sqrt(5)]
+        = -.5/.639
+        = -.782 with 5-1 = 4 degrees of freedom
+*always include degrees of freedom*
+
+1.b)
+Determine exactly or provide bounds for the p-values from the given test statistic
+    t-table from lecture 1-16
+    calculated in R
+The p-value lies between 0.4 and 0.5, therefore the p-value is large enough to conclude that htere is not enough evidence to reject the null hypothesis 
+
+1.c)
+and as such there is no evidence that he new hair growth product is useful.
+
+2.	In 1999, it was reported that the mean serum cholesterol level for female undergraduates was 168 mg/dl. A recent study at Baylor University investigated the lipid levels in a randomly selected cohort of n = 71 sedentary university female undergraduates. The data is given in cholbaylor.txt.
+a)	Compute using a software the sample mean and standard deviation. Remember to specify their units.
+```{r, include = F}
+mydata<- read.table("cholBaylor.txt", header = T)
+str(mydata)
+library(ggplot2)
+```
+```{r}
+mean(mydata$Cholesterol)
+sd(mydata$Cholesterol)
+```
+- The mean is 171 mg/dl cholesterol with standard deviation of 25.5 mg/dl.
+
+b)	Obtain a box-plot and a histogram of the observations. Does the data look symmetrically distributed about the mean?
+```{r}
+ggplot(data=mydata, aes(x=Cholesterol))+
+       geom_histogram(binwidth = 5)+
+       xlab("cholesterol (mg/dl)")
+
+ggplot(data=mydata, aes(y=Cholesterol))+
+       geom_boxplot(fill="cornflowerblue")+
+       ylab("Cholesterol (mg/dl)")+
+       theme_classic()
+```
+- we conclude from the histogram and the boxplot that the data appear to be symetrically distributed about the mean.
+
+
+c)	Is there any evidence that cholesterol levels of sedentary students differ from the previously reported average? To answer the question, write down the null and alternative hypotheses, clearly defining any notation you use. Compute the relevant test statistic and its degrees of freedom. Compute the p-value and provide a conclusion under the context of the problem.
+
+
+Suppose μ denote the population average of cholesterol levels of the sedentary female undergraduates in Baylor university. We want to test if H0:μ=168 vs HA:μ≠168.
+
+```{r}
+t.test(mydata$Cholesterol, mu = 168)
+```
+As you can see, the t-ratio is 1.1364 with n−1 = 70 degrees of freedom. The p-value is 0.2597 and gives no evidence against the null hypothesis.
+
+Conclusion: There’s no evidence that the mean cholesterol level of the sedentary university female undergraduates in Baylor university is different from 168.
+
+3.	The Deely Laboratory analyzes specimens of a pharmaceutical product to determine the concentration of the active ingredient. Such chemical analyses are not perfectly precise. Repeated measurements on the same specimen will give slightly different results. The results of repeated measurements follow a Normal distribution quite closely. The analysis procedure has no bias, so that the mean μ of the population of all measurements is the true concentration in the specimen. The laboratory analyzes each specimen 10 times and reports the mean result. The Deely Laboratory has been asked to evaluate the claim that the concentration of the active ingredient in a specimen is 0.86 grams per liter. The 10 observations are given in deely.csv.
+
+a)	Compute using a software the sample mean and standard deviation. Remember to specify their units.
+```{r, include=F}
+deely = read.csv("deely.csv")
+str(deely)
+```
+```{r}
+mean(deely$conc)
+sd(deely$conc)
+```
+- The mean is 0.84063 g/L of the active ingredient, with a standard deviation of 0.007823618 g/L
+
+b)	Obtain a box-plot and a histogram of the observations. Does the data look symmetrically distributed about the mean?
+```{r}
+ggplot(data=deely, aes(x=conc)) + geom_histogram() + xlab("Concentration values")
+
+ggplot(data=deely, aes(y=conc)) + geom_boxplot() + ylab("Concentration (g/l)")
+
+```
+- The observations may not be centered around the sample mean. Perhaps the most informative thing from the plots is the effect of low sample sizes.
+
+
+
+c)	Is there any evidence that the mean concentration is different from 0.86g/l? To answer the question, write down the null and alternative hypotheses, clearly defining any notation you use. Compute the relevant test statistic and its degrees of freedom. Compute the p-value and provide a conclusion under the context of the problem.
+```{r}
+t.test(deely$conc, mu = 0.86)
+```
+-Note that the p-value < 0.0001 gives very strong evidence against the null hypothesis.
+
+-Conclusion: There is strong evidence in the data that the concentration of the active ingredient is significantly less (because the sample mean is smaller than 0.86) than 0.86g/l.
+
+
+
+

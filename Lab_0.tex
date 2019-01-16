@@ -1,0 +1,367 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Week 1},
+            pdfauthor={Marty Simonson},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Week 1}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Marty Simonson}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{January 16, 2019}
+
+
+\begin{document}
+\maketitle
+
+1.a) Suppose \%mu\% is the population mean change in score after using
+the hair product. We would like to test:
+
+H\_o: mu = 0 vs H\_a: mu is not equal to 0; the hair score changed.
+
+The T-ratio is T = (-0.05) - 0 / {[}1.428/sqrt(5){]} = -.5/.639 = -.782
+with 5-1 = 4 degrees of freedom \emph{always include degrees of freedom}
+
+1.b) Determine exactly or provide bounds for the p-values from the given
+test statistic t-table from lecture 1-16 calculated in R The p-value
+lies between 0.4 and 0.5, therefore the p-value is large enough to
+conclude that htere is not enough evidence to reject the null hypothesis
+
+1.c) and as such there is no evidence that he new hair growth product is
+useful.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  In 1999, it was reported that the mean serum cholesterol level for
+  female undergraduates was 168 mg/dl. A recent study at Baylor
+  University investigated the lipid levels in a randomly selected cohort
+  of n = 71 sedentary university female undergraduates. The data is
+  given in cholbaylor.txt.
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\tightlist
+\item
+  Compute using a software the sample mean and standard deviation.
+  Remember to specify their units.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{mean}\NormalTok{(mydata}\OperatorTok{$}\NormalTok{Cholesterol)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 171.4437
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sd}\NormalTok{(mydata}\OperatorTok{$}\NormalTok{Cholesterol)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 25.53437
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  The mean is 171 mg/dl cholesterol with standard deviation of 25.5
+  mg/dl.
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Obtain a box-plot and a histogram of the observations. Does the data
+  look symmetrically distributed about the mean?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data=}\NormalTok{mydata, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{Cholesterol))}\OperatorTok{+}
+\StringTok{       }\KeywordTok{geom_histogram}\NormalTok{(}\DataTypeTok{binwidth =} \DecValTok{5}\NormalTok{)}\OperatorTok{+}
+\StringTok{       }\KeywordTok{xlab}\NormalTok{(}\StringTok{"cholesterol (mg/dl)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Lab_0_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data=}\NormalTok{mydata, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y=}\NormalTok{Cholesterol))}\OperatorTok{+}
+\StringTok{       }\KeywordTok{geom_boxplot}\NormalTok{(}\DataTypeTok{fill=}\StringTok{"cornflowerblue"}\NormalTok{)}\OperatorTok{+}
+\StringTok{       }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Cholesterol (mg/dl)"}\NormalTok{)}\OperatorTok{+}
+\StringTok{       }\KeywordTok{theme_classic}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Lab_0_files/figure-latex/unnamed-chunk-3-2.pdf} - we
+conclude from the histogram and the boxplot that the data appear to be
+symetrically distributed about the mean.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Is there any evidence that cholesterol levels of sedentary students
+  differ from the previously reported average? To answer the question,
+  write down the null and alternative hypotheses, clearly defining any
+  notation you use. Compute the relevant test statistic and its degrees
+  of freedom. Compute the p-value and provide a conclusion under the
+  context of the problem.
+\end{enumerate}
+
+Suppose μ denote the population average of cholesterol levels of the
+sedentary female undergraduates in Baylor university. We want to test if
+H0:μ=168 vs HA:μ≠168.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{t.test}\NormalTok{(mydata}\OperatorTok{$}\NormalTok{Cholesterol, }\DataTypeTok{mu =} \DecValTok{168}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  One Sample t-test
+## 
+## data:  mydata$Cholesterol
+## t = 1.1364, df = 70, p-value = 0.2597
+## alternative hypothesis: true mean is not equal to 168
+## 95 percent confidence interval:
+##  165.3998 177.4875
+## sample estimates:
+## mean of x 
+##  171.4437
+\end{verbatim}
+
+As you can see, the t-ratio is 1.1364 with n−1 = 70 degrees of freedom.
+The p-value is 0.2597 and gives no evidence against the null hypothesis.
+
+Conclusion: There's no evidence that the mean cholesterol level of the
+sedentary university female undergraduates in Baylor university is
+different from 168.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  The Deely Laboratory analyzes specimens of a pharmaceutical product to
+  determine the concentration of the active ingredient. Such chemical
+  analyses are not perfectly precise. Repeated measurements on the same
+  specimen will give slightly different results. The results of repeated
+  measurements follow a Normal distribution quite closely. The analysis
+  procedure has no bias, so that the mean μ of the population of all
+  measurements is the true concentration in the specimen. The laboratory
+  analyzes each specimen 10 times and reports the mean result. The Deely
+  Laboratory has been asked to evaluate the claim that the concentration
+  of the active ingredient in a specimen is 0.86 grams per liter. The 10
+  observations are given in deely.csv.
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\tightlist
+\item
+  Compute using a software the sample mean and standard deviation.
+  Remember to specify their units.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{mean}\NormalTok{(deely}\OperatorTok{$}\NormalTok{conc)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.84063
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sd}\NormalTok{(deely}\OperatorTok{$}\NormalTok{conc)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.007823618
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  The mean is 0.84063 g/L of the active ingredient, with a standard
+  deviation of 0.007823618 g/L
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Obtain a box-plot and a histogram of the observations. Does the data
+  look symmetrically distributed about the mean?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data=}\NormalTok{deely, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{conc)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_histogram}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Concentration values"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+\end{verbatim}
+
+\includegraphics{Lab_0_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data=}\NormalTok{deely, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y=}\NormalTok{conc)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Concentration (g/l)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Lab_0_files/figure-latex/unnamed-chunk-7-2.pdf} - The
+observations may not be centered around the sample mean. Perhaps the
+most informative thing from the plots is the effect of low sample sizes.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Is there any evidence that the mean concentration is different from
+  0.86g/l? To answer the question, write down the null and alternative
+  hypotheses, clearly defining any notation you use. Compute the
+  relevant test statistic and its degrees of freedom. Compute the
+  p-value and provide a conclusion under the context of the problem.
+\end{enumerate}
+
+
+\end{document}
