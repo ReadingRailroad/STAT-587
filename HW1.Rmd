@@ -10,7 +10,7 @@ A person claims that the current SAT Mathematics (SATM) test scores are over-est
 
 (a)
 - H~0~: The mean SATM score = 450;
-- H~a~: The mean SATM score < 450
+- H~a~: The mean SATM score $\neq$ 450
 
 (b)
 ```{r}
@@ -22,20 +22,20 @@ t
 
 (c)
 ```{r}
-p<-round((2*pt(-abs(t),df=499)),3)
+p<-round((pt(-abs(t),df=499)),3)
 p
 ```
-- The p-value from the t-table for a one-tailed test with a t-statistic of 2.394 with 499 degrees of freedom is bounded between .01 and .005, and the exact p-value as calculated by R is 0.017.
+- The p-value from the t-table for a two-tailed test with a t-statistic of 2.394 with 499 degrees of freedom is bounded between .02 and .001, and the exact p-value as calculated by R is 0.009.
 
 (d)
-- Given the sample data we can conclude that there is _some_ evidence to reject the null hypothesis and support the alternative hypothesis that the mean SATM test scores are no more than 450.
+- Given the sample data we can conclude that there is _strong_ evidence to reject the null hypothesis and thus data supports the alternative hypothesis that the mean SATM test scores are not equal to 450.
 
 # 2.) Something Fishy in the Cheese Factory
 Cheese admins suspect that their milk supplier is watering down milk to increase profits. The freezing point of natural milk is $-0.545^{\circ}C$. Adding water will raise the freezing temperature. The freezing temperature of 15 lots of suppliers milk is measured. The average of the 15 measurements is $\bar{X} = -0.538^{\circ}C$ with standard deviation of $s = 0.008^{\circ}C$. Is this sufficient statistical evidence that the supplier is adding water to the milk?
 
 (a)
 - H~0~: The freezing point of the supplier's milk = $-0.545^{\circ}C$;
-- H~a~: The freezing point of the supplier's milk > $-0.545^{\circ}C$
+- H~a~: The freezing point of the supplier's milk $\neq$ $-0.545^{\circ}C$
 
 (b)
 ```{r}
@@ -47,13 +47,13 @@ t
 
 (c)
 ```{r}
-p<-round((2*pt(-abs(t),df=14)),3)
+p<-round((pt(-abs(t),df=14)),3)
 p
 ```
-- The p-value from the t-table for a one-tailed test with a t-statistic of 3.389 with 14 degrees of freedom is bounded between 0.005 and and 0.001, and the exact p-value as calculated by R is 0.004.
+- The p-value from the t-table for a two-tailed one sample t-test with a t-statistic of 3.389 with 14 degrees of freedom is bounded between 0.01 and and 0.002, and the exact p-value as calculated by R is 0.002.
 
 (d)
-- Given this sample data we can conclude that there is strong evidence to reject the null hypothesis that the supplier's milk freezes at the same temperature as natural milk and supports the alternative hypothesis that the supplier's milk is watered down and freezes at a higher temperature than $-0.545^{\circ}C$.
+- Given this sample data we can conclude that there is _strong_ evidence to reject the null hypothesis that the supplier's milk freezes at the same temperature as natural milk and supports the alternative hypothesis that the supplier's milk is watered down and freezes at a temperature not equal to $-0.545^{\circ}C$.
 
 # 3.) VW Gas Mileage
 The VW's on-board computer was reading a better mile per gallon (MPG) than advertised for that model. Therefore, the computer's MPG and driver-recorded MPG recorded for each fill-up in 2016. The data provided in _mpg.txt_ shows the differences between the computer's MPG calculations and the driver's MPG calculations.
@@ -76,7 +76,7 @@ ggplot(data=data,aes(y=difference))+
 
 (c)
 - H~0~: The difference in MPG = 0;
-- H~a~: The difference in MPG $\ne0$
+- H~a~: The difference in MPG $\ne$ 0
 
 (d)
 ```{r}
@@ -84,5 +84,5 @@ t.test(data$difference, mu=0)
 ```
 
 (e)
-- We can conclude there is very strong evidence to reject the null hypothesis that there is no difference between the MPG provided by the VW onboard computer and the driver's calculation, and that there is very strong evidence supporting the alternative hypothesis that the true mean difference in MPG values between the VW computer and the driver's calculation is not equal to 0.
+- We can conclude from the two-tailed one-sample t-test that there is very strong evidence to reject the null hypothesis that there is no difference between the MPG provided by the VW onboard computer and the driver's calculation, and that the data shows very strong evidence supporting the alternative hypothesis that the true mean difference in MPG values between the VW computer and the driver's calculation is not equal to 0.
 
