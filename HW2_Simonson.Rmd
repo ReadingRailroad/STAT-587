@@ -1,0 +1,8 @@
+---
+title: "STAT 587 HW2"
+author: "Martin Simonson"
+date: "January 23, 2019"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
