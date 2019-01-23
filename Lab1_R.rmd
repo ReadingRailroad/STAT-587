@@ -1,0 +1,78 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+# Obtaining side-by-side boxplots performing pooled t-tests and checking for assumptions
+
+We are going to use the library _ggplot2_ so load it now
+```{r message=F}
+library("ggplot2")
+```
+
+## Problem 2
+Let's read the data first. Note that the file is a _txt_ file and is tab/space seprated (check this by opening the file using a text editor such as notepad or notepad++). Remember to keep the header=T option because the first line contains the variable names (not values)
+
+```{r}
+hay = read.table("hayfever.txt",header=T)
+str(hay)
+```
+
+To obtain the side-by-side boxplot use geom_boxplot from ggplot (here x=Group because we want the groups to be on the x-axis and y=Score because we want the response variable score to be on the y-axis)
+```{r}
+ggplot(hay,aes(x=Group,y=Score)) + geom_boxplot()
+```
+
+(note the font sizes on the axes are quite small. You may use _theme_ to adjust the font sizes. If you're ready for more advanced stuff check out https://ggplot2.tidyverse.org/reference/theme.html for how-to) 
+
+The variabilities within groups seem to be roughly equal.
+
+In order to perform the pooled t-test use the *t.test* command in R.
+*Note*: Remember to use *var.equal=T* to perform the pooled t-test because otherwise the Welch t-test is used (will learn that later)
+
+```{r}
+t.test(Score ~ Group,data=hay,var.equal=T)
+```
+
+The t-ratio is 0.100 with 22 degrees of freedoms. The p-value is 0.92 and gives no evidence against the null hypothesis. 
+
+Conclusion: there is no evidence in the data for any effect of the drug.
+
+### Confidence intervals:
+Note the t.test by default gives a 95% confidence interval for the difference of the mean (in this case Control minus Drug). In order to obtain other intervals with other confidence levels use an additional argument _conf_ : The following gives a 90% confidence interval for the difference between means:
+
+```{r}
+t.test(Score ~ Group,data=hay,var.equal=T,conf=0.90)
+```
+
+and the following gives a 99% confidence interval:
+```{r}
+t.test(Score ~ Group,data=hay,var.equal=T,conf=0.99)
+```
+
+To obtain the side-by-side QQ-plots:
+```{r}
+ggplot(hay,aes(sample=Score)) + stat_qq() + stat_qq_line() + facet_wrap(facets = vars(Group))
+```
+
+Note that the facet_wrap uses the Group variable to create the two facets. You have to use _vars()_ to tell R to look for the variable _Group_ in the original data frame (_hay_ in ggplot(hay,...))
+
+The points roughly lie along a straight line - no concern for violating the normality assumption.
+
+
+## Problem 3 (Try to do yourself first)
+
+The codes are given below.
+
+```{r}
+pine = read.table("pinetrees.txt",header=T)
+t.test(Diameter ~ Part,data = pine, var.equal=T)
+
+ggplot(pine,aes(x=Part,y=Diameter)) + geom_boxplot()
+
+ggplot(pine,aes(sample=Diameter)) + stat_qq() + stat_qq_line() + facet_wrap(facets = vars(Part))
+
+aggregate(Diameter ~ Part,data=pine,FUN = sd)
+17.50015/14.25831
+14.25831/17.50015
+```
