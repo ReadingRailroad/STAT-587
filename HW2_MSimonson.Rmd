@@ -1,0 +1,288 @@
+---
+title: "STAT 587 HW2"
+author: "Martin A. Simonson"
+date: "February 1, 2019"
+output: pdf_document
+---
+
+# 1.) Body Mass Index
+
+In a study to test the efficacy of a diet in reducing obesity, 20 obese participants (initial BMI greater than or equal to 30) were enrolled. One participant dropped out after few weeks. The participants’ BMI values were observed before the program started and after following the diet plan for one month. The data in _bmi.csv_ givs the change in BMI of these 19 participants. Suppose $\mu$ denote the average change in BMI due to the diet. The null hypothesis is $H_0: \mu = 0$.
+
+(a) Compute the t-ratio for testing the null hypothesis.
+```{r}
+dat<-read.csv("bmi.csv",header=T)
+str(dat)
+
+Tstat<- ((mean(dat$bmi)-0)) /
+        ((sd(dat$bmi))/sqrt(length(dat$bmi)))
+
+Tstat
+```
+
+- __Answer:__ The t-ratio testing the null hypothesis that $\mu = 0$ is 4.4696 with 18 degrees of freedom.
+
+(b) Complete a one-sided t-test with the alternative hypothesis $H_A: \mu < 0$. Only large negative values are considered "extreme". Compute the one-sided p-value and provide a conclusion in the context of the problem.
+
+```{r}
+t.test(dat, alternative = "less")
+```
+
+- __Answer:__ The p-value for the one-sided t-test of mean changes in BMI are less than $\mu < 0$ is 0.9999, indicating there is almost no evidence that the change in BMI is less than 0.
+
+(c) Now complete the two-sided alternative $H_A: \mu \neq 0$. Find the p-value and provide a conclusion in the context of this problem.
+```{r}
+t.test(dat) # two-sided is default
+```
+
+- __Answer:__ The p-value for the two sided t-test of mean changes in BMI are $\mu \neq 0$ is 0.0002962, which provides very strong evidence that there the true difference in BMI is not equal to zero.
+
+(d) Between one-sided and two-sided alternatives which one do you think is more objective and why?
+
+- __Answer:__ I believe that the two-sided test is more objective because it accounts for the fact that there may be extreme values in either direction of the null hypothesis $H_0: \mu = 0$ instead of an only greater than or less than 0. However, I would argue that this comparison is informative because there is strong indication that the true mean change in BMI is not equal to zero but no evidence that the true mean change in BMI is less than zero. Therefore, people on the diet would have a different BMI after a month but the change would not be negative.
+
+# 2.) Downs Syndrome
+
+The data consists of weights (g) of two groups of mice: non-transgenic (NONTRANS) mice and transgenic (TRANS) mice with an extra 285E6 DNA fragment. Assignment of mice to these groups is _not_ random; it depends on whether the gene injection process "works" or not. Summaries of the two data sets are provided in HW2.pdf Figure 1.
+
+(a) Calculate the pooled estimate of the standard deviation for the two independent samples.
+
+```{r}
+# NONTRANS s.d. = 3.69753 with n = 77
+# TRANS s.d. = 3.28690 with n = 81
+
+Sp<-sqrt(
+          (((77-1)*(3.69753^2)) + ((81-1)*(3.28690^2))) /
+          (77+81-2)
+          )
+Sp
+```
+
+- __Answer:__ The pooled estimate of the standard deviation for the two independent samples is 3.492986.
+
+(b) Calculate the standard error of the difference between the two averages.
+
+```{r}
+# SE = Sp * sqrt( 1/n1 + 1/n2 )
+
+SE<-Sp*sqrt((1/77)+(1/81))
+SE
+```
+
+- __Answer:__ The standard error of the difference between two means is 0.5559523
+
+(c) Conduct a pooled t-test to test whether the means are the same. Report the test statistic, degrees of freedom, p-value, and a short interpretation.
+
+```{r}
+
+# NONTRANS 
+#     mean = 27.4468
+#     s.d. = 3.69753 
+#     n = 77
+# TRANS 
+#     mean = 28.2407
+#     s.d. = 3.28690 
+#     n = 81
+
+
+t.stat<- abs( ((27.4468-28.2407) / SE) )
+t.stat
+(77+81-2) # degrees freedom
+```
+
+- __Answer:__ Assuming that we let $\mu_1$ equal the mean weight of _NONTRANS_ mice and $\mu_2$ equal the mean weight of _TRANS_ mice and further assuming the null hypothesis is $H_0: \mu_1 = \mu_2$, the test statistic from a two-tailed pooled t-test is 1.4280 with 156 degrees of freedom. Using a t-table the p-value is bounded between 0.10 and 0.20, which indicates there is very weak evidence to reject the null hypothesis.  
+
+(d) The assumption of independent observation of randomly assigned treatments cannot be tested here, since the success of gene injection is nonrandom. Further, the p-value greater than 0.1 does not provide evidence to reject the null hypothesis that the mean weights are equal between groups.
+
+# 3.) Blood Pressure and Oatmeal
+
+Studies on human blood pressure hav tried to identify environmental and lifestyle characteristics that influence blood pressure. Some studies are randomized experiments; many are not. One study looked at men in a particular city. The study compared the blood pressure of men who consistently ate oatmeal three times a week to that of those who had never eaten oatmeal. The data are summarized in the table below:
+
+Group        | n              | average       | s.d.
+------------ | -------------  | ------------- | -------------
+"Oatmeal Haters"     | 49             | 155           | 14
+"Oatmeal Eaters"     | 16             | 135           | 12  
+
+(a) The variability among observations is larger in which group of men?
+- __Answer:__ The "Oatmeal Haters" group has more variation because of a higher standard devation. Given that there is a larger number of "Oatmeal Haters" the precision of that estimate should be higher than the precision of the "Oatmeal Eaters" group.
+
+(b) Compute the pooled estimate of the standard deviation:
+```{r}
+Pool.sd<-sqrt(
+              (((49-1)*(14^2))+((16-1)*(12^2))) /
+              (49+16-2))
+Pool.sd
+```
+- __Answer:__ The pooled standard deviation is 13.55061.
+
+(c) Compute a 99% confidence interval for the difference in mean blood pressure between the groups. Show all work. Interpret this interval within the context of the study.
+
+```{r}
+# est is the estimate of difference between means
+# t.star is the t-ratio from the t-table for 99% confidence interval (with 63 df)
+# SE is the Pool.sd * sqrt(1/n1 + 1/n2)
+
+est<-155-135
+t.star<-2.639
+SE<-Pool.sd*sqrt((1/49)+(1/16))
+
+Lower<- est - (t.star * SE)
+Upper<- est + (t.star * SE)
+data.frame(Lower,Upper)
+```
+- __Answer:__ We are 99% confident that the difference in mean blood pressure values is 9.703327 to 30.29667 __(blood pressure units not provided)__, which indicates that "Oatmeal Haters" (in this study only) have a higher average blood pressure compared to "Oatmeal Eaters" (in this study only).
+
+(d) The results were reported as "Eating oatmeal reduces your blood pressure". Evaluate the appropriateness of this claim.
+
+- __Answer:__ Because the treatment (consuming oatmeal) was not randomly assigned to test subjects and because the sample sizes are uneven, we cannot make any causal conclusion regarding consumption of oatmeal and blood pressure.
+
+- __Further__, the example is dubious because we know nothing of the sample distributions and there are no units provided for the response variable. Although a directional difference in average blood pressure units was indicated by the 99% confidence interval, the magnitude of the change could be such that each man in this study remains in some sort of "safe" or "dangerous" blood pressure category and the overall change in blood pressure is meaningless. Therefore, we cannot make any conclusion about the consumption of oatmeal and blood pressure with the information given in this problem.
+
+# 4.) Galapagos Finches
+
+One of the classic data sets in evolutionary ecology is the long term data collected by Peter and Rosemary Grant on finches in the Galapagos. The data in _ex0218.csv_ describe the size of the beak of finches on Daphne Major, an island of the Galapagos archipelago. The data set describes the beak size __(millimeters; mm)__ of all 751 finches that were measured in 1976 and all 89 finches that were measured in 1978. They measured all these species of finch on the island each year. 1977 was a severe drought year; the only food source was a large, tough seed that was ignored by the finches in normal conditions. However, to survive the population bottleneck in 1977 the birds must have eaten large, tough seeds.
+
+(a) Draw side-by-side boxplots of beak size for the 1976 and 1978 birds.
+
+```{r, include = F}
+dat<-read.csv("ex0218.csv",header=T)
+str(dat)
+dat$Year<-as.factor(dat$Year)
+
+packages<-function(x, repos="http://cran.r-project.org", ...){
+x<-as.character(match.call()[[2]])
+if (!require(x,character.only=TRUE)){
+install.packages(pkgs=x, repos=repos, ...)
+require(x,character.only=TRUE)
+}
+}
+
+packages(ggplot2)
+```
+```{r}
+
+ggplot(data=dat,aes(x=Year, y=Depth))+
+       geom_boxplot(fill="cornflowerblue")+
+       ylab("Finch Beak Depth (mm)")+
+       theme_classic()
+```
+
+(b) Use a two-sample (pooled) two-sided t-test to test the hypothesis of no change in beak size. Provide a two-sided p-value, and interpret the results within the context of this problem. Let $\mu_1$ represent the mean beak deph in millimeters for finches on Daphne Major in 1976 and let $\mu_2$ represent the mean beak depth in millimeters for finches on Daphne Major in 1978.
+
+
+- $H_0: \mu_1 = \mu_2$
+- $H_A: \mu1 \neq \mu_2$
+
+```{r}
+attach(dat)
+t.test(Depth~Year, 
+       mu = 0, 
+       alt = "two.sided", 
+       conf=0.95, 
+       var.equal=T)
+```
+
+- __Answer:__ The two-sided pooled t-test returns t-statistic of -4.6871 with 838 degrees of freedom and a p-value of 0.000003233, which provides very strong evidence to reject the null hypothesis that there is no difference between mean beak size (mm) of Daphne Major finches. 
+
+(c) Estimate the increase in mean beak size beween 1976 and 1978. Also report the standard error of this estimate and the 95% confidence interval, using methods described in S2019-STAT-587-A. Let "beak.diff" equal the difference in means beak depth (mm) between years. Let SE equal the standard error of the difference of means (beak.diff). Let Lower be the lower 95% confidence interval, and Upper be the upper 95% confidence interval.
+
+- __Answer:__
+
+```{r}
+# Increase in mean beak size:
+beak.diff<- mean(dat$Depth[dat$Year == "1978"]) -
+            mean(dat$Depth[dat$Year == "1976"])
+beak.diff
+
+# pooled standard deviation and standard error
+Sp<-sqrt((((length(dat$Depth[dat$Year == "1976"]))*(sd(dat$Depth[dat$Year == "1976"]))^2)+
+            (length(dat$Depth[dat$Year == "1978"])*(sd(dat$Depth[dat$Year == "1978"]))^2)) /
+           (length(dat$Depth[dat$Year == "1976"])+length(dat$Depth[dat$Year == "1978"])-2))
+SE<-Sp*sqrt((1/length(dat$Depth[dat$Year == "1976"])) + 
+            (1/length(dat$Depth[dat$Year == "1978"])))
+SE
+
+# t-star
+t.star<-1.962
+
+# 95% confidence interval
+Lower<-beak.diff - (t.star * SE)
+Upper<-beak.diff + (t.star * SE)
+data.frame(Lower,Upper)
+```
+
+(d) Typical life span for these finches is 5-20 years. Does this raise any concerns about the assumption of indpendence between two groups?
+
+- __Answer:__ These are not independent observations. In fact, we cannot be sure without individual animal identification (e.g., tags) how many observations in 1978 were also measured in 1976 and how many observations in 1978 belong to finches born after the 1976 sample. There are many other confounding factors, like age of finches and species of finches. Any conclusions on this data are sketchy at best.
+
+# 5.) Pollen Removal
+
+Ignore the garbage book questions from the garbage book. Answer the far superior questions that follow instead. The data are provided in "bee.csv". Ignore the first column (the proportion of pollen), the second column is the duration of visit __(In Some Sort Of Completely Unknown Unit Of Time That I Will Assume To Be In Seconds)__, and the third column indicates worker bee (W) or queen bee (Q). Consider the data on duration of visit (2nd column). Find out if worker bees spend more time visiting flowers than queen bees. It is unclear if the mean or the median is more appropriate to describe typical length of visit.
+
+(a) Report the means and standard deviations of the groups.
+```{r, include = F}
+dat<-read.csv("bee.csv", header=T)
+str(dat)
+dat<-dat[,-1]
+
+# Worker bee mean duration 
+w.m<-mean(dat$Duration[dat$Type == "W"])
+
+# Worker bee standard deviation
+w.sd<-sd(dat$Duration[dat$Type == "W"])
+
+# Queen Bee mean duration
+q.m<-mean(dat$Duration[dat$Type == "Q"])
+
+#Queen Bee standard deviation
+q.sd<-sd(dat$Duration[dat$Type == "Q"])
+
+Five.A<-data.frame(c(w.m,q.m),c(w.sd,q.sd))
+colnames(Five.A)<-c("Mean","s.d.")
+rownames(Five.A)<-c("Worker","Queen")
+```
+
+- __Answer:__
+```{r}
+Five.A
+```
+
+(b) Use a pooled t-test to test whether the mean visit lengths are equal. Report the t-ratio, df, p-value, and write a conclusion within the context of the data.
+
+- __Answer:__ Let $\mu_1$ be the mean duration of visit for Queen Bees, and $\mu_2$ be the mean duration of visit for Worker Bees. Therefore:
+
+- $H_0: \mu_1 = \mu_2$
+- $H_A: \mu1 \neq \mu_2$
+
+```{r}
+attach(dat)
+t.test(Duration~Type, 
+       mu = 0, 
+       alt = "two.sided", 
+       conf=0.90, 
+       var.equal=T)
+```
+
+- The t-ratio from the pooled two-sided t-test is 4.0787 with 45 degrees of freedom and a p-value of 0.0001824. This provides strong evidence that there is a difference between worker and queen bees in the duration of time spent at a flower.
+
+(c) Compute a 90% confidence interval for the difference in mean visit lengths, and give an interpretation in the context of this data.
+
+- __Answer:__ From 5(b), we can see that the 90% confidence interval is 11.56609 to 27.75772. Therefore, we are 90% confident that the difference of mean length of visit lies between 11.56609 and 27.75772 units of time, probably seconds. 
+
+(d) Diagnostic tests: provide a side-by-side boxplot and the QQ-plots. Comment on findings.
+
+```{r}
+ggplot(data=dat,aes(x=Type, y=Duration))+
+       geom_boxplot(fill="cornflowerblue")+
+       ylab("Duration of Stay In Some Unit Of Time Probably Seconds")+
+       theme_classic()
+
+
+ggplot(data=dat, aes(sample=Duration)) + 
+        stat_qq() + 
+        stat_qq_line() + 
+        facet_wrap(facets = vars(Type))+
+        theme_classic()
+```
+
+- __Answer:__ These plots show two things: we have unequal variance, which is inappropriate for a reguar pooled t-test, and that deviation from the QQ line indicates that there may be some non-normal data in the "Q" group and at high values of the "W" group. Because an inappropriate test was used, the results are dubious.
