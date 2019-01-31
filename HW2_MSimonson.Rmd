@@ -7,7 +7,7 @@ output: pdf_document
 
 # 1.) Body Mass Index
 
-In a study to test the efficacy of a diet in reducing obesity, 20 obese participants (initial BMI greater than or equal to 30) were enrolled. One participant dropped out after few weeks. The participants’ BMI values were observed before the program started and after following the diet plan for one month. The data in _bmi.csv_ givs the change in BMI of these 19 participants. Suppose $\mu$ denote the average change in BMI due to the diet. The null hypothesis is $H_0: \mu = 0$.
+In a study to test the efficacy of a diet in reducing obesity, 20 obese participants (initial BMI greater than or equal to 30) were enrolled. One participant dropped out after few weeks. The participants’ BMI values were observed before the program started and after following the diet plan for one month. The data in _bmi.csv_ givs the change in BMI of these 19 participants. Suppose $\mu$ denotes the average change in BMI due to the diet. The null hypothesis is then $H_0: \mu = 0$.
 
 (a) Compute the t-ratio for testing the null hypothesis.
 ```{r}
@@ -35,11 +35,11 @@ t.test(dat, alternative = "less")
 t.test(dat) # two-sided is default
 ```
 
-- __Answer:__ The p-value for the two sided t-test of mean changes in BMI are $\mu \neq 0$ is 0.0002962, which provides very strong evidence that there the true difference in BMI is not equal to zero.
+- __Answer:__ The p-value for the two sided t-test of mean changes in BMI are $\mu \neq 0$ is 0.0002962, which provides very strong evidence that the true difference in BMI is not equal to zero.
 
 (d) Between one-sided and two-sided alternatives which one do you think is more objective and why?
 
-- __Answer:__ I believe that the two-sided test is more objective because it accounts for the fact that there may be extreme values in either direction of the null hypothesis $H_0: \mu = 0$ instead of an only greater than or less than 0. However, I would argue that this comparison is informative because there is strong indication that the true mean change in BMI is not equal to zero but no evidence that the true mean change in BMI is less than zero. Therefore, people on the diet would have a different BMI after a month but the change would not be negative.
+- __Answer:__ I believe that the two-sided test is more objective because it accounts for the fact that there may be extreme values in either direction of the null hypothesis $H_0: \mu = 0$ instead of an only greater than or less than 0. In this example, the data suggest that the true difference in BMI is not equal to zero, but if the person applying the test had completed a one-sided test to determine if the average change in BMI was less than zero, they would fail to reject the null hypothesis.
 
 # 2.) Downs Syndrome
 
@@ -92,7 +92,9 @@ t.stat
 
 - __Answer:__ Assuming that we let $\mu_1$ equal the mean weight of _NONTRANS_ mice and $\mu_2$ equal the mean weight of _TRANS_ mice and further assuming the null hypothesis is $H_0: \mu_1 = \mu_2$, the test statistic from a two-tailed pooled t-test is 1.4280 with 156 degrees of freedom. Using a t-table the p-value is bounded between 0.10 and 0.20, which indicates there is very weak evidence to reject the null hypothesis.  
 
-(d) The assumption of independent observation of randomly assigned treatments cannot be tested here, since the success of gene injection is nonrandom. Further, the p-value greater than 0.1 does not provide evidence to reject the null hypothesis that the mean weights are equal between groups.
+(d) Is is appropriate to make a causal conclusion from this study? Briefly explain.
+
+- __Answer:__ The assumption of independent observation of randomly assigned treatments cannot be tested here, since the success of gene injection is nonrandom. Further, the p-value greater than 0.1 does not provide evidence to reject the null hypothesis that the mean weights are equal between groups.
 
 # 3.) Blood Pressure and Oatmeal
 
@@ -104,7 +106,7 @@ Group        | n              | average       | s.d.
 "Oatmeal Eaters"     | 16             | 135           | 12  
 
 (a) The variability among observations is larger in which group of men?
-- __Answer:__ The "Oatmeal Haters" group has more variation because of a higher standard devation. Given that there is a larger number of "Oatmeal Haters" the precision of that estimate should be higher than the precision of the "Oatmeal Eaters" group.
+- __Answer:__ The "Oatmeal Haters" group has more variation because of a larger standard devation. Given that there is a greater number of "Oatmeal Haters" the precision of that estimate should be higher than the precision of the "Oatmeal Eaters" group.
 
 (b) Compute the pooled estimate of the standard deviation:
 ```{r}
@@ -130,13 +132,13 @@ Lower<- est - (t.star * SE)
 Upper<- est + (t.star * SE)
 data.frame(Lower,Upper)
 ```
-- __Answer:__ We are 99% confident that the difference in mean blood pressure values is 9.703327 to 30.29667 __(blood pressure units not provided)__, which indicates that "Oatmeal Haters" (in this study only) have a higher average blood pressure compared to "Oatmeal Eaters" (in this study only).
+- __Answer:__ We are 99% confident that the difference in mean blood pressure values is 9.703327 to 30.29667 units __(blood pressure units not provided)__, which indicates that "Oatmeal Haters" (in this study only) have a higher average blood pressure compared to "Oatmeal Eaters" (in this study only).
 
 (d) The results were reported as "Eating oatmeal reduces your blood pressure". Evaluate the appropriateness of this claim.
 
 - __Answer:__ Because the treatment (consuming oatmeal) was not randomly assigned to test subjects and because the sample sizes are uneven, we cannot make any causal conclusion regarding consumption of oatmeal and blood pressure.
 
-- __Further__, the example is dubious because we know nothing of the sample distributions and there are no units provided for the response variable. Although a directional difference in average blood pressure units was indicated by the 99% confidence interval, the magnitude of the change could be such that each man in this study remains in some sort of "safe" or "dangerous" blood pressure category and the overall change in blood pressure is meaningless. Therefore, we cannot make any conclusion about the consumption of oatmeal and blood pressure with the information given in this problem.
+- __Further__, the example is dubious because we know nothing of the sample distributions and there are no units provided for the response variable. Although a nonzero directional difference in average blood pressure units was indicated by the 99% confidence interval, the magnitude of the change could be such that each man in this study remains in some sort of "safe" or "dangerous" blood pressure category and the overall change in blood pressure is meaningless. Therefore, we cannot make any conclusion about the consumption of oatmeal and blood pressure with the information given in this problem.
 
 # 4.) Galapagos Finches
 
@@ -190,8 +192,8 @@ t.test(Depth~Year,
 
 ```{r}
 # Increase in mean beak size:
-beak.diff<- mean(dat$Depth[dat$Year == "1978"]) -
-            mean(dat$Depth[dat$Year == "1976"])
+beak.diff<- mean(dat$Depth[dat$Year == "1976"]) -
+            mean(dat$Depth[dat$Year == "1978"])
 beak.diff
 
 # pooled standard deviation and standard error
@@ -211,13 +213,15 @@ Upper<-beak.diff + (t.star * SE)
 data.frame(Lower,Upper)
 ```
 
+- __Answer:__ The 95% confidence interval, already provided by R output in 3(b), and re-calculated in 3(c), is -0.7626008 to -0.3122058.
+
 (d) Typical life span for these finches is 5-20 years. Does this raise any concerns about the assumption of indpendence between two groups?
 
 - __Answer:__ These are not independent observations. In fact, we cannot be sure without individual animal identification (e.g., tags) how many observations in 1978 were also measured in 1976 and how many observations in 1978 belong to finches born after the 1976 sample. There are many other confounding factors, like age of finches and species of finches. Any conclusions on this data are sketchy at best.
 
 # 5.) Pollen Removal
 
-Ignore the garbage book questions from the garbage book. Answer the far superior questions that follow instead. The data are provided in "bee.csv". Ignore the first column (the proportion of pollen), the second column is the duration of visit __(In Some Sort Of Completely Unknown Unit Of Time That I Will Assume To Be In Seconds)__, and the third column indicates worker bee (W) or queen bee (Q). Consider the data on duration of visit (2nd column). Find out if worker bees spend more time visiting flowers than queen bees. It is unclear if the mean or the median is more appropriate to describe typical length of visit.
+Data for this homework problem come from a study on pollen removal of bees. The data are provided in "bee.csv". Ignore the first column (the proportion of pollen), the second column is the duration of visit __(In Some Sort Of Completely Unknown Unit Of Time That I Will Assume To Be In Seconds)__, and the third column indicates worker bee (W) or queen bee (Q). Consider the data on duration of visit (2nd column). Find out if worker bees spend more time visiting flowers than queen bees. It is unclear if the mean or the median is more appropriate to describe typical length of visit and unclear if if this statement is relevant to the homework problem in any way.
 
 (a) Report the means and standard deviations of the groups.
 ```{r, include = F}
@@ -242,14 +246,14 @@ colnames(Five.A)<-c("Mean","s.d.")
 rownames(Five.A)<-c("Worker","Queen")
 ```
 
-- __Answer:__
+- __Answer:__ See data frame "Five.A" immediately below.
 ```{r}
 Five.A
 ```
 
 (b) Use a pooled t-test to test whether the mean visit lengths are equal. Report the t-ratio, df, p-value, and write a conclusion within the context of the data.
 
-- __Answer:__ Let $\mu_1$ be the mean duration of visit for Queen Bees, and $\mu_2$ be the mean duration of visit for Worker Bees. Therefore:
+- Let $\mu_1$ be the mean duration of visit for Queen Bees, and $\mu_2$ be the mean duration of visit for Worker Bees. Therefore:
 
 - $H_0: \mu_1 = \mu_2$
 - $H_A: \mu1 \neq \mu_2$
@@ -263,11 +267,11 @@ t.test(Duration~Type,
        var.equal=T)
 ```
 
-- The t-ratio from the pooled two-sided t-test is 4.0787 with 45 degrees of freedom and a p-value of 0.0001824. This provides strong evidence that there is a difference between worker and queen bees in the duration of time spent at a flower.
+- __Answer:__ The t-ratio from the pooled two-sided t-test is 4.0787 with 45 degrees of freedom and a p-value of 0.0001824. This provides strong evidence that there is a difference between worker and queen bees in the duration of time spent at a flower.
 
 (c) Compute a 90% confidence interval for the difference in mean visit lengths, and give an interpretation in the context of this data.
 
-- __Answer:__ From 5(b), we can see that the 90% confidence interval is 11.56609 to 27.75772. Therefore, we are 90% confident that the difference of mean length of visit lies between 11.56609 and 27.75772 units of time, probably seconds. 
+- __Answer:__ From 5(b), we can see that the 90% confidence interval is 11.56609 to 27.75772. Therefore, we are 90% confident that the true difference of mean length of visit lies between 11.56609 and 27.75772 units of time, probably seconds. 
 
 (d) Diagnostic tests: provide a side-by-side boxplot and the QQ-plots. Comment on findings.
 
@@ -285,4 +289,4 @@ ggplot(data=dat, aes(sample=Duration)) +
         theme_classic()
 ```
 
-- __Answer:__ These plots show two things: we have unequal variance, which is inappropriate for a reguar pooled t-test, and that deviation from the QQ line indicates that there may be some non-normal data in the "Q" group and at high values of the "W" group. Because an inappropriate test was used, the results are dubious.
+- __Answer:__ These plots show two things: we have unequal variance, which is inappropriate for a reguar pooled t-test, and that deviation from the QQ line indicates that there may be some non-normal data in the "Q" group and at high values of the "W" group. Because an inappropriate test was used, the results are an output of a futile exercise that did not make worthwhile conclusions. Perhaps the researcher should have tested the assumptions of the t-test _before_ running the t-test.
