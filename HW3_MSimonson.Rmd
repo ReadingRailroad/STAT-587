@@ -1,0 +1,107 @@
+---
+title: "Simonson_HW3"
+author: "Martin A. Simonson"
+date: "February 6, 2019"
+output: pdf_document
+---
+
+# 1.) Testing insulating fluids
+
+Researchers examined the time _(in minutes)_ before an insulating fluid lost its insulating property. The following data are the breakdown of times for 30 samples of the fluid, which had been randomly allocated to receive one of the two voltages of electricity:
+
+- 12 samples assigned to 26kV
+- 18 samples assigned to 28kV
+
+Following table gives the summary statistics of the times _(in minutes)_ and log-times
+
+Voltages     | 26kV          | 28kV          | 26kV          | 28kV        |
+------------ | ------------- | ------------- | ------------- |------------ |
+             | Time (minutes)                |  log-Time                   |
+------------ | ------------- | ------------- | ------------- | ----------- |
+Mean         |450.89         | 425.93        | 5.699         |5.620        |
+s.d.         |539.86         | 397.42        | 0.914         |1.098        |
+
+(a) Is there any evidence that the original responses are not normally distributed? Explain.
+
+```{r}
+
+```
+
+- __Answer:__
+
+(b) Test for a difference between the median breakdown times at two voltages. Clearly write the null and alternate hypothesis, explaining any notation used. Report the __pooled t-statistic and p-value__. Show computations.
+
+```{r}
+
+```
+
+- __Answer:__
+
+(c) Provide a conclusion in the context of this problem
+
+- __Answer:__
+
+# 2.) Antibiotic effectiveness
+
+A pharmaceutical company is conducting an experiment to test the effects of a new antibiotic on bacterial counts in tissue cultures. Forty randomly selected tissue cultures were laced in vials and infected with a low quantity of bacterial cells. Of those, 25 were randomly selected and given a dose of antibiotic. The other 15 were given a similar quantity of distilled water. Upon completion of the the experiment, full bacterial counts were made from each vial. Summary statistics for the bacterial counts are provided below; assume that log-transformed counts are normally distributed.
+
+Treatment    | Mean of log counts   | s.d. of log counts         | 
+------------ | -------------------- | -------------------------- |
+Antibiotic   | 2.87                 | 0.69                       |
+Distilled H20| 3.27                 | 0.86                       |
+
+(a) Provide a pooled estimate of s.d. (for observations on log scale)
+
+```{r}
+
+```
+
+- __Answer:__
+
+(b) Do these data suggest that the new antibiotic has an effect on bacterial counts in tissue cultures? (Answer this question by providing null and alternate hypothesis, provide the pooled t-ratio and p-value, and give an interprative conclusion - show all work).
+
+```{r}
+
+```
+
+- __Answer:__
+
+(c) Provide a 90% confidence interval for the ratio between the median bacterial counts for the water and antibiotic treated cultures. Interpret the interval within the context given by this problem.
+
+```{r}
+
+```
+
+- __Answer:__
+
+
+# 3.) The following boxplots and summary statistics are of the survival times _(in days)_ of guinea pigs that were randomly assigned to a control group or a treatment group that received a dose of the tubercle bacilli. Scientists are interested to see if the treatment has an effect on the mean surival time.
+
+(a) Write down the null and alternate hypotheses for testing the effect of treatment on the survival times.
+
+- __Answer:__
+
+(b) Compute and report the Welch's t-ratio and degrees of freedom.
+
+```{r}
+
+```
+
+
+- __Answer:__
+
+(c) Use a t-table to provide a bound on the p-value (using nearest integer degrees of freedom).
+
+- __Answer:__
+
+(d) Provide a scientific conclusion from the given context.
+
+- __Answer:__
+
+(e) Provide a 95% confidence interval for the difference in mean survival times and provide its interpretation.
+
+```{r}
+
+```
+
+- __Answer:__

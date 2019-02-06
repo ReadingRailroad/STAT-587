@@ -1,0 +1,96 @@
+---
+title: "Lab 3_Simonson"
+author: "Martin A. Simonson"
+date: "February 6, 2019"
+output: pdf_document
+editor_options: 
+  chunk_output_type: inline
+---
+
+# Cloud seeding and rainfall
+
+```{r}
+library(ggplot2)
+cloud<-read.table("Data/case0301.txt", header=T)
+str(cloud)
+
+ggplot(cloud, aes(x=Treatment,y=Rainfall)) + geom_boxplot()
+# unequal variance and skewed distributions
+
+ggplot(cloud, aes(sample=Rainfall)) + 
+              stat_qq()+
+              stat_qq_line() + 
+              facet_wrap(facets = vars(Treatment))
+#non-normal data and requires log transformation
+
+ggplot(cloud,aes(x=Treatment,y=log(Rainfall)))+geom_boxplot()
+# seems to be more even distribution and variance
+
+ggplot(cloud, aes(sample=log(Rainfall))) + 
+              stat_qq()+
+              stat_qq_line() + 
+              facet_wrap(facets = vars(Treatment))
+#higher values look better, but some low values are way off line now.
+
+aggregate(log(Rainfall) ~ Treatment, data = cloud, length)
+# equal sample sizes
+
+aggregate(log(Rainfall) ~ Treatment, data = cloud, mean)
+# mean
+
+aggregate(log(Rainfall) ~ Treatment, data = cloud, sd)
+# standard deviations
+
+t.test(log(Rainfall) ~ Treatment, data = cloud, var.equal = T)
+# pooled t.test on log scale
+
+
+object<-t.test(log(Rainfall) ~ Treatment, data = cloud)
+object
+
+# Welch t-test
+
+# to obtain an accurate 95% ci we must exponentiate the results of the t-test
+exp(object$conf.int)
+```
+
+# togetherness
+
+```{r}
+rat <-read.table("Data/togetherness.txt",header=T)
+rat
+
+t.test(rat$Alone,rat$Together,paired = T, conf= 0.90)
+# paired t-test: first vector minus second vector (Alone - Together)
+
+rat$Diff<-rat$Alone-rat$Together
+t.test(rat$Diff,conf=0.90)
+# one-sample t.test of the differences
+
+ggplot(rat,aes(sample=Diff))+stat_qq()+stat_qq_line() + theme_classic()
+```
+
+# Mayfly nymphs
+
+```{r}
+mayfly<-read.table("Data/mayfly.txt",header=T)
+mayfly
+
+mayfly$LogDif<-log(mayfly$Above) - log(mayfly$Below)
+
+mayfly.test<-t.test(mayfly$LogDif)
+# one-sample t.test of the difference of log means
+mayfly.test
+
+0.5*((exp(mayfly.test$conf.int[2]))-(exp(mayfly.test$conf.int[1])))
+
+
+exp(0.766644)
+# median count above outfalls is expeceted to be 2.152 times median count below outfalls.
+
+# graphical tests:
+ggplot(mayfly,aes(sample=LogDif))+stat_qq()+stat_qq_line() + theme_classic()
+# seems like even after a log-transformation we do not have normally distributed data
+
+```
+
