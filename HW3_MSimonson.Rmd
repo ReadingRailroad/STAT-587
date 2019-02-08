@@ -3,6 +3,8 @@ title: "Simonson_HW3"
 author: "Martin A. Simonson"
 date: "February 6, 2019"
 output: pdf_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 # 1.) Testing insulating fluids
@@ -16,8 +18,8 @@ Following table gives the summary statistics of the times _(in minutes)_ and log
 
 Voltages     | 26kV          | 28kV          | 26kV          | 28kV        |
 ------------ | ------------- | ------------- | ------------- |------------ |
-             | Time (minutes)                |  log-Time                   |
------------- | ------------- | ------------- | ------------- | ----------- |
+.            | Time (minutes)| Time (minutes)| log-Time      |  log-Time   |
+-------------|---------------|---------------|---------------|-------------|
 Mean         |450.89         | 425.93        | 5.699         |5.620        |
 s.d.         |539.86         | 397.42        | 0.914         |1.098        |
 
@@ -27,12 +29,17 @@ s.d.         |539.86         | 397.42        | 0.914         |1.098        |
 
 ```
 
-- __Answer:__
+- __Answer:__ A rule-of-thumb is that a normal distribution should have a standard deviation less than half of that of the mean. The original units of time (minutes) have standard deviations close to or larger than the mean statistic, therefore, there is evidence that the data is not evenly distributed. 
 
 (b) Test for a difference between the median breakdown times at two voltages. Clearly write the null and alternate hypothesis, explaining any notation used. Report the __pooled t-statistic and p-value__. Show computations.
 
-```{r}
+Let $\mu_1$ represent the log-transformed mean breakdown time ($\ln(minutes)$) of an insulating fluid at 26kV, and let $\mu_2$ represent the log-transformed mean breakdown time ($\ln(minutes)$) of an insulating fluid at 28kV.
+- $H_0: \mu_1 = \mu_2$
+- $H_A: \mu1 \neq \mu_2$
 
+```{r}
+# difference between two means
+Mu_d<-5.699-5.620
 ```
 
 - __Answer:__
@@ -75,7 +82,9 @@ Distilled H20| 3.27                 | 0.86                       |
 - __Answer:__
 
 
-# 3.) The following boxplots and summary statistics are of the survival times _(in days)_ of guinea pigs that were randomly assigned to a control group or a treatment group that received a dose of the tubercle bacilli. Scientists are interested to see if the treatment has an effect on the mean surival time.
+# 3.) Dosing Guinea Pigs
+
+The following boxplots and summary statistics are of the survival times _(in days)_ of guinea pigs that were randomly assigned to a control group or a treatment group that received a dose of the tubercle bacilli. Scientists are interested to see if the treatment has an effect on the mean surival time.
 
 (a) Write down the null and alternate hypotheses for testing the effect of treatment on the survival times.
 
