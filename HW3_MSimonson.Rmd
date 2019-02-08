@@ -34,19 +34,37 @@ s.d.         |539.86         | 397.42        | 0.914         |1.098        |
 (b) Test for a difference between the median breakdown times at two voltages. Clearly write the null and alternate hypothesis, explaining any notation used. Report the __pooled t-statistic and p-value__. Show computations.
 
 Let $\mu_1$ represent the log-transformed mean breakdown time ($\ln(minutes)$) of an insulating fluid at 26kV, and let $\mu_2$ represent the log-transformed mean breakdown time ($\ln(minutes)$) of an insulating fluid at 28kV.
+
 - $H_0: \mu_1 = \mu_2$
+
 - $H_A: \mu1 \neq \mu_2$
 
 ```{r}
 # difference between two means
-Mu_d<-5.699-5.620
+Mu.diff<-5.699-5.620 # minutes
+
+# pooled sd
+Sd.pool<-sqrt((((12-1)*(0.914^2))+(18-1)*(1.098^2)) /
+                (12+18-2))
+
+# Standard Error
+SE<-Sd.pool * sqrt((1/12)+(1/18))
+
+# T statistic
+T.stat<- Mu.diff/SE # with 28 degrees of freedom
+T.stat
+
+# p-value
+p<-2*pt(-abs(T.stat),df=28)
+p
+
 ```
 
-- __Answer:__
+- __Answer:__ The pooled t-statistic for this problem is 0.2059 with 28 degrees of freedom. This results in a p-value of 0.8384. 
 
 (c) Provide a conclusion in the context of this problem
 
-- __Answer:__
+- __Answer:__ There is very weak evidence to reject the null hypothesis. Therefore, we can conclude that the data show that there is no difference in median beakdown times of fluids at the two voltages. 
 
 # 2.) Antibiotic effectiveness
 
@@ -60,26 +78,49 @@ Distilled H20| 3.27                 | 0.86                       |
 (a) Provide a pooled estimate of s.d. (for observations on log scale)
 
 ```{r}
-
+Sd.pool<-sqrt((((25-1)*(0.69^2))+(15-1)*(0.86^2)) /
+                (25+15-2))
+Sd.pool
 ```
 
-- __Answer:__
+- __Answer:__ The pooled standard deviation for this problem is 0.757
 
 (b) Do these data suggest that the new antibiotic has an effect on bacterial counts in tissue cultures? (Answer this question by providing null and alternate hypothesis, provide the pooled t-ratio and p-value, and give an interprative conclusion - show all work).
 
-```{r}
+Let $\mu_1$ represent the log-transformed mean bacterial count of a culture given antibiotics, and let $\mu_2$ represent the log-transformed mean bacterial count of a culture given distilled water.
 
+- $H_0: \mu_1 = \mu_2$
+
+- $H_A: \mu1 \neq \mu_2$
+
+```{r}
+# SE
+SE<-Sd.pool * sqrt((1/25)+(1/15))
+
+# T statistic
+Mu.diff<-2.87-3.27
+T.stat <- Mu.diff/SE # with 38 degrees of freedom
+T.stat
+
+# p-value
+# p-value
+p<-2*pt(-abs(T.stat),df=38)
+p
 ```
 
-- __Answer:__
+- __Answer:__ There is no evidence against the null hypothesis, and we conclude that the data do not provide any evidnce that the mean bacterial count was different between the bacteria treated with an antibiotic and distilled water.
 
 (c) Provide a 90% confidence interval for the ratio between the median bacterial counts for the water and antibiotic treated cultures. Interpret the interval within the context given by this problem.
 
 ```{r}
+CI.upper <- exp(((2.87-3.27) + (1.684*SE)))
+CI.lower <- exp(((2.87-3.27) - (1.684*SE)))
+CI.90<-data.frame(CI.lower,CI.upper)
+CI.90
 
 ```
 
-- __Answer:__
+- __Answer:__ We are 90% confident that the true difference in mean bacterial counts of cultures given antibiotics is 0.442 to 1.016 times that of cultures given distilled water.
 
 
 # 3.) Dosing Guinea Pigs
@@ -88,29 +129,42 @@ The following boxplots and summary statistics are of the survival times _(in day
 
 (a) Write down the null and alternate hypotheses for testing the effect of treatment on the survival times.
 
-- __Answer:__
+- __Answer:__ Let $\mu_1$ represent the mean survival time (days) of mice given a dose of tubercle bacilli, and let $\mu_2$ represent the suvival time (days) of mice that were not given a dose of tubercle bacilli. 
+
+- $H_0: \mu_1 = \mu_2$
+
+- $H_A: \mu1 \neq \mu_2$
 
 (b) Compute and report the Welch's t-ratio and degrees of freedom.
 
 ```{r}
-
+SE <- sqrt((((117.931^2)/58)+((222.179^2)/64)))
+T.ratio<- ((345.234-242.534)/SE)
+T.ratio
+DF<- SE^4 / 
+          (((117.931^4)/((58^2)*(58-1))) +
+             ((222.179^4)/((64^2)*(64-1))))
+round(DF,1)
 ```
 
 
-- __Answer:__
+- __Answer:__ The Welch's t-ratio is 3.23 with 97.8 degrees of freedom.
 
 (c) Use a t-table to provide a bound on the p-value (using nearest integer degrees of freedom).
 
-- __Answer:__
+- __Answer:__ The p-value bounds are between 0.002 and 0.001
 
 (d) Provide a scientific conclusion from the given context.
 
-- __Answer:__
+- __Answer:__ There is strong evidence that the mean number of survival days of guinea pigs in the control group is greater than the mean number of survival days in the bacilli treatment group.
 
 (e) Provide a 95% confidence interval for the difference in mean survival times and provide its interpretation.
 
 ```{r}
-
+CI.lower<- (345.234-242.534) - (1.984 * SE)
+CI.upper<- (345.234-242.534) + (1.984 * SE)
+CI<-data.frame(CI.lower,CI.upper)
+CI
 ```
 
-- __Answer:__
+- __Answer:__ We are 95% confident that the mean survival time for guinea pigs in the control group is 39.61 to 63.09 days more than guinea pigs treated with tubercle bacilli.
