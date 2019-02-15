@@ -1,0 +1,47 @@
+---
+title: "Simonson_HW4"
+author: "Marty Simonson"
+date: "February 14, 2019"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+```{r, include = F}
+packages<-function(x, repos="http://cran.r-project.org", ...){
+x<-as.character(match.call()[[2]])
+if (!require(x,character.only=TRUE)){
+install.packages(pkgs=x, repos=repos, ...)
+require(x,character.only=TRUE)
+}
+}
+
+packages(ggplot2)
+```
+# 1.) Pollen Removal
+
+Using data from _bee.csv_, test if log-transformation helps meet assumptions of pooled t-tests.
+
+a) Construct box plots and normal quantile plots on the log-transformed duration values for both types of bees. 
+```{r}
+df<-read.csv("bee.csv")
+df$LogDuration<-log(df$Duration)
+
+ggplot(data=df,aes(x=Type, y=LogDuration))+
+       geom_boxplot(fill="aliceblue")+
+       ylab("Log(Duration)")+
+       theme_classic()
+
+ggplot(data=df, aes(sample=LogDuration)) + 
+        stat_qq() + 
+        stat_qq_line() + 
+        facet_wrap(facets = vars(Type))+
+        theme_classic()
+```
+
+Does it appear that assuming normality for thelog-transformed duration variable is reasonable? Explain.
+- __Answer:__ The assumption of normality is not met after log-transformation because there is still curvature in the points along the QQ line.
+
+Are the variabilities the same for the two types of bees on the log scale? Explain.
+- __Answer:__ The size of the boxes and whiskers are not equal, therefore the assumption of normality is not met.
+
+b) Use the Welch's t-test to compare the (population) median durations. Write down the3 null and alternate hypotheses, provide the t-stastic and p-value.
