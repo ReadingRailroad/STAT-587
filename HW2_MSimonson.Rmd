@@ -254,7 +254,6 @@ Five.A
 (b) Use a pooled t-test to test whether the mean visit lengths are equal. Report the t-ratio, df, p-value, and write a conclusion within the context of the data.
 
 - Let $\mu_1$ be the mean duration of visit for Queen Bees, and $\mu_2$ be the mean duration of visit for Worker Bees. Therefore:
-
 - $H_0: \mu_1 = \mu_2$
 - $H_A: \mu1 \neq \mu_2$
 
