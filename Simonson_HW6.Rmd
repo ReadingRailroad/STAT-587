@@ -17,9 +17,18 @@ a.) Test the null hypothesis that the mean weight loss is the same in the three 
  vs.
  $H_a: H_0$ is false
  
-```{r}
+```{r, include = F}
 df<-read.csv("Data/dietstudy.csv",header=T)
 str(df)
 levels(df$Group)
+
+library(ggplot2)
+library(emmeans)
+library(rcompanion)
+
+```
+
+```{r}
+
 ```
 
