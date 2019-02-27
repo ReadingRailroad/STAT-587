@@ -1,0 +1,177 @@
+---
+title: "Lab 5"
+output: pdf_document
+---
+
+## front matter
+```{r}
+library(ggplot2)
+library(emmeans)
+library(rcompanion)
+
+df<-read.csv("Data/Doughnuts.csv",header=T)
+str(df)
+```
+
+## fit the model
+
+```{r}
+fit <- lm(Absorbed ~ OilType, data = df)
+anova(fit)
+```
+
+## marginal means and their SDs
+
+```{r}
+oil.emm<-emmeans(fit,~OilType)
+oil.emm
+```
+
+# Bonferroni Method
+adjusting p-values. 
+MUST put all the contrasts together (otherwise R won't know how many contrasts we are testing). 
+Argument "adjust" with value "bonferroni"
+
+```{r}
+cc = contrast(oil.emm, list("Regular - hyd. corn oil"=c(1,-1,0,0),
+                       "Regular - hyd. Soy oil" =c(0,0,-1,1),
+                        "Avg. corn oil - avg. soy oil"=0.5*c(1,1,-1,-1),
+                        "Avg. hyd. - avg. regular"=0.5*c(-1,1,1,-1) ),
+                        adjust="bonferroni")
+cc
+```
+
+- __Answer__ The Bonferroni-adjusted p-values for the corn oil examples show that we have no evidence to reject the null hypothesis that the fat absorbed by doughnuts differs between types of cooking oil, except for Avg. hyd. = avg. regular, where we have weak evidence to reject the null hypothesis and conclude that there may be a true difference in fat absorbed, with hydrogenated oil absorbing more fat than regular.
+
+## Bonferroni confidence intervals
+
+```{r}
+plot(cc)
+```
+
+# tukey's Adjustment
+
+```{r}
+pp<-pairs(oil.emm)
+pp
+```
+
+
+## Tukey adjusted confidence intervals
+default 95%
+
+```{r}
+confint(pp,level = 0.9)
+```
+
+```{r}
+plot(pp)
+```
+
+
+## Need clarification about this this this this this
+__To get the CLD, call cld on the emmeans object (NOT pairwise comparisons)__ 
+__specify error rate by "alpha" (default 5%) and letters by either numbers (default) or latin letters.__ CLD stands for connected letter diagram (same leters indicate p>0.5)
+
+```{r}
+cld(oil.emm, alpha = 0.05, Letters = LETTERS)
+```
+
+# Dunnett's method for testing against control
+
+```{r}
+df<-read.csv("Data/jump.csv",header=T)
+str(df)
+```
+
+## fit the model
+```{r}
+fit <- lm(bone.density ~ jump, data = df)
+anova(fit)
+```
+
+to test treatment effects, first get emmeans and see what's the order of representation in R
+
+```{r}
+jump.emm<-emmeans(fit,~jump)
+jump.emm
+```
+
+Control first, high-jump second, low-jump third (alphabetical)
+
+## dunnett's comparison:
+can get this by using the "contrast" function, but using trt.vs.ctrl instead of list. also need to specify that the first row is the control.
+
+Ho: MU_c = MU_h = MU_l
+vs.
+Ha: Ho is false
+
+```{r}
+ccd<-contrast(jump.emm,"trt.vs.ctrl",ref=1)
+ccd
+
+
+```
+
+- __answer__ we see that there is strong evidence to reject the overall null hypothesis that the true difference in means between the three groups is not equal to zero.
+
+## confidence interval
+
+```{r}
+confint(ccd)
+```
+
+# linear trend contrast
+
+read in data
+```{r}
+fert<-read.csv("Data/FertAmountYield.csv",header=T)
+fert$Fertilizer.f<-factor(fert$Fertilizer)
+str(fert)
+```
+
+## Group Means:
+
+```{r}
+aggregate(Yield ~ Fertilizer.f, data = fert, FUN = mean)
+```
+
+## Group sd's
+
+```{r}
+aggregate(Yield ~ Fertilizer.f, data = fert, FUN = sd)
+```
+
+## fit model and get anova table for overall f-test
+
+```{r}
+fit<- lm(Yield ~ Fertilizer.f, data = fert)
+anova(fit)
+```
+
+## diagnostic plots
+
+```{r}
+ggplot(fert,aes(x=Fertilizer.f,y=Yield)) + geom_boxplot()
+
+fert$Residuals = resid(fit)
+ggplot(fert,aes(sample=Residuals)) + stat_qq() 
+```
+
+## emmeans
+
+```{r}
+fert.emm <- emmeans(fit, ~ Fertilizer.f)
+fert.emm
+```
+
+## linear contrast 
+The linear trend contrast coefficient is computed as the treatment amount (continuous variable) minus the mean treatment amount across all groups/reatment levels. In this case, each of [10,20,30,40] minus 25 (100/4)
+
+therefore the linear trend contrast coefficients are: [ -15, -5, 5, 15 
+
+
+```{r}
+contrast(fert.emm, list("Linear Trend Contrast"=c(-15,-5,5,15)))
+```
+

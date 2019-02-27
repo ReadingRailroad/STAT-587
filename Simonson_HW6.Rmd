@@ -1,0 +1,25 @@
+---
+title: "Simonson_HW6"
+author: "Martin A. Simonson"
+date: "March 1, 2019"
+output: pdf_document
+---
+
+# 1.) Long Term Diet Study
+
+Data are provided in _dietstudy.csv_. The response is the kg lost per subject 24 months after the start of the diet for the 272 people who completed the study.
+
+a.) Test the null hypothesis that the mean weight loss is the same in the three diets. Write down null and alternate hypotheses using well-defined notations. Report your test-statistic (along with DFs), the p-value, and short conclusion (no statement of effeect).
+
+- Let $\mu_1$ represent the low-carbohydrate group, let $\mu_2$ represent the low-fat group, and let $\mu_3$ represent the Mediterranean group.
+
+ $H_0: \mu_1 =\mu_2=\mu_3$
+ vs.
+ $H_a: H_0$ is false
+ 
+```{r}
+df<-read.csv("Data/dietstudy.csv",header=T)
+str(df)
+levels(df$Group)
+```
+

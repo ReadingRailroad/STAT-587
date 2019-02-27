@@ -1,0 +1,107 @@
+---
+title: "STAT 587 Lab 4"
+author: "Martin Simonson"
+date: "February 20, 2019"
+output: html_document
+---
+
+```{r}
+library(ggplot2)
+library(emmeans)
+
+df<- read.csv("U:/Documents/R/STAT-587/Data/Doughnuts.csv")
+str(df)
+
+aggregate(Absorbed ~ OilType, data=df, FUN = mean)
+
+aggregate(Absorbed ~ OilType, data=df, FUN = sd)
+
+ggplot(df, aes(x=OilType,y=Absorbed))+
+  geom_boxplot(fill = "aliceblue")+
+  xlab("Oil")+
+  ylab("Absorbed fat (gm)")+
+  theme_classic()
+
+
+```
+
+obtain a one-way anova table: done in two stages. first we use "lm" to fit the model and we use "anova" to obtain the anova table. 
+
+the syntax of lm is quite similar to t.test.
+
+```{r}
+fit<-lm(Absorbed~OilType,data=df)
+summary(fit)
+
+anova(fit)
+
+```
+
+- testing various contrasts involving the oils: 
+    compute marginal means and sds
+    
+```{r}
+oilemm <- emmeans(fit,~OilType)
+oilemm
+```
+
+First contrast:
+"test for difference between regular corn oil and hydrogenated corn oil" 
+contrast coeffs are 1, -1, 0, and 0. We used the "contrast" function from emmeans as follows:
+
+```{r}
+contrast(oilemm,list("Regular - hyd. corn oil" = c(1, -1, 0,0)))
+```
+
+test for hydrogenated soy oil minus regular soy oil
+
+```{r}
+contrast(oilemm,list("hyd. soy oil - regular soy oil" = c(0,0,1,-1)))
+```
+
+test between soy oils and corn oils (corn - soy)
+
+```{r}
+contrast(oilemm, list("Corn oil - Soy Oil" = c(.5,.5,-.5,-.5)))
+```
+
+test for effect of hydrogenation
+
+```{r}
+contrast(oilemm,list("Regular - Hydrogenized" = c(.5,-.5,-.5,.5)))
+```
+
+Or list them all together
+
+```{r}
+contrast(oilemm,list("problem3"=c(1,-1,0,0),
+                     "problem4"=c(0,0,-1,1),
+                     "problem5"=c(0.5,0.5,-0.5,-0.5),
+                     "problem6"=c(0.5,-0.5,-0.5,0.5)))
+```
+
+
+## Interpretations
+ - problem 3: doughnuts prepared in hydrogenated corn oil absorbed more grams of fat than regular corn oil. 
+- problem 4: doughnuts prepared in hydrogenated soy oil absorbed more grams of fat than those prepared in regular soy oil
+- problem 5; doughnuts prepared in either corn oil absorbed more grams of fat than those prepared in soy oil.
+- Problem 6: doughnuts prepared in either hydrogenated oil have more grams of fat absorbed than those prepared in either regular oil.
+ 
+ 
+ 
+ 
+ 
+ 
+```{r}
+warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
+warp.emm <- emmeans(warp.lm, ~ tension | wool)
+contrast(warp.emm, "poly")    # inherits 'by = "wool"' from warp.emm
+pairs(warp.emm)               # ditto
+contrast(warp.emm, "eff", by = NULL)  # contrasts of the 6 factor combs
+pairs(warp.emm, simple = "wool") # same as pairs(warp.emm, by = "tension")
+
+# Do all "simple" comparisons, combined into one family
+pairs(warp.emm, simple = "each", combine = TRUE)
+```
+ 
+ 
