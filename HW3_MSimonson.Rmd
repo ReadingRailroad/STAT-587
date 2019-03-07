@@ -39,7 +39,7 @@ Let $\mu_1$ represent the log-transformed mean breakdown time ($\ln(minutes)$) o
 
 - $H_A: \mu1 \neq \mu_2$
 
-```{r}
+```{r,}
 # difference between two means
 Mu.diff<-5.699-5.620 # minutes
 

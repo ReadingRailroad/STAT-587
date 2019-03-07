@@ -1,0 +1,55 @@
+---
+title: "Simonson_HW7"
+author: "Martin Simonson"
+date: "March 5, 2019"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+
+
+# 1.) Fertilized Lettuce
+
+The data in _lettuce.csv_ come from a randomized experiment on the response of lettuce to additions of nitrogen fertilizer. The experiment was conducted on irrigated plots in Arizona. Plots were randomly assigned to one of four fertilizer levels: 0, 50, 100 or 150 lb. N /acre. The response is the number of lettuce heads harvested from each plot. There were four replicates of each treatment. Don’t worry about assumptions and analyze the yield data without using any transformation. 
+
+a) Test the null hypothesis of no difference among treatments. Report the test statistic and p-value.
+
+```{r}
+lettuce<-read.csv("Data/lettuce.csv")
+str(lettuce)
+lettuce$N<-as.factor(lettuce$N)
+model<-lm(yield~N, data = lettuce)
+anova(model)
+```
+
+- __Answer:__ The F-statistic is 4.206, with a p-value of 0.02998 that has 3 and 12 degrees of freedom. Therefore, we have weak evidence to reject the null hypothesis that there is no difference in yield among treatments.
+
+b) In part (a) above, you have probably rejected the null hypothesis that the means for all four treatments are equal. However, the only meaningful way to decide which of the differences are significant is to either construct a confidence interval for each difference in means, or to conduct tests of hypotheses for every pair of group means. Using the Tukey-Kramer correction with a familywise confidence level of 95%, determine which treatment means are significantly different. Provide the adjusted p-values and a connected letter diagram.
+
+```{r}
+
+```
+
+- __Answer:__
+
+c) Based only on your work above (i.e. no additional work required), do you believe these data provide evidence that adding more N fertilizer increases lettuce yield? Briefly explain why or why not?
+
+- __Answer:__
+
+d) Construct a linear trend contrast to test the null hypothesis of no linear trend in yield due to additional N fertilizer. Report the test statistic, p-value and conclusion for this test.
+
+```{r}
+
+```
+
+- __Answer:__
+
+# 2.) Rat Diets
+
+For an evaluation of diets used for routine maintenance of laboratory rats, researchers used a completely randomized design (same number of units randomly assigned to each treatment) to allocate weanling male rats to five different diets (20 rats total). After four weeks, specimens of blood were collected and various biochemical variables were measured. We consider the results for blood urea concentration (mg/dl). The data is given in _RatDiet.csv_. 
+
+Suppose diet A is a control and the researchers were only interested in the performance of Diet A compared to the other diets. Construct a family of confidence intervals for the pairwise differences between Diet A and the other four diets (i.e. there are only 4 confidence intervals to construct). Use a method for determining significance that results in a familywise confidence level of at least 95%, for just this set of pairwise differences. Based on these intervals, which diets produce significantly different mean blood urea concentrations from Diet A?
+
+
+
+
