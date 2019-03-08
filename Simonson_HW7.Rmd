@@ -1,7 +1,7 @@
 ---
 title: "Simonson_HW7"
 author: "Martin Simonson"
-date: "March 5, 2019"
+date: "March 8, 2019"
 output: pdf_document
 editor_options: 
   chunk_output_type: console
@@ -12,11 +12,13 @@ editor_options:
 
 The data in _lettuce.csv_ come from a randomized experiment on the response of lettuce to additions of nitrogen fertilizer. The experiment was conducted on irrigated plots in Arizona. Plots were randomly assigned to one of four fertilizer levels: 0, 50, 100 or 150 lb. N /acre. The response is the number of lettuce heads harvested from each plot. There were four replicates of each treatment. Don’t worry about assumptions and analyze the yield data without using any transformation. 
 
-a) Test the null hypothesis of no difference among treatments. Report the test statistic and p-value.
+## a) 
 
-```{r}
+Test the null hypothesis of no difference among treatments. Report the test statistic and p-value.
+
+```{r, echo = F}
+rm(list=ls())
 lettuce<-read.csv("Data/lettuce.csv")
-str(lettuce)
 lettuce$N<-as.factor(lettuce$N)
 model<-lm(yield~N, data = lettuce)
 anova(model)
@@ -24,25 +26,35 @@ anova(model)
 
 - __Answer:__ The F-statistic is 4.206, with a p-value of 0.02998 that has 3 and 12 degrees of freedom. Therefore, we have weak evidence to reject the null hypothesis that there is no difference in yield among treatments.
 
-b) In part (a) above, you have probably rejected the null hypothesis that the means for all four treatments are equal. However, the only meaningful way to decide which of the differences are significant is to either construct a confidence interval for each difference in means, or to conduct tests of hypotheses for every pair of group means. Using the Tukey-Kramer correction with a familywise confidence level of 95%, determine which treatment means are significantly different. Provide the adjusted p-values and a connected letter diagram.
+## b) 
 
-```{r}
+In part (a) above, you have probably rejected the null hypothesis that the means for all four treatments are equal. However, the only meaningful way to decide which of the differences are significant is to either construct a confidence interval for each difference in means, or to conduct tests of hypotheses for every pair of group means. Using the Tukey-Kramer correction with a familywise confidence level of 95%, determine which treatment means are significantly different. Provide the adjusted p-values and a connected letter diagram.
 
+```{r, echo = F}
+require("emmeans")
+lettuce.emm <- emmeans(model,~N)
+lettuce.emm
+pears <- pairs(lettuce.emm)
+pears
+cld(lettuce.emm, alpha = 0.05, Letters = LETTERS)
+plot(pears)
 ```
 
-- __Answer:__
+- __Answer:__ The only treatment means with a difference were 0 and 150 pounds of nitrogen per acre. The adjusted p-value is 0.0215, indicating some evidence to reject the null hypothesis that the mean number of lettuce heads harvested between 0 additional nitrogen and 150 lbs of nitrogen per acre.
 
-c) Based only on your work above (i.e. no additional work required), do you believe these data provide evidence that adding more N fertilizer increases lettuce yield? Briefly explain why or why not?
+##c) 
 
-- __Answer:__
+Based only on your work above (i.e. no additional work required), do you believe these data provide evidence that adding more N fertilizer increases lettuce yield? Briefly explain why or why not?
 
-d) Construct a linear trend contrast to test the null hypothesis of no linear trend in yield due to additional N fertilizer. Report the test statistic, p-value and conclusion for this test.
+- __Answer:__ I think the scale of yield is important here. Based on the pairwise 95% confidence interval for the difference in mean response (lettuce heads), there is some evidence for a difference between 0 lbs. of nitrogen added per acre and 150 lbs. of nitrogen per acre. The cost of additional nitrogen fertilizer may outweigh the increased yield of lettuce.
+
+##d) 
+
+Construct a linear trend contrast to test the null hypothesis of no linear trend in yield due to additional N fertilizer. Report the test statistic, p-value and conclusion for this test.
 
 ```{r}
-
+contrast(lettuce.emm, list("Linter Trend Contrast" = c(-75,-25,25,75)))
 ```
-
-- __Answer:__
 
 # 2.) Rat Diets
 
@@ -50,6 +62,247 @@ For an evaluation of diets used for routine maintenance of laboratory rats, rese
 
 Suppose diet A is a control and the researchers were only interested in the performance of Diet A compared to the other diets. Construct a family of confidence intervals for the pairwise differences between Diet A and the other four diets (i.e. there are only 4 confidence intervals to construct). Use a method for determining significance that results in a familywise confidence level of at least 95%, for just this set of pairwise differences. Based on these intervals, which diets produce significantly different mean blood urea concentrations from Diet A?
 
+```{r, include = F}
+rats<-read.csv("Data/RatDiet.csv")
+str(rats) # mg/dl
+model<-lm(urea~diet, data = rats)
+anova(model)
+rats.emm <- emmeans(model,~diet)
+rats.emm
+pears <- pairs(rats.emm)
+pears
+cld(rats.emm, alpha = 0.05, Letters = LETTERS)
+plot(pears)
+```
 
+```{r}
+cc<-contrast(rats.emm, list("A-B" = c(1,-1,0,0,0),
+                           "A-c" = c(1,0,-1,0,0),
+                           "A-D" = c(1,0,0,-1,0),
+                           "A-E" = c(1,0,0,0,-1)),
+         adjust = "bonferroni")
+
+cc
+confint(cc,level=0.95)
+```
+
+- __Answer:__ Diet D is the only treatment with evidence of a different in urea concentration wehn compared to diet A. The 95% bonferroni adjusted confidence interval for the difference in mean urea concentration between the treatments does not contain zero.
+
+# 3.) Rat Diet, Revisited
+
+Amphetamine is a drug that suppresses appetite. In a study of this effect, a pharmacologist randomly allocated 24 rats to three treatment groups to receive an injection of amphetamine at one of two dosage levels (2.5 mg/kg and 5 mg/kg), or an injection of saline solution. She measured the amount of food consumed by each animal in the 3-hour period following the injection. The results (gm of food consumed per kg body weight) are available in _amphetamine.csv_. 
+
+## a)
+
+Is there evidence that the amount of food consumed by animals is different among the three groups? Provide a test statistic, approximate p-value, and a conclusion, in context.
+
+
+```{r, include = F}
+rats2<-read.csv("Data/amphetamine.csv")
+str(rats2) # grams of food consumed per kg body weight
+rats2$Treatment<-as.factor(rats2$Treatment)
+model<-lm(Consumed~Treatment, data = rats2)
+anova(model)
+rats2.emm <- emmeans(model,~Treatment)
+rats2.emm
+pears <- pairs(rats2.emm)
+pears
+cld(rats2.emm, alpha = 0.05, Letters = LETTERS)
+plot(pears)
+```
+```{r}
+anova(model)
+```
+
+- __Answer:__ The F-statistic is is 30.082 and a p-value less than 0.0001 with 2 and 21 degrees of freedom. There is strong evidence that the mean amount of food consumed by animals is not equal between treatments.
+
+## b)
+
+Test the claim that mean food consumption for the group receiving the saline solution is larger than the average of the mean food consumption for the two groups receiving amphetamine dosages. [Use a two-sided alternative hypothesis even if the claim is one-sided]
+
+```{r}
+rats2.cc<-contrast(rats2.emm,list("Saline-drug"=c(1,-.5,-.5)))
+rats2.cc
+```
+
+## c)
+
+Sketch a plot of the estimated mean food consumption for each group versus amphetamine dosage levels (0, 2.5, 5). Describe in a few words the relationship between the means (if any) you observe in this plot.
+
+```{r, echo=F}
+require(ggplot2)
+ggplot(rats2,aes(x=Treatment,y=Consumed)) +
+  geom_boxplot(fill = "cornflowerblue")+
+  theme_classic()
+```
+
+- __Answer:__ The plot of the means show that the mean consumption rate decreases as amphetamine dosage increases.
+
+## d)
+
+Use a linear trend contrast to test the null hypothesis of no linear trend in food consumption. Report the test statistic and p-value and a conclusion within the context of the data.
+
+```{r}
+rats2.cc2<-contrast(rats2.emm,list("Linear Trend Contrast"=c(23.18,-1.31,-21.86)))
+rats2.cc2
+```
+
+- __Answer:__ The t-ratio is 7.762 with 21 degrees of freedom. The p-value less than 0.0001 suggests strong evidence against the null hypothesis and there is a linear decrease in food consumption when amphetamine dosage increases.
+
+# 4) Soybean Yields
+
+An experiment was conducted to compare soybean yields of plots treated with one of three herbicides (A, B, or C) or a control (D). A total of 32 soybean plots were used in the experiment; 8 plots were randomly assigned to each of the four treatments. Statistics summarizing the yields (in bushels per acre) are provided in the following table.
+
+Treatment      | Number of Plots  | Mean Plot Yield  | Variance of Yield ($SD^2$)
+-------------- | ---------------  | ---------------- | ---------------------------
+A              | 8                | 60.3             | 9.8
+B              | 8                | 62.1             | 10.1  
+C              | 8                | 57.6             | 9.2
+D              | 8                | 52.0             | 9.7
+
+Test the following Contrasts
+
+## a) Herbicide A on Soybead Yield (A-D)
+
+Let $\mu_1$ and $\mu_4$ denote the mean yield of soybeans treated with herbicide A and  control D, respectively. Therefore,
+
+- $H_0: \mu_1 = \mu_4$ vs. $H_A: \mu_1 \neq \mu_4$
+
+_Mean Squared Error (MSE), Error, T-statistic, p-value, and 95% Confidence Interval:_
+
+- $MSE = \frac{(n_1 - 1)S_1 + (n_2 - 1)S_2 + (n_3-1)S_3 + (n_4-1)S_4}{(n_1-1)+(n_2-1)+(n_3-1)+(n_4-1)}$
+
+- $S_p = \sqrt{MSE}$ 
+
+```{r}
+MSE<- ((7*9.8)+(7*10.1)+(7*9.2)+(7*9.7)) /
+      (7*4)
+MSE # 9.7 bushels/acre
+
+Sp<-sqrt(MSE)
+Sp # 3.114482 bushels / acre
+
+
+```
+
+- $\gamma_1 = \mu_1 + 0*\mu_2 + 0*\mu_3 -\mu_4$
+
+```{r}
+gamma.1<-60.3-52
+```
+
+- $SE = S_p * \sqrt{\frac{coeff_1^2}{n} + \frac{coeff_2^2}{n} + \frac{coeff_3^2}{n} + \frac{coeff_4^2}{n}}$
+
+```{r}
+SE<-Sp * sqrt(2/8)
+SE
+```
+
+- $T = \frac{\gamma_1}{SE}$
+
+```{r}
+T.stat<-gamma.1/SE
+T.stat
+
+p.value <- 1-pt(T.stat,28)
+p.value
+```
+
+- 95% CI = $\gamma_1 \pm t^* * SE$
+
+```{r}
+gamma.1-(2.048*SE)
+gamma.1+(2.048*SE)
+```
+
+- __Answer:__ With a t-statistic of 5.33 and 28 denominator degrees of freedom, we have an observed p-value less than 0.0001 we have strong evidence to reject the null hypothesis that herbicide A and control D have no difference in mean soybean yields. We are 95% confident that the mean yeild of soybeans will increase by 5.11 5o 11.49 bushels per acre with herbicide A when compared to the control D.
+
+
+
+## b) Herbicide B vs. Herbicide C
+
+Let $\mu_2$ and $\mu_3$ denote the mean yield of soybean plots treated with herbicide B and herbicide C, respectively. Therefore, we want to test:
+
+- $H_0: \mu_2 = \mu_3$ vs. $H_A: \mu_2 \neq \mu_3$
+
+_Gamma, t-test, p-value, and 95% confidence interval:_
+
+- $\gamma_2 = 0*\mu_1 + \mu_2 - \mu_3 + 0*\mu_4$
+
+```{r}
+gamma.2<-(62.1-57.6) #4.5
+```
+
+- $T = \frac{\gamma_1}{SE}$
+
+```{r}
+T.stat<-gamma.2/SE
+T.stat
+
+p.value <- 1-pt(T.stat,28)
+p.value
+```
+
+- 95% CI = $\gamma_2 \pm t^* * SE$
+
+```{r}
+gamma.2-(2.048*SE)
+gamma.2+(2.048*SE)
+```
+
+- __Answer:__ We have an observed t-statistic of 2.89 with 28 denominator degrees of freedom and  p-value of 0.00368, which suggests strong evidence against the null hypothesis that there is no true difference in mean soybean yields between herbicide B and herbicide C. We are 95% confidenc that the mean soybean ield for herbicide B is 1.31 to 7.69 bushels per acre more than when herbicide C is used.
+
+## c) Average effect of herbicides on soybead yield: (A+B+C)/3-D
+
+Let $\mu_5$ denote the mean yield of soybean plots treated with the average combined effects of all three fertilizers A-C, and let $\mu_4$ denote the mean yield of soybean plots without treatment, D. Therefore, we want to test:
+
+- $H_0: \mu_5 = \mu_4$ vs. $H_A: \mu_5 \neq \mu_4$
+
+_Gamma, SE, T-statistic, P-value, and 95% CI:_
+
+- $\gamma_3 = (1/3)*\mu_1 + (1/3)*\mu_2 + (1/3)*\mu_3 - \mu_4$
+
+```{r}
+gamma.3<-(((1/3)*60.3)+
+            ((1/3)*62.1)+
+            ((1/3)*57.6)-
+            52)
+# 8
+```
+
+- $SE = S_p * \sqrt{\frac{coeff_1^2}{n} + \frac{coeff_2^2}{n} + \frac{coeff_3^2}{n} + \frac{coeff_4^2}{n}}$
+
+```{r}
+coeff<-(1/3)^2
+SE<-Sp * sqrt((coeff/8)+(coeff/8)+(coeff/8)+(1/8))
+SE
+```
+
+- $T = \frac{\gamma_1}{SE}$
+
+```{r}
+T.stat<-gamma.3/SE
+T.stat
+
+p.value <- 1-pt(T.stat,28)
+p.value
+```
+
+- 95% CI = $\gamma_2 \pm t^* * SE$
+
+```{r}
+gamma.3-(2.048*SE)
+gamma.3+(2.048*SE)
+```
+
+- __Answer:__ We observed a t-statistic of 6.29187 with 28 denominator degrees of freedom, and a p-value less than 0.0001, suggesting very strong evidence to reject the null hypothesis and conclude that that the mean soybean yield for all herbicide treatments is not equal to the control treatment. We are 95% confident that the combined use of herbicides A, B, and C will increase from mean yield by between 5.396 and 10.6 bushels per acre compared to no herbicide treatment.
+
+# 5.) Root Metabolism
+
+A plant physiologist investigated the effect of flooding on root metabolism in two tree species: flood-tolerant river birch and the intolerant European birch. Four seedlings of each species were flooded for one day and four were used as controls. The concentration of adenosine triphosphate (ATP) in the roots of each plant was measured. The data (nmol ATP per mg tissue) are shown in the table below, and are available in _ATP.csv_.
+
+## a)
+
+Test the null hypothesis that the ATP concentration for the four groups is the same. Provide a test statistic, p-value, and a conclusion.
 
 
