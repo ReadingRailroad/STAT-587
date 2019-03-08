@@ -305,4 +305,30 @@ A plant physiologist investigated the effect of flooding on root metabolism in t
 
 Test the null hypothesis that the ATP concentration for the four groups is the same. Provide a test statistic, p-value, and a conclusion.
 
+## b) 
+
+Show the contrasts to measure each of the following and test the contrasts. (remember to define the $\mu$-notations)
+
+### i) The effect of flooding in European Birch
+
+- __Answer:__
+
+### i) Difference between river birch and European birch with repect to flood effect.
+
+- __Answer:__
+
+### i) Comparing the average of the flooded and control river birch ATP to the average of the flooded and control european birch mean ATP levels.
+
+- __Answer:__
+
+## c)
+
+Obtain Bonferroni adjusted confidence intervals for the above contrasts, with a familywise confidence of 95%.
+
+__Answer:__
+
+# 6.) Beetles, Revisited
+
+[Beetles problem from HW6] Test the hypothesis that the means for yellow, blue and green are the same. That is, test the hypothesis that $\mu_{yellow} = \mu_{blue} = \mu_{green}$.
+
 
