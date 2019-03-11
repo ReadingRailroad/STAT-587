@@ -313,11 +313,11 @@ Show the contrasts to measure each of the following and test the contrasts. (rem
 
 - __Answer:__
 
-### i) Difference between river birch and European birch with repect to flood effect.
+### ii) Difference between river birch and European birch with repect to flood effect.
 
 - __Answer:__
 
-### i) Comparing the average of the flooded and control river birch ATP to the average of the flooded and control european birch mean ATP levels.
+### iii) Comparing the average of the flooded and control river birch ATP to the average of the flooded and control european birch mean ATP levels.
 
 - __Answer:__
 
