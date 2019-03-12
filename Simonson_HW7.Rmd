@@ -53,7 +53,7 @@ Based only on your work above (i.e. no additional work required), do you believe
 Construct a linear trend contrast to test the null hypothesis of no linear trend in yield due to additional N fertilizer. Report the test statistic, p-value and conclusion for this test.
 
 ```{r}
-contrast(lettuce.emm, list("Linter Trend Contrast" = c(-75,-25,25,75)))
+contrast(lettuce.emm, list("Linear Trend Contrast" = c(-75,-25,25,75)))
 ```
 
 # 2.) Rat Diets
@@ -147,7 +147,7 @@ rats2.cc2<-contrast(rats2.emm,list("Linear Trend Contrast"=c(23.18,-1.31,-21.86)
 rats2.cc2
 ```
 
-- __Answer:__ The t-ratio is 7.762 with 21 degrees of freedom. The p-value less than 0.0001 suggests strong evidence against the null hypothesis and there is a linear decrease in food consumption when amphetamine dosage increases.
+- __Answer:__ The t-ratio is 7.762 with 21 degrees of freedom. The p-value less than 0.0001 suggests strong evidence against the null hypothesis and data suggest there is a linear decrease in food consumption when amphetamine dosage increases.
 
 # 4) Soybean Yields
 
@@ -215,7 +215,7 @@ gamma.1-(2.048*SE)
 gamma.1+(2.048*SE)
 ```
 
-- __Answer:__ With a t-statistic of 5.33 and 28 denominator degrees of freedom, we have an observed p-value less than 0.0001 we have strong evidence to reject the null hypothesis that herbicide A and control D have no difference in mean soybean yields. We are 95% confident that the mean yeild of soybeans will increase by 5.11 5o 11.49 bushels per acre with herbicide A when compared to the control D.
+- __Answer:__ With a t-statistic of 5.33 and 28 denominator degrees of freedom, we have an observed p-value less than 0.0001. Therefore, we have strong evidence to reject the null hypothesis that herbicide A and control D have no difference in mean soybean yields. We are 95% confident that the mean yeild of soybeans will increase by 5.11 5o 11.49 bushels per acre with herbicide A when compared to the control D.
 
 
 
@@ -305,30 +305,106 @@ A plant physiologist investigated the effect of flooding on root metabolism in t
 
 Test the null hypothesis that the ATP concentration for the four groups is the same. Provide a test statistic, p-value, and a conclusion.
 
+```{r, include = F}
+atp<-read.csv("Data/atp.csv")
+str(atp) # grams of food consumed per kg body weight
+levels(atp$Group)
+model<-lm(ATP~Group, data = atp)
+anova(model)
+atp.emm <- emmeans(model,~Group)
+atp.emm
+pears <- pairs(atp.emm)
+pears
+cld(atp.emm, alpha = 0.05, Letters = LETTERS)
+plot(pears)
+```
+
+- We are testing $H_0:$ All group means are equal vs. $H_A:$ All group means are not equal.
+
+```{r}
+anova(model)
+```
+
+- __Answer:__ With an f-statistic of 38.391 and a p-value less than 0.0001 there is very strong evidence that the mean ATP concentrations are different between groups.
+
 ## b) 
 
 Show the contrasts to measure each of the following and test the contrasts. (remember to define the $\mu$-notations)
 
+Let $\mu_1$ denote the mean nmol ATP per mg of root tissue in European Birch in a reference site and let $\mu_2$ denote the mean nmol ATP per mg of root tissue in European Birch trees in a flood setting. Further, let $\mu_3$ denote the mean nmol ATP per mg of root tissue in River Birch trees in a reference setting and let $\mu_4$ denote the mean nmol ATP per mg root tissue in River Birch trees in a flooded site.
+
+```{r}
+atp.emm
+```
+
+
 ### i) The effect of flooding in European Birch
 
-- __Answer:__
+- $H_0: \mu_1 = \mu_2$ vs. $H_A: \mu_1 \neq \mu_2$
 
-### i) Difference between river birch and European birch with repect to flood effect.
+```{r}
+contrast(atp.emm, list("European Control - European Flood"=c(-1,1,0,0)))
+```
 
-- __Answer:__
+- __Answer:__ With a t-ratio of -6.455 with 12 degrees of freedom and a p-value less than 0.0001 we have very strong evidence to reject the null hypothesis and conclude there is a difference in mean nmol ATP per mg root tissue between Eropean Birch trees in a control and flood site. 
 
-### i) Comparing the average of the flooded and control river birch ATP to the average of the flooded and control european birch mean ATP levels.
+### ii) Difference between river birch and European birch with repect to flood effect.
 
-- __Answer:__
+- $H_0: \mu_2 = \mu_4$ vs. $H_A: \mu_2 \neq \mu_4$
+
+```{r}
+contrast(atp.emm, list("European Flood - River Flood" = c(0,1,0,-1)))
+```
+
+- __Answer:__ With a t-ratio of -6.384 on 12 degrees of freedom and a p-value of less than 0.0001, we observe very strong evidence against the null hypothesis and can conclude that the mean nmol ATP per mg root tissue is not equal between species.
+
+### iii) Comparing the average of the flooded and control river birch ATP to the average of the flooded and control european birch mean ATP levels.
+
+```{r}
+contrast(atp.emm, list("Mean European Birch - Mean River Birch"=c(0.5,0.5,-0.5,-0.5)))
+```
+
+- __Answer:__ With a t-ratio of -7.456 on 12 degrees of freedom and a p-value less than 0.0001 we have very strong evidence to reject the null hypothesis and conclude there is a difference in the mean nmol ATP per mg root tissue bewteen flooded sites and reference sites.
 
 ## c)
 
 Obtain Bonferroni adjusted confidence intervals for the above contrasts, with a familywise confidence of 95%.
 
-__Answer:__
+```{r,echo=F}
+atp.cc<-contrast(atp.emm,list("European Control - European Flood"=c(-1,1,0,0),
+                              "European Flood - River Flood" = c(0,1,0,-1),
+                              "Mean European Birch - Mean River Birch"=c(0.5,0.5,-0.5,-0.5)),
+                 adjust = "bonferroni")
+atp.cc
+confint(atp.cc,level=0.95)
+```
 
 # 6.) Beetles, Revisited
 
 [Beetles problem from HW6] Test the hypothesis that the means for yellow, blue and green are the same. That is, test the hypothesis that $\mu_{yellow} = \mu_{blue} = \mu_{green}$.
 
+```{r, include = F}
+beetles<-read.csv("Data/beetles.csv",header=T)
+str(beetles)
+levels(beetles$Color)
+model<-lm(NumBeetles~Color, data = beetles)
+anova(model)
+beetles.emm <- emmeans(model,~Color)
+beetles.emm
+pears <- pairs(beetles.emm)
+pears
+cld(beetles.emm, alpha = 0.05, Letters = LETTERS)
+plot(pears)
+```
 
+```{r}
+
+cld(beetles.emm, alpha = 0.05, Letters = LETTERS)
+
+beetles.cc<-contrast(beetles.emm, list(c(1,0,-1,0),
+                                       c(1,0,0,-1),
+                                       c(0,0,1,-1)))
+test(beetles.cc,joint=T)
+```
+
+- __Answer:__ The F-statistic was 61.065 on 2 and 35 degrees of freedom, with a p-value less than 0.0001. Therefore, we have strong evidence to reject the null hypothesis and conclude there is a difference in mean number of beetles between green, blue, and yellow board colors. In addition, the connected letter diagram indicates different letters for each of those colors, which is more evidence for a difference in a familywise comparison.
