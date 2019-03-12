@@ -9,7 +9,7 @@ editor_options:
 
 # 1.) Rowan Adaptation
 
-The rowan ( _Sorbus aucuparia_) is a tree that grows in a wide range of altitudes. To study how the tree adapts toits varying habitats, researchers collected twigs with attached buds from 12 trees growing at various altitudes in North Angus, Scotland.  The buds were brought back to the laboratory and measurements were made on the dark respiration rate.  The average altitude from the origin for the 12 trees is 433.33 meters. The average respiration  rate  computed  for  the  12  trees  is  0.21 $\mu l$ oxygen  per hour per  mg  dry weight  of  tissue. The standard deviation of the altitude for the 12 trees is 214.62 meters and for respiration rate is 0.077  $\mu l/(hour*mg^{-1})$ mg.The correlation between altitude from the origin and dark respiration rate was 0.887.
+The rowan ( _Sorbus aucuparia_) is a tree that grows in a wide range of altitudes. To study how the tree adapts toits varying habitats, researchers collected twigs with attached buds from 12 trees growing at various altitudes in North Angus, Scotland.  The buds were brought back to the laboratory and measurements were made on the dark respiration rate.  The average altitude from the origin for the 12 trees is 433.33 meters. The average respiration  rate  computed  for  the  12  trees  is  0.21 $\mu l$ oxygen  per hour per  mg  dry weight  of  tissue. The standard deviation of the altitude for the 12 trees is 214.62 meters and for respiration rate is 0.077  $\mu l/(hour*mg^{-1})$ mg.The correlation between altitude from the origin and dark respiration rate($r_{xy}$) was 0.887.
 
 ## (a)
 
@@ -31,7 +31,11 @@ where $r_{xy}$ is the correlation coefficient of the two variables; the sample s
 
 ```{r}
 r.xy<-0.887
+S.y<-0.077
+S.x<-214.62
 
+beta.1<-r.xy*(S.y/S.x)
+beta.1
 ```
 
 
@@ -43,11 +47,114 @@ The formula for $\beta_0$ is given by:
 \]
 
 ```{r}
+y.bar<-0.21
+x.bar<-433.33
 
+beta.0<-y.bar-(beta.1*x.bar)
+beta.0
 ```
 
+Therefore, the equation of the least squares regression line for the respiration rate in response to tree altitude is:
 
+\[
+y = 0.07210043 + 0.0003182322*x
+\]
 
+## (c)
+
+Compute a 95% confidence interval for the slope of the regression line.
+
+- __Answer:__ We want to test $H_0: \beta_1 = 0$ vs. $H_A: \beta_1 \neq 0$. First we need to compute the root mean squared error (RMSE, $\hat{\sigma}$):
+
+\[
+RMSE = S_y * \sqrt{1-r{_{xy}^2}}
+\]
+
+```{r}
+rmse<-S.y * sqrt(1-(r.xy^2))
+rmse
+```
+
+Then, we compute the SE of $\beta_1$ with the following formula:
+
+\[
+SE(\hat{\beta_1}) = \frac{\hat{\sigma}}{\sqrt{(n-1)*S{_x^2}}}
+\]
+
+```{r}
+se.beta.1<-rmse/sqrt((12-1)*(S.x^2))
+se.beta.1
+```
+
+And compute the T-ratio
+
+\[
+T=\frac{\hat{\beta_1}}{SE(\hat{\beta_1})}
+\]
+
+```{r}
+t.statistic<-beta.1/se.beta.1
+t.statistic
+```
+
+We observe a t-statistic of 6.370812 with 10 degrees of freedom. From the t-table we find a twp-tailed p-value of less than 0.001, providing strong evidence to reject the null hypothesis. To complete the 95% confidnce interval, we use the formula:
+
+\[
+95\%CI = \hat{\beta_1} \pm t^* * SE(\hat{\beta_1})
+\]
+
+From the t-table, using 10 degrees of freedom, we find the $t^*$ from the t-table is 2.228. 
+
+```{r}
+lower<-beta.1-(2.228*se.beta.1)
+upper<-beta.1+(2.228*se.beta.1)
+CI<-data.frame(lower,upper)
+CI
+```
+
+We are 95% confident that a 1 meter rise in altitude is accompanied by between 0.0002069401 and 0.0004295244 increase in respiration, measured as $\mu l/(hour*mg^{-1})$. The fact that the confdiecnet inverval for $\hat{\beta_1}$ does not include zero, along with the p-value above, provide very strong evidence that the slope of the the least squares regression line does not equal 0.
+
+## (d) 
+
+Estimate the mean respiration rate for a tree growing at 300 meters above origin.
+
+```{r}
+x<- 300
+mu.300<- 0.07210043 + 0.0003182322*x
+mu.300
+```
+
+- __Answer:__ We would expect the respiration rate for a tree growing at an elevation of 300 meters to be 0.1675701 $\mu l/(hour*mg^{-1})$.
+
+## (e)
+
+If the value of the new explanatory variable lies within one s.d. of the mean of the values of explanatory variables, the prediction is called interpolation, otherwise it is called extrapolation. Do you think your estimate in part (d) involved interpolation or extrapolation? Explain.
+
+```{r}
+x.range<-c((433.33 - 214.62),(433.33 + 214.62))
+x.range
+```
+
+- __Answer:__ The value provided in part (d), 300 meters, is within one standard deviation of the mean elevation (218.71 meters to 647.95 meters), therefore, this estimate involved interpolation.
+
+## (f)
+
+Compute the s.e. of the mean respiration rate at 300 meters elevation.
+
+- __Answer:__ Let $\hat{\mu}_{300}$ represent the mean predicted respiration rate at 300 meters elevation, as calculated by $\hat{\mu}_{300} = \hat{\beta_0} + \hat{\beta_1}*300$. We want to compute the standard error for $\hat{\mu}_{300}$:
+
+\[
+SE(\hat{\mu}_{300}) = \hat{\sigma} * \sqrt{\frac{1}{n} + \frac{(x-\bar{x})^2}{(n-1)*S{_x^2}}}
+\]
+
+Where $x$ is equal to 300, $\bar{x}$ is equal to 433.33, $n$ is equal to 12, and $S_x$ is equal to 214.62. 
+
+```{r}
+se.mu.300<-rmse*sqrt((1/12)+(((300-433.33)^2) / ((12-1)*(S.x^2))))
+se.mu.300
+```
+
+The standard error of the mean respiration rate at 300 meters elevation is 0.01223561 $\mu l/(hour*mg^{-1})$.
 
 # 2.) Old Faithful
 
@@ -72,7 +179,7 @@ summary(model)
 Calculate and report a 95% confidence interval for the slope
 
 ```{r}
-confint(model$coefficients[],level=0.95)
+confint(model,level=0.95)
 ```
 
 - __Answer:__ We are 95% confident that the mean increase in chirping rate lies between 9.499 and 11.983 minutes per minute of eruption duration.
@@ -116,7 +223,9 @@ summary(model)
 
 - __Answer:__ Let $Y$ be the percent of fruit attacked and let $X$ be the size of a crop. The equation for the estimated linear model of $Y$ in response to $X$ is:
 
-$Y=62.96802 + (-0.16913 * X)$
+\[
+y = 62.96802 + (-0.16913 * x)
+\]
 
 ## (b)
 
@@ -182,7 +291,7 @@ perc2$fit
 
 # 4.) Butterfly Diversity
 
-The data in _diversity.csv_ are decribed in Chapter 8, problem 22 (both editions). Ecological theory suggests that the appropriate regression model is diversity = $\beta_0 + \beta_1 * log(area)$. Use this model for all questions below. The data come from ane xperimental study where the area of the patch was randomly assigned to plots of land.
+The data in _diversity.csv_ are decribed in Chapter 8, problem 22 (both editions). Ecological theory suggests that the appropriate regression model is diversity = $\hat{\beta_0} + \hat{\beta_1} * log(area)$. Use this model for all questions below. The data come from an experimental study where the area of the patch was randomly assigned to plots of land.
 
 ## (a) 
 
@@ -195,4 +304,93 @@ model<-lm(species~area,data=df)
 summary(model)
 ```
 
-- 
+- __Answer:__ The estimate for $\hat{\beta_0}$ is 55.76094; the estimate for $\hat{\beta_1}$ is 0.09878. To test whether or not the data provide evidence of a positive linear relationship we observe a t-statistic for $\hat{\beta_1}$ of 3.449 on 14 degrees of freedom, with a p-value of 0.003912.
+
+## (b)
+
+Does the mean diversity vary linearly with log(area), or does a model that allows the mean diversity to follow some other pattern appear to fit the data better? Provide the hypotheses, test statistic and a p-value in addition to your conclusion.
+
+- __Answer:__
+
+## (c) 
+
+The investigators are interested in using this model to predict the number of species on new patches of forest. What is the area of a patch that has the smallest standard error for the predictions of the mean number of species? What is the area of a patch that has the smallest standard error for predictions of number of species in an individual patch?
+
+- __Answer:__
+
+## (d) 
+
+The investigators would really like to make predictions of diversity in an individual patch that has standard errors less than 20 species. Is that possible with this model and data? Explain why or why not.
+
+- __Answer:__
+
+## (e)
+
+The study that produced these data has attracted a lot of international attention. Imagine that this study can be repeated with 10 times as many plots (160 instead of the 16 here). All else about the system remains the same: the regression intercept, slope, and error variance (i.e. $\hat{\sigma}$) are the same as here. Will this study be able to predict diversity in an individual patch with a standard error less than 20 species? Briefly explain why or why not.
+
+- __Answer:__
+
+
+# 5.) Manatees
+
+Manatees (a.k.a. sea cows) live off the coast of Florida and unfortunately, many manatees are killed or injured by powerboats every year. The file _manatee.csv_ contains data on X = the number of Florida powerboat registrations (in 1000s) and Y = number of manatees killed near Florida. There is one point for each year from 1977 to 1990.
+
+## (a)
+
+Use software to construct a scatterplot between the number of manates killed and number of Florida power boat registrations. Is the relationship roughly linear?
+
+```{r}
+
+```
+
+- __Answer:__
+
+## (b)
+
+Compute the correlation coefficient between two variables. Describe what this value says about the relationship between X and Y, in the context of the study.
+
+```{r}
+
+```
+
+- __Answer:__
+
+## (c)
+
+Give the equation of the least-squares regression line for predicting the number of manatee deaths as a function of powerboat registrations.
+
+```{r}
+
+```
+
+- __Answer:__
+
+## (d)
+
+Predict the number of manatee deaths for a year in which 600,000 powerboats are registered in Florida (X=600). 
+
+```{r}
+
+```
+
+- __Answer:__
+
+## (e)
+
+Provide a 95% prediction interval for the number of manatee deaths in a year in which 600,000 powerboats are registered in Florida.
+
+```{r}
+
+```
+
+- __Answer:__
+
+## (f)
+
+Examine the residual plot and the normal probability plot of the residuals from the simple linear regression model. is there an indication that the assumptions of the model are violated? Explain why or why not.
+
+```{r}
+
+```
+
+- __Answer:__
