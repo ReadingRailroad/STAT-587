@@ -342,13 +342,21 @@ atp.emm
 
 - $H_0: \mu_1 = \mu_2$ vs. $H_A: \mu_1 \neq \mu_2$
 
+<<<<<<< HEAD
 ```{r}
 contrast(atp.emm, list("European Control - European Flood"=c(-1,1,0,0)))
 ```
+=======
+### ii) Difference between river birch and European birch with repect to flood effect.
+>>>>>>> 7e78a9da2cffda1e9c23831387b940227b0e0379
 
 - __Answer:__ With a t-ratio of -6.455 with 12 degrees of freedom and a p-value less than 0.0001 we have very strong evidence to reject the null hypothesis and conclude there is a difference in mean nmol ATP per mg root tissue between Eropean Birch trees in a control and flood site. 
 
+<<<<<<< HEAD
 ### ii) Difference between river birch and European birch with repect to flood effect.
+=======
+### iii) Comparing the average of the flooded and control river birch ATP to the average of the flooded and control european birch mean ATP levels.
+>>>>>>> 7e78a9da2cffda1e9c23831387b940227b0e0379
 
 - $H_0: \mu_2 = \mu_4$ vs. $H_A: \mu_2 \neq \mu_4$
 

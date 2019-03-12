@@ -1,0 +1,198 @@
+---
+title: "Simonson_HW8"
+author: "Martin A. Simonson"
+date: "March 10, 2019"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# 1.) Rowan Adaptation
+
+The rowan ( _Sorbus aucuparia_) is a tree that grows in a wide range of altitudes. To study how the tree adapts toits varying habitats, researchers collected twigs with attached buds from 12 trees growing at various altitudes in North Angus, Scotland.  The buds were brought back to the laboratory and measurements were made on the dark respiration rate.  The average altitude from the origin for the 12 trees is 433.33 meters. The average respiration  rate  computed  for  the  12  trees  is  0.21 $\mu l$ oxygen  per hour per  mg  dry weight  of  tissue. The standard deviation of the altitude for the 12 trees is 214.62 meters and for respiration rate is 0.077  $\mu l/(hour*mg^{-1})$ mg.The correlation between altitude from the origin and dark respiration rate was 0.887.
+
+## (a)
+
+We will use linear regression to describe the relationship between altitude and dark respiration. Which of the two variables would most naturally be considered the explanatory variable and which would be the response variable?
+
+- __Answer:__ The explanatory variable is the elevation from which the sample buds were taken, in meters. The response variable is the dark respiration rate in micrograms oxygen per hour per mg of dry bud tissue [$\mu l/(hour*mg^{-1})$].
+
+## (b)
+
+Compute the equation of the least squares regression line.
+
+- __Answer:__ We want to fit the model $y=\hat{\beta_0} + \hat{\beta_1}*x$ where  $\hat{\beta_0}$ is constant and represents the least squares regression incercept, and $\hat{\beta_1}$ is constant and represents the least squares regression slope. To calculate this from available data, we first estimate $\hat{\beta_1}$ by:
+
+\[
+\hat{\beta_1} = r_{xy} * \frac{S_y}{S_x} 
+\]
+
+where $r_{xy}$ is the correlation coefficient of the two variables; the sample standard deviations for y (dark respiration) and x (elevation) are represented by $S_Y$ and $S_x$, respectively. 
+
+```{r}
+r.xy<-0.887
+
+```
+
+
+
+The formula for $\beta_0$ is given by: 
+
+\[
+\hat{\beta_0} = \bar{y} - \hat{\beta_1}*\bar{x}
+\]
+
+```{r}
+
+```
+
+
+
+
+# 2.) Old Faithful
+
+The data in _eruption.csv_ are the interval waiting time between eruptions and the duration of the eruption for the Old Faithful geyser in Yellowstone National Park, Wyoming. Ignore the date variable and consider all observations as one sample of X and Y values. Answer the following questions:
+
+## (a) 
+
+Fit the regression model that predicts interval from the duration of the last eruption and report the estimated intercept and slope.
+
+```{r}
+df<-read.csv("Data/eruption.csv",header=T)
+summary(df)
+df$interval<-as.numeric(as.character(df$interval))
+model<-lm(interval~duration, data = df)
+summary(model)
+```
+
+- __Answer:__ The estimated interval length intercept is 33.8282 minutes with a slope of 10.7410 minutes.
+
+## (b)
+
+Calculate and report a 95% confidence interval for the slope
+
+```{r}
+confint(model$coefficients[],level=0.95)
+```
+
+- __Answer:__ We are 95% confident that the mean increase in chirping rate lies between 9.499 and 11.983 minutes per minute of eruption duration.
+
+## (c)
+
+Test whether the slope equals 0. Report your test statistic, p-value and a one-sentence conclusion.
+
+```{r}
+summary(model)
+```
+
+
+- __Answer:__ Let $\beta$ represent the slope of the relationship between interval time and eruption time (both in minutes). We want to test: $H_0: \beta = 0$ vs. $H_A: \beta \neq 0$. The t-statistic for the effect of duration from our model summary is 17.15 on 105 degrees of freedom. The associated p-value less than 0.0001 provides very strong evidence to reject the null hypothesis and conclude the true slope of the relationship betweene eruption duration and interval is not equal to 0.
+
+## (d)
+
+Rangers at Yellowstone report a interval describing when they expect the next eruption to occur. Is it more appropriate to provie a confidence interval or a prediction interval? Briefly explain why.
+
+- __Answer:__ The rangers should use a prediction interval because it will account for the scatter of data, and estimate variance around a predicted value.
+
+# 3.) Wormyfruit
+
+It is generally thought that the percentage of fruit attacked by codling moth larvae is greater on apple trees bearing a small crop. Apparently the density of the flying moths is unrelated to the size of the crop on a tree, so the chance of attack for any particular fruit is increased if few fruits are on the tree. Data collected for a random sample of 10 trees gives a sample linear correlation coefficient of -0.77. Other summary statistics obtained from the sample are provided below. The data are available in _wormyfruit.csv_.
+
+Variable              | Sample Mean      | Sample Standard Deviation   
+--------------------- | ---------------  | -------------------------- 
+Crop Size (#fruit)    | 126.702          | 59.924
+% wormy fruits        | 41.539           | 12.070
+
+## (a)
+
+Estimate the least-squares regression line for predicting percentage of wormy fruits from crop size. Show all your work in addition to the equation of the estimated model.
+
+```{r}
+df<-read.csv("Data/wormyfruit.csv",header=T)
+str(df) # size of crop x; percent of fruit attacked is y
+model<-lm(Perc~Size,data=df)
+summary(model)
+```
+
+- __Answer:__ Let $Y$ be the percent of fruit attacked and let $X$ be the size of a crop. The equation for the estimated linear model of $Y$ in response to $X$ is:
+
+$Y=62.96802 + (-0.16913 * X)$
+
+## (b)
+
+Write down the ANOVA table for the simple linear regression of percentage of wormy fruit on crop size. Compute the F statistic and find a p-value.
+
+```{r}
+anova(model)
+```
+
+- __Answer:__ The F-statistic is 11.62 with 8 and 1 degrees of freedom, and an observed p-value 0.00924. Therefore, we have strong evidence against the null hypothesis that the true effect of crop size is not equal to zero. 
+
+## (c) 
+
+Based on the F statistic and p-value computed in part (b), is there statistically significant evidence that the slope of the regression line is significantly different from 0?
+
+- __Answer:__ There is strong evidence to reject the null hypothesis that the slope of the regression is equal to 0, and therefore conclude that the mean percentage of wormy fruit decreases with crop size.
+
+## (d)
+
+What proportion of the variability in the percentage of wormy fruit is explained by the regression of percentage of wormy fruit on crop size?
+
+- __Answer:__ The model summary from (a) returns an adjusted $R^2$ of 0.5413, meaning about 54.13% of the variability in the percentage of wormy fruit is explained by the regression of percentage of wormy fruit on crop size.
+
+## (e)
+
+Estimate the mean percentage of wormy fruits for trees with a crop size of 150 fruit.
+
+```{r}
+new.data = data.frame(Size=c(150))
+
+perc<-predict(model, newdata = new.data,se.fit = T,interval = "conf",level=0.95)
+perc$fit # estimated percentage infestation at 150 apples
+```
+
+- __Answer:__ We expect 37.59 percent of apples would be infested with worms would if the crop size were 150 apples. 
+
+## (f)
+
+Provide a 95% confidence interval for the mean percentage of wormy fruits for trees witha crop size of 150 fruit.
+
+```{r}
+perc$fit
+```
+
+- __Answer:__ We are 95% confident that the interval for the mean percentage of wormy fruits for trees with a crop size of 150 fruit is between 31.07% and 44.13%.
+
+## (g)
+
+Is there a statistically significant evidence from these data that trees with a crop size of 150 have, on average, 50% wormy fruit?
+
+- __Answer:__ No, we would not expect that another sample with a crop size of 150 apples would have 50% wormy fruit.
+
+## (f)
+
+Provide a 90% prediction interval for the average percentage of wormy fruit for the first tree with 150 fruit that was selected to be part of the study.
+
+```{r}
+perc2<-predict(model, newdata = new.data, se.fit = T, interval = "predict",level=0.90)
+perc2$fit
+```
+
+- __Answer:__ The 90% prediction interval for the mean percentage of wormy fruit in a tree with 150 fruit is between 21.51% and 53.69%.
+
+# 4.) Butterfly Diversity
+
+The data in _diversity.csv_ are decribed in Chapter 8, problem 22 (both editions). Ecological theory suggests that the appropriate regression model is diversity = $\beta_0 + \beta_1 * log(area)$. Use this model for all questions below. The data come from ane xperimental study where the area of the patch was randomly assigned to plots of land.
+
+## (a) 
+
+Estimate the regression coefficients of the linear regression model suggested by ecological theory, then test whether the data provide evidence of a positive linear relationship between diversity and log(area). Report the estimates, the test statistic, and p-value for the test. 
+
+```{r}
+df<-read.csv("Data/diversity.csv",header=T)
+str(df) # area x; number of species is y
+model<-lm(species~area,data=df)
+summary(model)
+```
+
+- 
