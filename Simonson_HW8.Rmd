@@ -1,12 +1,53 @@
 ---
 title: "Simonson_HW8"
-subtitle: "# 2, 3, 4, 5"
 author: "Martin A. Simonson"
 date: "March 10, 2019"
 output: pdf_document
 editor_options: 
   chunk_output_type: console
 ---
+
+# 1.) Rowan Adaptation
+
+The rowan ( _Sorbus aucuparia_) is a tree that grows in a wide range of altitudes. To study how the tree adapts toits varying habitats, researchers collected twigs with attached buds from 12 trees growing at various altitudes in North Angus, Scotland.  The buds were brought back to the laboratory and measurements were made on the dark respiration rate.  The average altitude from the origin for the 12 trees is 433.33 meters. The average respiration  rate  computed  for  the  12  trees  is  0.21 $\mu l$ oxygen  per hour per  mg  dry weight  of  tissue. The standard deviation of the altitude for the 12 trees is 214.62 meters and for respiration rate is 0.077  $\mu l/(hour*mg^{-1})$ mg.The correlation between altitude from the origin and dark respiration rate was 0.887.
+
+## (a)
+
+We will use linear regression to describe the relationship between altitude and dark respiration. Which of the two variables would most naturally be considered the explanatory variable and which would be the response variable?
+
+- __Answer:__ The explanatory variable is the elevation from which the sample buds were taken, in meters. The response variable is the dark respiration rate in micrograms oxygen per hour per mg of dry bud tissue [$\mu l/(hour*mg^{-1})$].
+
+## (b)
+
+Compute the equation of the least squares regression line.
+
+- __Answer:__ We want to fit the model $y=\hat{\beta_0} + \hat{\beta_1}*x$ where  $\hat{\beta_0}$ is constant and represents the least squares regression incercept, and $\hat{\beta_1}$ is constant and represents the least squares regression slope. To calculate this from available data, we first estimate $\hat{\beta_1}$ by:
+
+\[
+\hat{\beta_1} = r_{xy} * \frac{S_y}{S_x} 
+\]
+
+where $r_{xy}$ is the correlation coefficient of the two variables; the sample standard deviations for y (dark respiration) and x (elevation) are represented by $S_Y$ and $S_x$, respectively. 
+
+```{r}
+r.xy<-0.887
+
+```
+
+
+
+The formula for $\beta_0$ is given by: 
+
+\[
+\hat{\beta_0} = \bar{y} - \hat{\beta_1}*\bar{x}
+\]
+
+```{r}
+
+```
+
+
+
 
 # 2.) Old Faithful
 
