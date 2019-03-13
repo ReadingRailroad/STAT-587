@@ -304,7 +304,7 @@ model<-lm(species~area,data=df)
 summary(model)
 ```
 
-- __Answer:__ The estimate for $\hat{\beta_0}$ is 55.76094; the estimate for $\hat{\beta_1}$ is 0.09878. To test whether or not the data provide evidence of a positive linear relationship we observe a t-statistic for $\hat{\beta_1}$ of 3.449 on 14 degrees of freedom, with a p-value of 0.003912.
+- __Answer:__ The estimate for $\hat{\beta_0}$ is 55.76094; the estimate for $\hat{\beta_1}$ is 0.09878. The data provide strong evidence of a positive linear relationship; we observe a t-statistic for $\hat{\beta_1}$ of 3.449 on 14 degrees of freedom, with a p-value of 0.003912.
 
 ## (b)
 
@@ -314,7 +314,14 @@ Does the mean diversity vary linearly with log(area), or does a model that allow
 
 ## (c) 
 
-The investigators are interested in using this model to predict the number of species on new patches of forest. What is the area of a patch that has the smallest standard error for the predictions of the mean number of species? What is the area of a patch that has the smallest standard error for predictions of number of species in an individual patch?
+The investigators are interested in using this model to predict the number of species on new patches of forest. 
+
+### (i) What is the area of a patch that has the smallest standard error for the predictions of the mean number of species? 
+
+- __Answer:__
+
+
+### (ii) What is the area of a patch that has the smallest standard error for predictions of number of species in an individual patch?
 
 - __Answer:__
 
@@ -339,58 +346,82 @@ Manatees (a.k.a. sea cows) live off the coast of Florida and unfortunately, many
 
 Use software to construct a scatterplot between the number of manates killed and number of Florida power boat registrations. Is the relationship roughly linear?
 
-```{r}
+```{r,include=F}
+df<-read.csv("Data/manatee.csv",header=T)
+str(df)
+require(ggplot2)
+p1<-ggplot(df,aes(x=X,y=Y))+
+  geom_point()+
+  theme_classic()+
+  labs(x="Number of Florida Powerboat Registrations (1,000s)",
+       y="Number of Mantaees Killed")
 
 ```
+```{r, echo=F}
+p1
+```
 
-- __Answer:__
+
+- __Answer:__ The scatterplot shows that the number of powerboat registrations, in thousands, is roughly linearly correlated with the number of mantaees killed.
 
 ## (b)
 
 Compute the correlation coefficient between two variables. Describe what this value says about the relationship between X and Y, in the context of the study.
 
 ```{r}
-
+cor(df)
 ```
 
-- __Answer:__
+- __Answer:__ The correlation coefficeint for the two variables is 0.9414773, indicating a strong positive relationship between the number of manatees killed and the number of Florida powerboat registrations (in thousands).
 
 ## (c)
 
 Give the equation of the least-squares regression line for predicting the number of manatee deaths as a function of powerboat registrations.
 
 ```{r}
-
+model<-lm(Y~X, data = df)
+summary(model)
 ```
 
-- __Answer:__
+- __Answer:__ Given the mantaee data, our observed $\hat{\beta_0}$ for the intercept of the least-squares regression line is -41.4304 and our observed $\hat{\beta_1}$ for the least squares regression slope is 0.1249. Therefore;
+
+\[
+Y = -41.304 + (0.1249 * X)
+\]
 
 ## (d)
 
 Predict the number of manatee deaths for a year in which 600,000 powerboats are registered in Florida (X=600). 
 
 ```{r}
-
+new.data<-data.frame(X = 600)
+est<-predict(model, newdata = new.data, se.fit = T,interval = "conf",level=0.95)
+est$fit
 ```
 
-- __Answer:__
+- __Answer:__ The estimated mean number of manatee deaths in one year when there are 600,000 powerboats registered in Florida is 33.48658.
 
 ## (e)
 
 Provide a 95% prediction interval for the number of manatee deaths in a year in which 600,000 powerboats are registered in Florida.
 
-```{r}
-
-```
-
-- __Answer:__
+- __Answer:__ Given the output from part (d), we are 95% certain that the mean number of manatee deaths is between 30.83401 and 36.13915 when there are 600,000 powerboats registered in Florida .
 
 ## (f)
 
-Examine the residual plot and the normal probability plot of the residuals from the simple linear regression model. is there an indication that the assumptions of the model are violated? Explain why or why not.
+Examine the residual plot and the normal probability plot of the residuals from the simple linear regression model. Is there an indication that the assumptions of the model are violated? Explain why or why not.
 
-```{r}
-
+```{r,include=F}
+require(gridExtra)
+p1<-ggplot(model)+
+  geom_point(aes(x=.fitted,y=.resid))+
+  theme_classic()
+p1
+p2<-ggplot(df,aes(sample = Y))+
+  stat_qq()+
+  stat_qq_line()+
+  theme_classic()
+grid.arrange(p1,p2,ncol=2)
 ```
 
-- __Answer:__
+- __Answer:__ Using personal judgement of visual displays of the residual plot (left) and QQ plot (right), I do not think that there is any evidence to conclude these assumptions have been violated. The residual plot shows that the residuals are centered around zero with no pattern as fitted values increase. Similarly, the QQ plot shows that the points fall roughly along a straight line.
