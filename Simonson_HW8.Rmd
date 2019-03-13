@@ -182,7 +182,7 @@ Calculate and report a 95% confidence interval for the slope
 confint(model,level=0.95)
 ```
 
-- __Answer:__ We are 95% confident that the mean increase in chirping rate lies between 9.499 and 11.983 minutes per minute of eruption duration.
+- __Answer:__ We are 95% confident that the mean increase in interval time between eruptions lies between 9.499 and 11.983 minutes per minute of eruption duration.
 
 ## (c)
 
@@ -314,7 +314,7 @@ model<-lm(species~log.area,data=df)
 summary(model)
 ```
 
-- __Answer:__ The estimate for $\hat{\beta_0}$ is 36.250; the estimate for $\hat{\beta_1}$ is 12.377. The data provide strong evidence of a positive linear relationship; we observe a t-statistic for $\hat{\beta_1}$ of 4.485 on 14 degrees of freedom, with a p-value of 0.00514.
+- __Answer:__ The estimate for $\hat{\beta_0}$ is 36.250; the estimate for $\hat{\beta_1}$ is 12.377. The data provide strong evidence of a positive linear relationship; we observe a t-statistic for $\hat{\beta_1}$ of 4.485 on 14 degrees of freedom, with a p-value of 0.000514.
 
 ## (b)
 
@@ -445,7 +445,7 @@ Predict the number of manatee deaths for a year in which 600,000 powerboats are 
 
 ```{r}
 new.data<-data.frame(X = 600)
-est<-predict(model, newdata = new.data, se.fit = T,interval = "conf",level=0.95)
+est<-predict(model, newdata = new.data, se.fit = T,interval = "pred",level=0.95)
 est$fit
 ```
 
@@ -455,7 +455,7 @@ est$fit
 
 Provide a 95% prediction interval for the number of manatee deaths in a year in which 600,000 powerboats are registered in Florida.
 
-- __Answer:__ Given the output from part (d), we are 95% certain that the mean number of manatee deaths is between 30.83401 and 36.13915 when there are 600,000 powerboats registered in Florida .
+- __Answer:__ Given the output from part (d), we are 95% certain that the mean number of manatee deaths is between 23.7981 and 43.17425 when there are 600,000 powerboats registered in Florida .
 
 ## (f)
 
