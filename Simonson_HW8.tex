@@ -1,0 +1,1241 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Simonson\_HW8},
+            pdfauthor={Martin A. Simonson},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{longtable,booktabs}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Simonson\_HW8}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Martin A. Simonson}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{March 10, 2019}
+
+
+\begin{document}
+\maketitle
+
+\section{1.) Rowan Adaptation}\label{rowan-adaptation}
+
+The rowan ( \emph{Sorbus aucuparia}) is a tree that grows in a wide
+range of altitudes. To study how the tree adapts toits varying habitats,
+researchers collected twigs with attached buds from 12 trees growing at
+various altitudes in North Angus, Scotland. The buds were brought back
+to the laboratory and measurements were made on the dark respiration
+rate. The average altitude from the origin for the 12 trees is 433.33
+meters. The average respiration rate computed for the 12 trees is 0.21
+\(\mu l\) oxygen per hour per mg dry weight of tissue. The standard
+deviation of the altitude for the 12 trees is 214.62 meters and for
+respiration rate is 0.077 \(\mu l/(hour*mg^{-1})\) mg.The correlation
+between altitude from the origin and dark respiration rate(\(r_{xy}\))
+was 0.887.
+
+\subsection{(a)}\label{a}
+
+We will use linear regression to describe the relationship between
+altitude and dark respiration. Which of the two variables would most
+naturally be considered the explanatory variable and which would be the
+response variable?
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} The explanatory variable is the elevation from which
+  the sample buds were taken, in meters. The response variable is the
+  dark respiration rate in micrograms oxygen per hour per mg of dry bud
+  tissue {[}\(\mu l/(hour*mg^{-1})\){]}.
+\end{itemize}
+
+\subsection{(b)}\label{b}
+
+Compute the equation of the least squares regression line.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} We want to fit the model
+  \(y=\hat{\beta_0} + \hat{\beta_1}*x\) where \(\hat{\beta_0}\) is
+  constant and represents the least squares regression incercept, and
+  \(\hat{\beta_1}\) is constant and represents the least squares
+  regression slope. To calculate this from available data, we first
+  estimate \(\hat{\beta_1}\) by:
+\end{itemize}
+
+\[
+\hat{\beta_1} = r_{xy} * \frac{S_y}{S_x} 
+\]
+
+where \(r_{xy}\) is the correlation coefficient of the two variables;
+the sample standard deviations for y (dark respiration) and x
+(elevation) are represented by \(S_Y\) and \(S_x\), respectively.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{r.xy<-}\FloatTok{0.887}
+\NormalTok{S.y<-}\FloatTok{0.077}
+\NormalTok{S.x<-}\FloatTok{214.62}
+
+\NormalTok{beta.}\DecValTok{1}\NormalTok{<-r.xy}\OperatorTok{*}\NormalTok{(S.y}\OperatorTok{/}\NormalTok{S.x)}
+\NormalTok{beta.}\DecValTok{1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.0003182322
+\end{verbatim}
+
+The formula for \(\beta_0\) is given by:
+
+\[
+\hat{\beta_0} = \bar{y} - \hat{\beta_1}*\bar{x}
+\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y.bar<-}\FloatTok{0.21}
+\NormalTok{x.bar<-}\FloatTok{433.33}
+
+\NormalTok{beta.}\DecValTok{0}\NormalTok{<-y.bar}\OperatorTok{-}\NormalTok{(beta.}\DecValTok{1}\OperatorTok{*}\NormalTok{x.bar)}
+\NormalTok{beta.}\DecValTok{0}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.07210043
+\end{verbatim}
+
+Therefore, the equation of the least squares regression line for the
+respiration rate in response to tree altitude is:
+
+\[
+y = 0.07210043 + 0.0003182322*x
+\]
+
+\subsection{(c)}\label{c}
+
+Compute a 95\% confidence interval for the slope of the regression line.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} We want to test \(H_0: \beta_1 = 0\) vs.
+  \(H_A: \beta_1 \neq 0\). First we need to compute the root mean
+  squared error (RMSE, \(\hat{\sigma}\)):
+\end{itemize}
+
+\[
+RMSE = S_y * \sqrt{1-r{_{xy}^2}}
+\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rmse<-S.y }\OperatorTok{*}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{(r.xy}\OperatorTok{^}\DecValTok{2}\NormalTok{))}
+\NormalTok{rmse}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.03555625
+\end{verbatim}
+
+Then, we compute the SE of \(\beta_1\) with the following formula:
+
+\[
+SE(\hat{\beta_1}) = \frac{\hat{\sigma}}{\sqrt{(n-1)*S{_x^2}}}
+\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{se.beta.}\DecValTok{1}\NormalTok{<-rmse}\OperatorTok{/}\KeywordTok{sqrt}\NormalTok{((}\DecValTok{12}\OperatorTok{-}\DecValTok{1}\NormalTok{)}\OperatorTok{*}\NormalTok{(S.x}\OperatorTok{^}\DecValTok{2}\NormalTok{))}
+\NormalTok{se.beta.}\DecValTok{1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 4.99516e-05
+\end{verbatim}
+
+And compute the T-ratio
+
+\[
+T=\frac{\hat{\beta_1}}{SE(\hat{\beta_1})}
+\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{t.statistic<-beta.}\DecValTok{1}\OperatorTok{/}\NormalTok{se.beta.}\DecValTok{1}
+\NormalTok{t.statistic}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 6.370812
+\end{verbatim}
+
+We observe a t-statistic of 6.370812 with 10 degrees of freedom. From
+the t-table we find a twp-tailed p-value of less than 0.001, providing
+strong evidence to reject the null hypothesis. To complete the 95\%
+confidnce interval, we use the formula:
+
+\[
+95\%CI = \hat{\beta_1} \pm t^* * SE(\hat{\beta_1})
+\]
+
+From the t-table, using 10 degrees of freedom, we find the \(t^*\) from
+the t-table is 2.228.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lower<-beta.}\DecValTok{1}\OperatorTok{-}\NormalTok{(}\FloatTok{2.228}\OperatorTok{*}\NormalTok{se.beta.}\DecValTok{1}\NormalTok{)}
+\NormalTok{upper<-beta.}\DecValTok{1}\OperatorTok{+}\NormalTok{(}\FloatTok{2.228}\OperatorTok{*}\NormalTok{se.beta.}\DecValTok{1}\NormalTok{)}
+\NormalTok{CI<-}\KeywordTok{data.frame}\NormalTok{(lower,upper)}
+\NormalTok{CI}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##          lower        upper
+## 1 0.0002069401 0.0004295244
+\end{verbatim}
+
+We are 95\% confident that a 1 meter rise in altitude is accompanied by
+between 0.0002069401 and 0.0004295244 increase in respiration, measured
+as \(\mu l/(hour*mg^{-1})\). The fact that the confdiecnet inverval for
+\(\hat{\beta_1}\) does not include zero, along with the p-value above,
+provide very strong evidence that the slope of the the least squares
+regression line does not equal 0.
+
+\subsection{(d)}\label{d}
+
+Estimate the mean respiration rate for a tree growing at 300 meters
+above origin.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x<-}\StringTok{ }\DecValTok{300}
+\NormalTok{mu.}\DecValTok{300}\NormalTok{<-}\StringTok{ }\FloatTok{0.07210043} \OperatorTok{+}\StringTok{ }\FloatTok{0.0003182322}\OperatorTok{*}\NormalTok{x}
+\NormalTok{mu.}\DecValTok{300}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.1675701
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} We would expect the respiration rate for a tree
+  growing at an elevation of 300 meters to be 0.1675701
+  \(\mu l/(hour*mg^{-1})\).
+\end{itemize}
+
+\subsection{(e)}\label{e}
+
+If the value of the new explanatory variable lies within one s.d. of the
+mean of the values of explanatory variables, the prediction is called
+interpolation, otherwise it is called extrapolation. Do you think your
+estimate in part (d) involved interpolation or extrapolation? Explain.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x.range<-}\KeywordTok{c}\NormalTok{((}\FloatTok{433.33} \OperatorTok{-}\StringTok{ }\FloatTok{214.62}\NormalTok{),(}\FloatTok{433.33} \OperatorTok{+}\StringTok{ }\FloatTok{214.62}\NormalTok{))}
+\NormalTok{x.range}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 218.71 647.95
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} The value provided in part (d), 300 meters, is within
+  one standard deviation of the mean elevation (218.71 meters to 647.95
+  meters), therefore, this estimate involved interpolation.
+\end{itemize}
+
+\subsection{(f)}\label{f}
+
+Compute the s.e. of the mean respiration rate at 300 meters elevation.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} Let \(\hat{\mu}_{300}\) represent the mean predicted
+  respiration rate at 300 meters elevation, as calculated by
+  \(\hat{\mu}_{300} = \hat{\beta_0} + \hat{\beta_1}*300\). We want to
+  compute the standard error for \(\hat{\mu}_{300}\):
+\end{itemize}
+
+\[
+SE(\hat{\mu}_{300}) = \hat{\sigma} * \sqrt{\frac{1}{n} + \frac{(x-\bar{x})^2}{(n-1)*S{_x^2}}}
+\]
+
+Where \(x\) is equal to 300, \(\bar{x}\) is equal to 433.33, \(n\) is
+equal to 12, and \(S_x\) is equal to 214.62.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{se.mu.}\DecValTok{300}\NormalTok{<-rmse}\OperatorTok{*}\KeywordTok{sqrt}\NormalTok{((}\DecValTok{1}\OperatorTok{/}\DecValTok{12}\NormalTok{)}\OperatorTok{+}\NormalTok{(((}\DecValTok{300}\OperatorTok{-}\FloatTok{433.33}\NormalTok{)}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{/}\StringTok{ }\NormalTok{((}\DecValTok{12}\OperatorTok{-}\DecValTok{1}\NormalTok{)}\OperatorTok{*}\NormalTok{(S.x}\OperatorTok{^}\DecValTok{2}\NormalTok{))))}
+\NormalTok{se.mu.}\DecValTok{300}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.01223561
+\end{verbatim}
+
+The standard error of the mean respiration rate at 300 meters elevation
+is 0.01223561 \(\mu l/(hour*mg^{-1})\).
+
+\section{2.) Old Faithful}\label{old-faithful}
+
+The data in \emph{eruption.csv} are the interval waiting time between
+eruptions and the duration of the eruption for the Old Faithful geyser
+in Yellowstone National Park, Wyoming. Ignore the date variable and
+consider all observations as one sample of X and Y values. Answer the
+following questions:
+
+\subsection{(a)}\label{a-1}
+
+Fit the regression model that predicts interval from the duration of the
+last eruption and report the estimated intercept and slope.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df<-}\KeywordTok{read.csv}\NormalTok{(}\StringTok{"Data/eruption.csv"}\NormalTok{,}\DataTypeTok{header=}\NormalTok{T)}
+\KeywordTok{summary}\NormalTok{(df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       date          interval       duration    
+##  Min.   : 1.00   Min.   :42.0   Min.   :1.700  
+##  1st Qu.:15.50   1st Qu.:59.0   1st Qu.:2.300  
+##  Median :42.00   Median :75.0   Median :3.800  
+##  Mean   :42.73   Mean   :71.0   Mean   :3.461  
+##  3rd Qu.:68.50   3rd Qu.:80.5   3rd Qu.:4.300  
+##  Max.   :95.00   Max.   :95.0   Max.   :4.900
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df}\OperatorTok{$}\NormalTok{interval<-}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{as.character}\NormalTok{(df}\OperatorTok{$}\NormalTok{interval))}
+\NormalTok{model<-}\KeywordTok{lm}\NormalTok{(interval}\OperatorTok{~}\NormalTok{duration, }\DataTypeTok{data =}\NormalTok{ df)}
+\KeywordTok{summary}\NormalTok{(model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = interval ~ duration, data = df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -14.644  -4.440  -1.088   4.467  15.652 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  33.8282     2.2618   14.96   <2e-16 ***
+## duration     10.7410     0.6263   17.15   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6.683 on 105 degrees of freedom
+## Multiple R-squared:  0.7369, Adjusted R-squared:  0.7344 
+## F-statistic: 294.1 on 1 and 105 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} The estimated interval length intercept is 33.8282
+  minutes with a slope of 10.7410 minutes.
+\end{itemize}
+
+\subsection{(b)}\label{b-1}
+
+Calculate and report a 95\% confidence interval for the slope
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{confint}\NormalTok{(model,}\DataTypeTok{level=}\FloatTok{0.95}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                 2.5 %   97.5 %
+## (Intercept) 29.343441 38.31297
+## duration     9.499061 11.98288
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} We are 95\% confident that the mean increase in
+  chirping rate lies between 9.499 and 11.983 minutes per minute of
+  eruption duration.
+\end{itemize}
+
+\subsection{(c)}\label{c-1}
+
+Test whether the slope equals 0. Report your test statistic, p-value and
+a one-sentence conclusion.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = interval ~ duration, data = df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -14.644  -4.440  -1.088   4.467  15.652 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  33.8282     2.2618   14.96   <2e-16 ***
+## duration     10.7410     0.6263   17.15   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6.683 on 105 degrees of freedom
+## Multiple R-squared:  0.7369, Adjusted R-squared:  0.7344 
+## F-statistic: 294.1 on 1 and 105 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} Let \(\beta\) represent the slope of the relationship
+  between interval time and eruption time (both in minutes). We want to
+  test: \(H_0: \beta = 0\) vs. \(H_A: \beta \neq 0\). The t-statistic
+  for the effect of duration from our model summary is 17.15 on 105
+  degrees of freedom. The associated p-value less than 0.0001 provides
+  very strong evidence to reject the null hypothesis and conclude the
+  true slope of the relationship betweene eruption duration and interval
+  is not equal to 0.
+\end{itemize}
+
+\subsection{(d)}\label{d-1}
+
+Rangers at Yellowstone report a interval describing when they expect the
+next eruption to occur. Is it more appropriate to provie a confidence
+interval or a prediction interval? Briefly explain why.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} The rangers should use a prediction interval because
+  it will account for the scatter of data, and estimate variance around
+  a predicted value.
+\end{itemize}
+
+\section{3.) Wormyfruit}\label{wormyfruit}
+
+It is generally thought that the percentage of fruit attacked by codling
+moth larvae is greater on apple trees bearing a small crop. Apparently
+the density of the flying moths is unrelated to the size of the crop on
+a tree, so the chance of attack for any particular fruit is increased if
+few fruits are on the tree. Data collected for a random sample of 10
+trees gives a sample linear correlation coefficient of -0.77. Other
+summary statistics obtained from the sample are provided below. The data
+are available in \emph{wormyfruit.csv}.
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+Variable & Sample Mean & Sample Standard Deviation\tabularnewline
+\midrule
+\endhead
+Crop Size (\#fruit) & 126.702 & 59.924\tabularnewline
+\% wormy fruits & 41.539 & 12.070\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsection{(a)}\label{a-2}
+
+Estimate the least-squares regression line for predicting percentage of
+wormy fruits from crop size. Show all your work in addition to the
+equation of the estimated model.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df<-}\KeywordTok{read.csv}\NormalTok{(}\StringTok{"Data/wormyfruit.csv"}\NormalTok{,}\DataTypeTok{header=}\NormalTok{T)}
+\KeywordTok{str}\NormalTok{(df) }\CommentTok{# size of crop x; percent of fruit attacked is y}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 'data.frame':    10 obs. of  2 variables:
+##  $ Perc: num  50.8 66.9 22.5 43.3 45.1 ...
+##  $ Size: num  66.7 63.5 189.9 171 51.7 ...
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model<-}\KeywordTok{lm}\NormalTok{(Perc}\OperatorTok{~}\NormalTok{Size,}\DataTypeTok{data=}\NormalTok{df)}
+\KeywordTok{summary}\NormalTok{(model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = Perc ~ Size, data = df)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -9.125 -6.058 -1.196  3.628 14.619 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) 62.96802    6.79719   9.264  1.5e-05 ***
+## Size        -0.16913    0.04962  -3.409  0.00924 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 8.175 on 8 degrees of freedom
+## Multiple R-squared:  0.5922, Adjusted R-squared:  0.5413 
+## F-statistic: 11.62 on 1 and 8 DF,  p-value: 0.00924
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} Let \(Y\) be the percent of fruit attacked and let
+  \(X\) be the size of a crop. The equation for the estimated linear
+  model of \(Y\) in response to \(X\) is:
+\end{itemize}
+
+\[
+y = 62.96802 + (-0.16913 * x)
+\]
+
+\subsection{(b)}\label{b-2}
+
+Write down the ANOVA table for the simple linear regression of
+percentage of wormy fruit on crop size. Compute the F statistic and find
+a p-value.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{anova}\NormalTok{(model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Response: Perc
+##           Df Sum Sq Mean Sq F value  Pr(>F)   
+## Size       1 776.60  776.60   11.62 0.00924 **
+## Residuals  8 534.67   66.83                   
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} The F-statistic is 11.62 with 8 and 1 degrees of
+  freedom, and an observed p-value 0.00924. Therefore, we have strong
+  evidence against the null hypothesis that the true effect of crop size
+  is not equal to zero.
+\end{itemize}
+
+\subsection{(c)}\label{c-2}
+
+Based on the F statistic and p-value computed in part (b), is there
+statistically significant evidence that the slope of the regression line
+is significantly different from 0?
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} There is strong evidence to reject the null
+  hypothesis that the slope of the regression is equal to 0, and
+  therefore conclude that the mean percentage of wormy fruit decreases
+  with crop size.
+\end{itemize}
+
+\subsection{(d)}\label{d-2}
+
+What proportion of the variability in the percentage of wormy fruit is
+explained by the regression of percentage of wormy fruit on crop size?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{anova}\NormalTok{(model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Response: Perc
+##           Df Sum Sq Mean Sq F value  Pr(>F)   
+## Size       1 776.60  776.60   11.62 0.00924 **
+## Residuals  8 534.67   66.83                   
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{SS.Between<-}\FloatTok{776.6}
+\NormalTok{SS.Total<-}\FloatTok{534.67}\OperatorTok{+}\FloatTok{776.6}
+\NormalTok{SS.Between}\OperatorTok{/}\NormalTok{SS.Total}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.5922503
+\end{verbatim}
+
+\begin{itemize}
+\item
+  \textbf{Answer:} The proportion of variability is given by the sum of
+  squares between divdied by the sum of squares total. Therefore, the
+  {[}unadjusted{]} proporition of variability in the percentage of wormy
+  fruit that is explained by regression is 0.5922503, or 59.22\%
+\item
+  \textbf{Answer, Part 2:} The model summary from (a) returns a more
+  conservatiev {[}adjusted{]} \(R^2\) of 0.5413, meaning about 54.13\%
+  of the variability in the percentage of wormy fruit is explained by
+  the regression of percentage of wormy fruit on crop size.
+\end{itemize}
+
+\subsection{(e)}\label{e-1}
+
+Estimate the mean percentage of wormy fruits for trees with a crop size
+of 150 fruit.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{new.data =}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Size=}\KeywordTok{c}\NormalTok{(}\DecValTok{150}\NormalTok{))}
+
+\NormalTok{perc<-}\KeywordTok{predict}\NormalTok{(model, }\DataTypeTok{newdata =}\NormalTok{ new.data,}\DataTypeTok{se.fit =}\NormalTok{ T,}\DataTypeTok{interval =} \StringTok{"conf"}\NormalTok{,}\DataTypeTok{level=}\FloatTok{0.95}\NormalTok{)}
+\NormalTok{perc}\OperatorTok{$}\NormalTok{fit }\CommentTok{# estimated percentage infestation at 150 apples}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        fit      lwr      upr
+## 1 37.59886 31.06851 44.12922
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} We expect 37.59 percent of apples would be infested
+  with worms would if the crop size were 150 apples.
+\end{itemize}
+
+\subsection{(f)}\label{f-1}
+
+Provide a 95\% confidence interval for the mean percentage of wormy
+fruits for trees witha crop size of 150 fruit.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{perc}\OperatorTok{$}\NormalTok{fit}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        fit      lwr      upr
+## 1 37.59886 31.06851 44.12922
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} We are 95\% confident that the interval for the mean
+  percentage of wormy fruits for trees with a crop size of 150 fruit is
+  between 31.07\% and 44.13\%.
+\end{itemize}
+
+\subsection{(g)}\label{g}
+
+Is there a statistically significant evidence from these data that trees
+with a crop size of 150 have, on average, 50\% wormy fruit?
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} No, we would not expect that another sample with a
+  crop size of 150 apples would have 50\% wormy fruit.
+\end{itemize}
+
+\subsection{(f)}\label{f-2}
+
+Provide a 90\% prediction interval for the average percentage of wormy
+fruit for the first tree with 150 fruit that was selected to be part of
+the study.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{perc2<-}\KeywordTok{predict}\NormalTok{(model, }\DataTypeTok{newdata =}\NormalTok{ new.data, }\DataTypeTok{se.fit =}\NormalTok{ T, }\DataTypeTok{interval =} \StringTok{"predict"}\NormalTok{,}\DataTypeTok{level=}\FloatTok{0.90}\NormalTok{)}
+\NormalTok{perc2}\OperatorTok{$}\NormalTok{fit}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        fit      lwr      upr
+## 1 37.59886 21.51042 53.68731
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} The 90\% prediction interval for the mean percentage
+  of wormy fruit in a tree with 150 fruit is between 21.51\% and
+  53.69\%.
+\end{itemize}
+
+\section{4.) Butterfly Diversity}\label{butterfly-diversity}
+
+The data in \emph{diversity.csv} are decribed in Chapter 8, problem 22
+(both editions). Ecological theory suggests that the appropriate
+regression model is diversity =
+\(\hat{\beta_0} + \hat{\beta_1} * log(area)\). Use this model for all
+questions below. The data come from an experimental study where the area
+of the patch was randomly assigned to plots of land.
+
+\subsection{(a)}\label{a-3}
+
+Estimate the regression coefficients of the linear regression model
+suggested by ecological theory, then test whether the data provide
+evidence of a positive linear relationship between diversity and
+log(area). Report the estimates, the test statistic, and p-value for the
+test.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df<-}\KeywordTok{read.csv}\NormalTok{(}\StringTok{"Data/diversity.csv"}\NormalTok{,}\DataTypeTok{header=}\NormalTok{T)}
+\KeywordTok{str}\NormalTok{(df) }\CommentTok{# area x (hectares); number of species is y}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 'data.frame':    16 obs. of  2 variables:
+##  $ area   : int  1 1 1 1 1 1 10 10 10 10 ...
+##  $ species: int  14 50 55 34 40 57 43 103 33 53 ...
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df}\OperatorTok{$}\NormalTok{log.area<-}\KeywordTok{log}\NormalTok{(df}\OperatorTok{$}\NormalTok{area)}
+\NormalTok{model<-}\KeywordTok{lm}\NormalTok{(species}\OperatorTok{~}\NormalTok{log.area,}\DataTypeTok{data=}\NormalTok{df)}
+\KeywordTok{summary}\NormalTok{(model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = species ~ log.area, data = df)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -33.25 -21.88   0.75  19.25  38.25 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)   36.250      8.702   4.166 0.000952 ***
+## log.area      12.377      2.760   4.485 0.000514 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 23.78 on 14 degrees of freedom
+## Multiple R-squared:  0.5896, Adjusted R-squared:  0.5603 
+## F-statistic: 20.11 on 1 and 14 DF,  p-value: 0.000514
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} The estimate for \(\hat{\beta_0}\) is 36.250; the
+  estimate for \(\hat{\beta_1}\) is 12.377. The data provide strong
+  evidence of a positive linear relationship; we observe a t-statistic
+  for \(\hat{\beta_1}\) of 4.485 on 14 degrees of freedom, with a
+  p-value of 0.00514.
+\end{itemize}
+
+\subsection{(b)}\label{b-3}
+
+Does the mean diversity vary linearly with log(area), or does a model
+that allows the mean diversity to follow some other pattern appear to
+fit the data better? Provide the hypotheses, test statistic and a
+p-value in addition to your conclusion. \textbf{Only do a visual test
+for the assumptions of linearity.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(ggplot2)}
+\KeywordTok{library}\NormalTok{(gridExtra)}
+\NormalTok{p1<-}\KeywordTok{ggplot}\NormalTok{(model)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{.fitted,}\DataTypeTok{y=}\NormalTok{.resid))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_abline}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{intercept=}\DecValTok{0}\NormalTok{,}\DataTypeTok{slope=}\DecValTok{0}\NormalTok{))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_classic}\NormalTok{()}
+\NormalTok{p1}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Simonson_HW8_files/figure-latex/unnamed-chunk-20-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p2<-}\KeywordTok{ggplot}\NormalTok{(df,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{sample =}\NormalTok{ log.area))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{stat_qq}\NormalTok{()}\OperatorTok{+}
+\StringTok{  }\KeywordTok{stat_qq_line}\NormalTok{()}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_classic}\NormalTok{()}
+\KeywordTok{grid.arrange}\NormalTok{(p1,p2,}\DataTypeTok{ncol=}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Simonson_HW8_files/figure-latex/unnamed-chunk-20-2.pdf}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} The residual plot shows a concentration of points
+  distributed broadly along the y-axis but concentrated at discrete
+  intervals along the x-axis. The points in the QQ-plot do not fall
+  along the QQ line, and appear to have disjointed trends in the data
+  (Number of species is a discrete variable). Therefore, I believe the
+  assumptions of least squares regression are violated.
+\end{itemize}
+
+\subsection{(c)}\label{c-3}
+
+The investigators are interested in using this model to predict the
+number of species on new patches of forest.
+
+\subsubsection{(i) What is the area of a patch that has the smallest
+standard error for the predictions of the mean number of
+species?}\label{i-what-is-the-area-of-a-patch-that-has-the-smallest-standard-error-for-the-predictions-of-the-mean-number-of-species}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{exp}\NormalTok{(}\KeywordTok{mean}\NormalTok{(df}\OperatorTok{$}\NormalTok{log.area))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 10
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} The uncertainty in prediction on an estimate is
+  smallest when \(x=\bar{x}\). Therefore, the area of the patch that has
+  the smallest standard error the predictions of the mean number of
+  species is 10 hectares.
+\end{itemize}
+
+\subsubsection{(ii) What is the area of a patch that has the smallest
+standard error for predictions of number of species in an individual
+patch?}\label{ii-what-is-the-area-of-a-patch-that-has-the-smallest-standard-error-for-predictions-of-number-of-species-in-an-individual-patch}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} The uncertainty in prediction on an estimate is
+  smallest when \(x=\bar{x}\). Therefore, the area of the patch that has
+  the smallest standard error the predictions of the mean number of
+  species is 10 hectares.
+\end{itemize}
+
+\subsection{(d)}\label{d-3}
+
+The investigators would really like to make predictions of diversity in
+an individual patch that has standard errors less than 20 species. Is
+that possible with this model and data? Explain why or why not.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = species ~ log.area, data = df)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -33.25 -21.88   0.75  19.25  38.25 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)   36.250      8.702   4.166 0.000952 ***
+## log.area      12.377      2.760   4.485 0.000514 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 23.78 on 14 degrees of freedom
+## Multiple R-squared:  0.5896, Adjusted R-squared:  0.5603 
+## F-statistic: 20.11 on 1 and 14 DF,  p-value: 0.000514
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sigma.hat<-}\FloatTok{23.78}
+\NormalTok{n <-}\StringTok{ }\DecValTok{16}
+\CommentTok{# minimum prediction error for individual response.}
+\NormalTok{min.pe<-sigma.hat}\OperatorTok{*}\KeywordTok{sqrt}\NormalTok{(}\DecValTok{1}\OperatorTok{+}\NormalTok{(}\DecValTok{1}\OperatorTok{/}\NormalTok{n))}
+\NormalTok{min.pe}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 24.51186
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} No, the minimum attainable prediction error (p.e.)
+  for a predicted individual patch response is 24.51186.
+\end{itemize}
+
+\subsection{(e)}\label{e-2}
+
+The study that produced these data has attracted a lot of international
+attention. Imagine that this study can be repeated with 10 times as many
+plots (160 instead of the 16 here). All else about the system remains
+the same: the regression intercept, slope, and error variance (i.e.
+\(\hat{\sigma}\)) are the same as here. Will this study be able to
+predict diversity in an individual patch with a standard error less than
+20 species? Briefly explain why or why not.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = species ~ log.area, data = df)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -33.25 -21.88   0.75  19.25  38.25 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)   36.250      8.702   4.166 0.000952 ***
+## log.area      12.377      2.760   4.485 0.000514 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 23.78 on 14 degrees of freedom
+## Multiple R-squared:  0.5896, Adjusted R-squared:  0.5603 
+## F-statistic: 20.11 on 1 and 14 DF,  p-value: 0.000514
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sigma.hat<-}\FloatTok{23.78}
+\NormalTok{n2 <-}\StringTok{ }\DecValTok{160}
+\CommentTok{# minimum prediction error for individual response.}
+\NormalTok{min.pe2<-sigma.hat}\OperatorTok{*}\KeywordTok{sqrt}\NormalTok{(}\DecValTok{1}\OperatorTok{+}\NormalTok{(}\DecValTok{1}\OperatorTok{/}\NormalTok{n2))}
+\NormalTok{min.pe2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 23.8542
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} No, the minimum attainable prediction error for an
+  individual patch, when the sample size is increased to 160, is
+  23.8542.
+\end{itemize}
+
+\section{5.) Manatees}\label{manatees}
+
+Manatees (a.k.a. sea cows) live off the coast of Florida and
+unfortunately, many manatees are killed or injured by powerboats every
+year. The file \emph{manatee.csv} contains data on X = the number of
+Florida powerboat registrations (in 1000s) and Y = number of manatees
+killed near Florida. There is one point for each year from 1977 to 1990.
+
+\subsection{(a)}\label{a-4}
+
+Use software to construct a scatterplot between the number of manates
+killed and number of Florida power boat registrations. Is the
+relationship roughly linear?
+
+\includegraphics{Simonson_HW8_files/figure-latex/unnamed-chunk-25-1.pdf}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} The scatterplot shows that the number of powerboat
+  registrations, in thousands, is roughly linearly correlated with the
+  number of mantaees killed.
+\end{itemize}
+
+\subsection{(b)}\label{b-4}
+
+Compute the correlation coefficient between two variables. Describe what
+this value says about the relationship between X and Y, in the context
+of the study.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cor}\NormalTok{(df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           X         Y
+## X 1.0000000 0.9414773
+## Y 0.9414773 1.0000000
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} The correlation coefficeint for the two variables is
+  0.9414773, indicating a strong positive relationship between the
+  number of manatees killed and the number of Florida powerboat
+  registrations (in thousands).
+\end{itemize}
+
+\subsection{(c)}\label{c-4}
+
+Give the equation of the least-squares regression line for predicting
+the number of manatee deaths as a function of powerboat registrations.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model<-}\KeywordTok{lm}\NormalTok{(Y}\OperatorTok{~}\NormalTok{X, }\DataTypeTok{data =}\NormalTok{ df)}
+\KeywordTok{summary}\NormalTok{(model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = Y ~ X, data = df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -9.2468 -2.0217  0.0217  2.3369  5.6328 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) -41.4304     7.4122  -5.589 0.000118 ***
+## X             0.1249     0.0129   9.675 5.11e-07 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 4.276 on 12 degrees of freedom
+## Multiple R-squared:  0.8864, Adjusted R-squared:  0.8769 
+## F-statistic: 93.61 on 1 and 12 DF,  p-value: 5.109e-07
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} Given the mantaee data, our observed
+  \(\hat{\beta_0}\) for the intercept of the least-squares regression
+  line is -41.4304 and our observed \(\hat{\beta_1}\) for the least
+  squares regression slope is 0.1249. Therefore;
+\end{itemize}
+
+\[
+Y = -41.304 + (0.1249 * X)
+\]
+
+\subsection{(d)}\label{d-4}
+
+Predict the number of manatee deaths for a year in which 600,000
+powerboats are registered in Florida (X=600).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{new.data<-}\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{X =} \DecValTok{600}\NormalTok{)}
+\NormalTok{est<-}\KeywordTok{predict}\NormalTok{(model, }\DataTypeTok{newdata =}\NormalTok{ new.data, }\DataTypeTok{se.fit =}\NormalTok{ T,}\DataTypeTok{interval =} \StringTok{"conf"}\NormalTok{,}\DataTypeTok{level=}\FloatTok{0.95}\NormalTok{)}
+\NormalTok{est}\OperatorTok{$}\NormalTok{fit}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        fit      lwr      upr
+## 1 33.48658 30.83401 36.13915
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} The estimated mean number of manatee deaths in one
+  year when there are 600,000 powerboats registered in Florida is
+  33.48658.
+\end{itemize}
+
+\subsection{(e)}\label{e-3}
+
+Provide a 95\% prediction interval for the number of manatee deaths in a
+year in which 600,000 powerboats are registered in Florida.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} Given the output from part (d), we are 95\% certain
+  that the mean number of manatee deaths is between 30.83401 and
+  36.13915 when there are 600,000 powerboats registered in Florida .
+\end{itemize}
+
+\subsection{(f)}\label{f-3}
+
+Examine the residual plot and the normal probability plot of the
+residuals from the simple linear regression model. Is there an
+indication that the assumptions of the model are violated? Explain why
+or why not.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Answer:} Using personal judgement of visual displays of the
+  residual plot (left) and QQ plot (right), I do not think that there is
+  any evidence to conclude these assumptions have been violated. The
+  residual plot shows that the residuals are centered around zero with
+  no pattern as fitted values increase. Similarly, the QQ plot shows
+  that the points fall roughly along a straight line.
+\end{itemize}
+
+
+\end{document}

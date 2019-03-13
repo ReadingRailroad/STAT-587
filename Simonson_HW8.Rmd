@@ -247,7 +247,16 @@ Based on the F statistic and p-value computed in part (b), is there statisticall
 
 What proportion of the variability in the percentage of wormy fruit is explained by the regression of percentage of wormy fruit on crop size?
 
-- __Answer:__ The model summary from (a) returns an adjusted $R^2$ of 0.5413, meaning about 54.13% of the variability in the percentage of wormy fruit is explained by the regression of percentage of wormy fruit on crop size.
+```{r}
+anova(model)
+SS.Between<-776.6
+SS.Total<-534.67+776.6
+SS.Between/SS.Total
+```
+
+- __Answer:__ The proportion of variability is given by the sum of squares between divdied by the sum of squares total. Therefore, the [unadjusted] proporition of variability in the percentage of wormy fruit that is explained by regression is 0.5922503, or 59.22%
+
+- __Answer, Part 2:__ The model summary from (a) returns a more conservatiev [adjusted] $R^2$ of 0.5413, meaning about 54.13% of the variability in the percentage of wormy fruit is explained by the regression of percentage of wormy fruit on crop size.
 
 ## (e)
 
@@ -299,18 +308,34 @@ Estimate the regression coefficients of the linear regression model suggested by
 
 ```{r}
 df<-read.csv("Data/diversity.csv",header=T)
-str(df) # area x; number of species is y
-model<-lm(species~area,data=df)
+str(df) # area x (hectares); number of species is y
+df$log.area<-log(df$area)
+model<-lm(species~log.area,data=df)
 summary(model)
 ```
 
-- __Answer:__ The estimate for $\hat{\beta_0}$ is 55.76094; the estimate for $\hat{\beta_1}$ is 0.09878. The data provide strong evidence of a positive linear relationship; we observe a t-statistic for $\hat{\beta_1}$ of 3.449 on 14 degrees of freedom, with a p-value of 0.003912.
+- __Answer:__ The estimate for $\hat{\beta_0}$ is 36.250; the estimate for $\hat{\beta_1}$ is 12.377. The data provide strong evidence of a positive linear relationship; we observe a t-statistic for $\hat{\beta_1}$ of 4.485 on 14 degrees of freedom, with a p-value of 0.00514.
 
 ## (b)
 
-Does the mean diversity vary linearly with log(area), or does a model that allows the mean diversity to follow some other pattern appear to fit the data better? Provide the hypotheses, test statistic and a p-value in addition to your conclusion.
+Does the mean diversity vary linearly with log(area), or does a model that allows the mean diversity to follow some other pattern appear to fit the data better? Provide the hypotheses, test statistic and a p-value in addition to your conclusion. __Only do a visual test for the assumptions of linearity.__
 
-- __Answer:__
+```{r}
+library(ggplot2)
+library(gridExtra)
+p1<-ggplot(model)+
+  geom_point(aes(x=.fitted,y=.resid))+
+  geom_abline(aes(intercept=0,slope=0))+
+  theme_classic()
+p1
+p2<-ggplot(df,aes(sample = log.area))+
+  stat_qq()+
+  stat_qq_line()+
+  theme_classic()
+grid.arrange(p1,p2,ncol=2)
+```
+
+- __Answer:__ The residual plot shows a concentration of points distributed broadly along the y-axis but concentrated at discrete intervals along the x-axis. The points in the QQ-plot do not fall along the QQ line, and appear to have disjointed trends in the data (Number of species is a discrete variable). Therefore, I believe the assumptions of least squares regression are violated.
 
 ## (c) 
 
@@ -318,24 +343,49 @@ The investigators are interested in using this model to predict the number of sp
 
 ### (i) What is the area of a patch that has the smallest standard error for the predictions of the mean number of species? 
 
-- __Answer:__
+```{r}
+exp(mean(df$log.area))
+```
+
+
+- __Answer:__ The uncertainty in prediction on an estimate is smallest when $x=\bar{x}$. Therefore, the area of the patch that has the smallest standard error the predictions of the mean number of species is 10 hectares.
 
 
 ### (ii) What is the area of a patch that has the smallest standard error for predictions of number of species in an individual patch?
 
-- __Answer:__
+- __Answer:__ The uncertainty in prediction on an estimate is smallest when $x=\bar{x}$. Therefore, the area of the patch that has the smallest standard error the predictions of the mean number of species is 10 hectares.
 
 ## (d) 
 
 The investigators would really like to make predictions of diversity in an individual patch that has standard errors less than 20 species. Is that possible with this model and data? Explain why or why not.
 
-- __Answer:__
+```{r}
+summary(model)
+sigma.hat<-23.78
+n <- 16
+# minimum prediction error for individual response.
+min.pe<-sigma.hat*sqrt(1+(1/n))
+min.pe
+
+```
+
+- __Answer:__ No, the minimum attainable prediction error (p.e.) for a predicted individual patch response is 24.51186.
 
 ## (e)
 
 The study that produced these data has attracted a lot of international attention. Imagine that this study can be repeated with 10 times as many plots (160 instead of the 16 here). All else about the system remains the same: the regression intercept, slope, and error variance (i.e. $\hat{\sigma}$) are the same as here. Will this study be able to predict diversity in an individual patch with a standard error less than 20 species? Briefly explain why or why not.
 
-- __Answer:__
+```{r}
+summary(model)
+sigma.hat<-23.78
+n2 <- 160
+# minimum prediction error for individual response.
+min.pe2<-sigma.hat*sqrt(1+(1/n2))
+min.pe2
+
+```
+
+- __Answer:__ No, the minimum attainable prediction error for an individual patch, when the sample size is increased to 160, is 23.8542. 
 
 
 # 5.) Manatees
@@ -349,7 +399,7 @@ Use software to construct a scatterplot between the number of manates killed and
 ```{r,include=F}
 df<-read.csv("Data/manatee.csv",header=T)
 str(df)
-require(ggplot2)
+library(ggplot2)
 p1<-ggplot(df,aes(x=X,y=Y))+
   geom_point()+
   theme_classic()+
@@ -412,9 +462,10 @@ Provide a 95% prediction interval for the number of manatee deaths in a year in 
 Examine the residual plot and the normal probability plot of the residuals from the simple linear regression model. Is there an indication that the assumptions of the model are violated? Explain why or why not.
 
 ```{r,include=F}
-require(gridExtra)
+library(gridExtra)
 p1<-ggplot(model)+
   geom_point(aes(x=.fitted,y=.resid))+
+  geom_abline(aes(intercept=0,slope=0))
   theme_classic()
 p1
 p2<-ggplot(df,aes(sample = Y))+

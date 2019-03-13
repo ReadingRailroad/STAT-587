@@ -1,0 +1,52 @@
+---
+title: "Lab_7"
+author: "Marty Simonson"
+date: "March 13, 2019"
+output: pdf_document
+---
+
+# 1.) crickets
+```{r}
+library(ggplot2)
+
+crickets = read.table("Data/Crickets.txt",header=T)
+str(crickets)
+
+fit<-lm(chirps~temp,data=crickets)
+predict(fit,newdata=data.frame(temp=78),interval="predict",level=0.95)
+#
+predict(fit,newdata=data.frame(temp=68),interval="predict")
+#
+summary(fit)
+
+crickets$residuals <- resid(fit)
+crickets$fitted <- fitted(fit)
+
+ggplot(crickets,aes(x=fitted,y=residuals))+
+  geom_point()+
+  geom_abline(aes(intercept = 0,slope=0))+
+  theme_classic()
+
+ggplot(crickets,aes(sample=residuals))+
+  stat_qq()+
+  stat_qq_line()+
+  theme_classic()
+
+```
+
+# 2. kangaroos
+
+recall kangaroos. response is nasal length and predictor is nasal width. n = 45
+
+## a) predictions with standard errors less than 1mm?
+
+```{r}
+roo<-read.table("Data/kangaroo.txt",header=T)
+
+# residual standard error from model is 0.9133
+# n is equal to 45
+
+
+
+```
+
