@@ -1,0 +1,199 @@
+---
+title: "Simonson Homework 9"
+author: "Martin A. Simonson"
+date: "April 5, 2019"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# 1. Multiple Linear Regression Formula
+
+Consider a multiple linear regression model with n observations and m continuous predictor variables. Recall that multiple R2 = SSModel / (SSModel + SSError) and the overall F-ratio is F = MSModel/MSError. Use this to express F in terms of R2 (and m and n).
+
+- __Answer:__ 
+
+# 2. Drug Costs
+
+Health plans use many tools to try to control the cost of prescription medicines. For older drugs, generic substitutes that are equivalent to name-brand drugs are sometimes available at a lower cost. Another tool that may lower costs is restricting the drugs that physicians may prescribe. For example, if three similar drugs are available for treating the same symptoms, a health plan may require physicians to prescribe only one of them. Since the usage of the chosen drug will be higher, the health plan may be able to negotiate a lower price for that drug.
+
+The data in the file _drugcost.txt_, can be used to explore the effectiveness of these two strategies in controlling drug costs. The response variable is _COST_, the average cost of drugs per prescription per day, and predictors include GS (the extent to which the plan uses generic substitution, a number between zero, no substitution, and 100, always use a generic substitute if available) and RI (a measure of the restrictiveness of the plan, from zero, no restrictions on the physician, to 100, the maximum possible restrictiveness). Other variables that might impact cost were also collected, and are described in Table 1. The data are from the mid-1990s, and are for 29 plans throughout the United States with pharmacies
+administered by a national insurance company.
+
+Table 1: The Drug Cost Data
+
+```{r, echo = F}
+df<-read.table("Data/drugcost.txt", header = T)
+
+str(df)
+```
+
+## A. 
+
+Fit a multiple linear regression model of COST on the other predictor variables. Report the overall F-ratio, p-value and the multiple R-squared.
+
+```{r,echo=F}
+
+```
+
+
+- __Answer:__
+
+## B.
+
+Summarize your results with regard to the importance of GS and RI. In particular, can we infer that more use of GS and RI will reduce drug costs?
+
+- __Answer:__
+
+## C.
+
+What are the other important variables and how do they affect the cost?
+
+- __Answer:__
+
+## D.
+
+Find a 95% confidence interval for the coefficient of GS and interpret it in the given context.
+
+- __Answer:__
+
+## E.
+
+Run model diagnostics and comment
+
+```{r}
+
+```
+
+- __Answer:__
+
+# 3. Longnose Dace
+
+The data in longnose_dace.txt gives the data on the abundance of longnose dace in streams in
+Maryland. The columns are:
+
+- stream : Name of the stream [ignore this column for fitting model]
+- longnosedace : number of longnose in a 75m section of the stream.
+- acreage : area (in acres) drained by the stream
+- do2 : dissolved oxygen (in mg/litre)
+- maxdepth : maximum depth (in cm) of the 75-meter segment of stream
+- no3 : nitrate concentration (mg/liter)
+- so4 : sulfate concentration (mg/liter)
+- temp : water temperature on the sampling date (in oC).
+
+```{r, include = F}
+
+
+```
+
+## A.
+
+Use multiple linear model with the number of longnose dace as the response variable. Run a model diagnostics and check for model adequacy.
+
+```{r, echo = F}
+
+```
+
+- __Answer:__
+
+## B.
+
+Use an appropriate transformation [log] on the response, fit another MLR and run model diagnostics. Do things look better than A.? Irrespective of the answer, use the model in B. to answer all following questions.
+
+```{r}
+
+```
+
+## C.
+
+Check for predictive power of each variable after accounting for the rest [That is, test each regression coefficient]. Report the table of estimates, s.e.'s, T-ratios and p-values. Write a short conclusion [1-2 sentences, include direction of an effect if present].
+
+```{r}
+
+```
+
+- __Answer:__
+
+## D.
+
+Find a 95% confidence intervals for the coefficients of important predictor variables [i.3. the ones you found "significant" in C.].
+
+```{r}
+
+```
+
+- __Answer:__
+
+## E.
+
+What are the units in the study? Is this an experimental sudy or observational?
+
+- __Answer:__
+
+## F.
+
+Use your model to predict the median abundance of longnose dace and a 95% interval for the abundance in a Maryland river where the conditions are as follows:
+
+- Acreage: 6298
+- do2: 9.7 mg/l
+- maxdepth: 65cm
+- NO3: 7.5 mg/l
+- SO4: 44 mg/l
+- temperature: $20^\circ C$
+
+```{r}
+
+```
+
+- __Answer:__
+
+# 4. Mammal Brain Weights
+
+The data is given in _brainsize.txt_. Ignore book's questions and answer the following. Use a MLR of log(Brain) on log(Body), log(Gestation) and log(Litter) to answer the following questions:
+
+## A.
+
+Report the overall F-test and the p-value associated with it, multiple R-squared and the estimate of error variance (i.e. $\hat{\sigma}$).
+
+```{r, echo = F}
+
+```
+
+- __Answer:__
+
+## B.
+
+Report the table of estimates for the coefficients. Which predictors seem to be important in predicting brain size?
+
+```{r}
+
+```
+
+## C.
+
+Suppose we want to construct a 5% interval for the average brain size of red kangaroos. Should it be a confidence interval or prediction interval?
+
+- __Answer:__
+
+## D.
+
+Obtain a 95% interval for C. Use the following information on red kangaroos:
+
+- Average body weight: 63 lb. [ _warning: watch the units_]
+- Average gestation period: 34 days
+- Average litter size: 2
+
+[Note: youll not be double benalized if youg et C. wrong and if your answer in D. is consistent with C.]
+
+```{r}
+
+```
+
+- __Answer:__
+
+## E.
+
+Obtain the plot of residual-vs-fitted valuse. Point out a limitation of your model. [Hint: check the signs of the residuals associated with large body weights.]
+
+
+
