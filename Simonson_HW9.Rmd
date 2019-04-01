@@ -20,7 +20,7 @@ Health plans use many tools to try to control the cost of prescription medicines
 The data in the file _drugcost.txt_, can be used to explore the effectiveness of these two strategies in controlling drug costs. The response variable is _COST_, the average cost of drugs per prescription per day, and predictors include GS (the extent to which the plan uses generic substitution, a number between zero, no substitution, and 100, always use a generic substitute if available) and RI (a measure of the restrictiveness of the plan, from zero, no restrictions on the physician, to 100, the maximum possible restrictiveness). Other variables that might impact cost were also collected, and are described in Table 1. The data are from the mid-1990s, and are for 29 plans throughout the United States with pharmacies
 administered by a national insurance company.
 
-Table 1: The Drug Cost Data
+The Drug Cost Data
 
 ```{r, echo = F}
 df<-read.table("Data/drugcost.txt", header = T)
@@ -33,39 +33,58 @@ str(df)
 Fit a multiple linear regression model of COST on the other predictor variables. Report the overall F-ratio, p-value and the multiple R-squared.
 
 ```{r,echo=F}
-
+fit<-lm(COST~RXPM+GS+RI+COPAY+AGE+F+MM,data = df)
+summary(fit)
 ```
 
-
-- __Answer:__
+- __Answer:__ The overall F-statistic is 4.072 on 7 and 21 degrees of freedom, with a p-value of 0.00572. The multiple R-squared is 0.5758. 
 
 ## B.
 
-Summarize your results with regard to the importance of GS and RI. In particular, can we infer that more use of GS and RI will reduce drug costs?
+Summarize your results with regard to the importance of _GS_ and _RI_. In particular, can we infer that more use of GS and RI will reduce drug costs?
 
-- __Answer:__
+- __Answer:__ The coefficient for _GS_ has a t-ratio of -4.018 associated with a p-value of 0.000622, providing very strong evidence that an increase in GS will reduce drug costs. On the other hand, _RI_ has a low t-ratio of 0.160 associated with a p-value of 0.874468, providing no evidence that an increase in RI will affect drug cost.
 
 ## C.
 
 What are the other important variables and how do they affect the cost?
 
-- __Answer:__
+- __Answer:__ There is some evidence (p-value 0.054483) for an effect of _RXPM_; with an increase in _RXPM_ corresponding with an increase in drug cost. Also, there is evidence (p-value 0.020012) for an effect of _AGE_, with an increase in _AGE_ corresponding with a decrease in drug cost.
 
 ## D.
 
 Find a 95% confidence interval for the coefficient of GS and interpret it in the given context.
 
-- __Answer:__
+```{r}
+
+t.star<-2.08 # From t-table with 21 degrees of freedom
+se<-2.830 * (10^-3) # SE of GS coefficient from summary output
+est<- -1.137 * (10^-2) # GS coefficient estimate from summary output
+
+lower<- est - t.star * se
+upper<- est + t.star * se
+
+data.frame(lower,upper)
+```
+
+
+- __Answer:__ We are 95% confident that, after accounting for the other variables, the coefficient for _GS_ lies between -0.0172564 and -0.0054836. In other words, with all other variables held constant a one unit increase in _GS_ would correspond with between 0.0172564 and 0.0054836 reduction in drug cost
 
 ## E.
 
 Run model diagnostics and comment
 
-```{r}
-
+```{r,echo=F}
+library(ggplot2)
+library(gridExtra)
+df$resid<-resid(fit)
+df$fitted<-fitted(fit)
+p1<-ggplot(df,aes(x=fitted,y=resid))+geom_point()+theme_classic()+geom_hline(yintercept = 0)
+p2<-ggplot(df,aes(sample=resid))+stat_qq()+stat_qq_line()+theme_classic()
+grid.arrange(p1,p2,ncol=2)
 ```
 
-- __Answer:__
+- __Answer:__ From both diagnostic plots we see that there may be an issue with the normality assumption (curvature of points at upper end of QQ plot) and that the homoskedasticity assumption may be violated due to uneven distribution observed in the residuals vs. fitted scatterplot.
 
 # 3. Longnose Dace
 
@@ -82,8 +101,8 @@ Maryland. The columns are:
 - temp : water temperature on the sampling date (in oC).
 
 ```{r, include = F}
-
-
+dace<-read.table("Data/longnose_dace.txt",header=T)
+str(dace)
 ```
 
 ## A.
@@ -91,18 +110,32 @@ Maryland. The columns are:
 Use multiple linear model with the number of longnose dace as the response variable. Run a model diagnostics and check for model adequacy.
 
 ```{r, echo = F}
-
+fit<-lm(longnosedace~acreage + do2 + maxdepth + no3 + so4 + temp, data = dace)
+summary(fit)
+dace$resid<-resid(fit)
+dace$fitted<-fitted(fit)
+p1<-ggplot(dace,aes(x=fitted,y=resid))+geom_point()+theme_classic()+geom_hline(yintercept = 0)
+p2<-ggplot(dace,aes(sample=resid))+stat_qq()+stat_qq_line()+theme_classic()
+grid.arrange(p1,p2,ncol=2)
 ```
 
-- __Answer:__
+- __Answer:__ The first longnose dace model had an F-statistic of 4.653 on 6 and 61 degrees of freedom, with an associated p-value of 0.0005905. However, the multiple R-squared value was 0.314, showing that the model only explains about 31% of overall variability. The diagnostic plots also show violations of homoskedascity and non-normal distributions.
 
 ## B.
 
 Use an appropriate transformation [log] on the response, fit another MLR and run model diagnostics. Do things look better than A.? Irrespective of the answer, use the model in B. to answer all following questions.
 
 ```{r}
-
+fit<-lm(log(longnosedace)~acreage + do2 + maxdepth + no3 + so4 + temp, data = dace)
+summary(fit)
+dace$resid<-resid(fit)
+dace$fitted<-fitted(fit)
+p1<-ggplot(dace,aes(x=fitted,y=resid))+geom_point()+theme_classic()+geom_hline(yintercept = 0)
+p2<-ggplot(dace,aes(sample=resid))+stat_qq()+stat_qq_line()+theme_classic()
+grid.arrange(p1,p2,ncol=2)
 ```
+
+- __Answer:__
 
 ## C.
 
