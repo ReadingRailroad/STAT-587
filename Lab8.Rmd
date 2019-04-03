@@ -1,0 +1,53 @@
+---
+title: "Lab 8"
+author: "Marty Simonson"
+date: "March 27, 2019"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(ggplot2)
+
+rl <- read.table("Data/readlev.txt",header=T)
+str(rl)
+
+ggplot(rl, aes(x=tvtime,y=readlev,label=grade))+
+  geom_label()+
+  xlab("TV time (hours)")+
+  ylab("Reading Level Score")+
+  theme_classic()
+```
+
+
+# multiple linear regression
+
+```{r}
+fit <- lm(readlev ~ tvtime + grade, data = rl)
+summary(fit)
+```
+
+# individual predictions
+
+```{r}
+predict(fit, newdata = data.frame(grade = 4, tvtime = 7), 
+        interval = "predict")
+```
+
+# residual plots for model diagnostics
+
+```{r}
+rl$Resid<-resid(fit)
+rl$Fitted<-fitted(fit)
+ggplot(rl, aes(x=Fitted,y=Resid))+
+  geom_point()+
+  theme_classic()
+
+ggplot(rl, aes(sample = Resid)) +
+  stat_qq()+
+  stat_qq_line()+
+  theme_classic()
+
+```
+

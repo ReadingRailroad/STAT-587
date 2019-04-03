@@ -1,0 +1,305 @@
+---
+title: "R tutorial for Lab -- 9"
+author: "Somak Dutta"
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r setup, include=FALSE}
+library(knitr)
+library(kableExtra)
+knitr::opts_chunk$set(fig.width = 8,fig.height = 6)
+options(digits = 6)
+
+```
+
+Load the required packages (you may have to **install** `car` by calling `install.packages("car")`)
+```{r warning=FALSE,message=FALSE}
+library(ggplot2)
+library(emmeans)
+library(car)
+```
+
+
+
+## Problem 1.
+Read the data
+```{r}
+wl = read.table("Data/weightloss.txt",header = T)
+str(wl)
+```
+
+Obtain the scatter plot matrix:
+Note: The first column is the subject id. the `[,-1]` drops the first column temporarily (if you want to drop the third column it would be `[,-3]`)
+
+```{r}
+pairs(wl[,-1])
+```
+
+
+The multiple linear regression model is also fit using the `lm` function (`lm` stands for linear models). The symbol `+` in the following formula tells `R` to include additive effects of the variables, but it does not algebraically \emph{add} these variables.
+
+```{r}
+f = lm(WtLoss24 ~ Diet + Sex + Age + BMI,data=wl)
+```
+
+You can print the model matrix R uses to fit represent the dummy variables (R uses )
+```{r results="hide",include=T}
+model.matrix(f)
+```
+Once you run the command above you'd know that R has used a `treatment` contrast, i.e., held `Low-carb` diet as the baselevel and used two dummies. Also for `Sex` it held the `Female` as the baselevel.
+
+In order to perform the overall F-test, and also for testing the effects of the continuous variables, we can simply look at the summary of the regression:
+
+```{r}
+summary(f)
+```
+
+
+```{r}
+joint_tests(f)
+```
+
+To test various contrasts involving the diets, we can get their marginal means by `emmeans` and proceed as we used to:
+
+
+```{r}
+diet.emm = emmeans(f,~Diet)
+diet.emm
+```
+
+For testing low-fat against low-carb:
+```{r}
+ct1 = c(-1,1,0)
+contrast(diet.emm,list("LowFat - LowCarb"=ct1))
+```
+
+
+To test if the Mediterranean diet has a different effect than the average of the other two diets:
+```{r}
+ct2 = c(1/2, 1/2, -1)
+contrast(diet.emm, list("(LowCarb and LowFat)/2 - Med"=ct2))
+```
+
+
+For comparing all pairs of treatments (NOTE: Tukey adjustment has been used)
+```{r}
+pairs(diet.emm)
+```
+
+A connected letter diagram can also be obtained:
+```{r}
+CLD(diet.emm,Letters = LETTERS)
+```
+
+To predict we use the `predict` function on the output of `lm` object.
+```{r}
+predict(f,newdata = data.frame(Diet="Low-Fat",Sex="M",Age=32,BMI=30.3),interval = "predict")
+predict(f,newdata = data.frame(Diet="Low-Carbohydrate",Sex="M",Age=32,BMI=30.3),interval = "predict")
+predict(f,newdata = data.frame(Diet="Mediterranean",Sex="M",Age=32,BMI=30.3),interval = "predict")
+```
+
+
+To see how the diets will affect \emph{you}, use your Sex, Age and BMI values in the above.
+
+To run the model diagnostics, get the residual-vs-fitted plot and the `QQ-plot` of the residuals:
+
+```{r}
+wl$Residuals = resid(f)
+wl$Fitted = fitted(f)
+```
+
+```{r}
+ggplot(wl,aes(x=Fitted,y=Residuals)) + geom_point()
+```
+
+The above plot is somewhat worrying, because it suggests that the variability increases with the fitted values (fanning pattern)
+
+```{r}
+ggplot(wl,aes(sample=Residuals)) + stat_qq() + stat_qq_line()
+```
+
+
+
+
+
+
+## Problem 2
+Read the dataset:
+
+```{r}
+corn = read.table("Data/CornVariety.dat",header=T)
+str(corn)
+```
+
+### a.
+Plot the data. The argument `color=Variety` instructs `R` to use different colors for different varieties. The `size=2` in `geom_point` magnifies the points (the default size is often too small to be visible on print) and the `theme_light(base_size=13)` uses a light-theme (removes the default gray background) and sets the base fontsize to be 13 (the default fonts are too small in my opininion).
+
+```{r}
+ggplot(corn,aes(x=FertAmt,y=Yield,color=Variety)) + geom_point(size=2) + 
+  xlab("Fertilizer amount") + theme_light(base_size = 13)
+```
+
+### b.
+Ya = 131.5 + 0.125 * D1 + 0.93x where d1 is the dummy variable for variety. {1=A, -1=B}
+Ya = 131.625 + 0.93x for Variety A; Ya = yield and x = fertilizer amount
+
+Yb = 131.5 + 0.125 * D1 + 0.93x where d1 is the dummy variable for variety {-1=B}
+Yb = 131.475 + 0.93x
+
+### c.
+Parallel lines model
+
+```{r}
+fit.par = lm(Yield ~ Variety + FertAmt,data=corn)
+summary(fit.par)
+```
+
+
+Summary gives the overall F-test, coefficients table and the multiple R-squared:
+
+**Rule**: Always test the significance of continuous variables from the coefficients table and the significance of factors using partial F-tests.
+```{r}
+summary(fit.par)
+```
+
+Using the parallel lines model, we estimate that a unit increase in fertilizer amount increases the mean yield by 0.930 buac (s.e. 0.151 buac), ceteris paribus.
+
+### d. and e.
+To do this, we use `emmeans` (as we used to)
+```{r}
+Variety.emm = emmeans(fit.par, ~ Variety)
+Variety.emm
+```
+
+Use contrast as we used to:
+```{r}
+contrast(Variety.emm, list("A-B"=c(1,-1)))
+```
+
+You want to test them jointly use `joint_tests` (in this case the above contrast and the joint test give equivalent result because there are only two levels)
+
+```{r}
+joint_tests(Variety.emm)
+```
+
+### f.
+Y = B0 + B1D1 + B2X + B3(D1X)
+y = yield
+x= fertilizer amount
+D1X = product of D1 and X where D1 is the dummy variable for variety
+
+### g.
+
+We include the main effects as well as the interaction using `*`. However, when you include interaction it is imperative that you use the sum contrast (instead of the default treatment contrast) for the factor variable(s). This can be achieved by passing a `contrasts = list(Variety="contr.sum")` argument to the `lm` function. If you have more than one factors, you have to include them inside the `list` and seprate by commas.
+
+```{r}
+fit.int = lm(Yield ~ Variety*FertAmt,data=corn, contrasts = list(Variety="contr.sum"))
+```
+
+```{r}
+summary(fit.int)
+```
+
+See Lecture note on how to compute the slope coefficients for each variety.
+
+Slope in absence of variety: 0.93
+Variety A: beta2 plus beta 3: 0.33 + 0.93 = 1.26
+Variety B: beta 2 minus beta 3: 0.93 = 0.33 = 0.60
+
+
+### h.
+This is equivalent to testing for the interaction effect. Use `Anova` (with an uppercase A), from the `car` package to get the table of partial F-tests. Remember to use `type=3`:
+
+```{r}
+Anova(fit.int,type=3)
+```
+
+(Ignore the `(Intercept)` term in the above table). Strong evidence that the slopes are not the same for the two varieties: the fertilizer have different effect on the two varieties (which is also suggested by the data)
+
+
+
+## Problem 3
+Read the data. 
+```{r}
+kids = read.table("Data/readlev.txt",header = T)
+str(kids)
+```
+
+The variable grade is read as continuous variable by default, so we have to convert it to a factor.
+
+Best practice: Create a copy of `grade` (call it `grade.f`) and store that as a factor (in case you may need the original continuous representation of `grade`)
+
+```{r}
+kids$grade.f = factor(kids$grade)
+str(kids)
+```
+
+### a.
+```{r}
+kids.par = lm(readlev ~ grade.f + tvtime,data=kids)
+summary(kids.par)
+```
+
+We observe that each additional unit of TV time results in -.91 units change in reading score.
+
+### b.
+First obtain the emmeans:
+
+```{r}
+grade.emm = emmeans(kids.par,~grade.f)
+grade.emm
+```
+
+```{r}
+contrast(grade.emm,list("1st - 2nd graders"=c(1,-1,0,0,0) ))
+```
+
+The estimated difference in mean reading scores between first and second graders, after adjusting for tv time, is -3.86 with an SE = 0.256.
+
+### c.
+```{r}
+joint_tests(grade.emm)
+```
+
+We have strong evidence to reject the null and conclude that htere is a difference in reading score between grades, after accounting for tv time. The F-ratio is 143 on 4 and 9 degrees of freedom, with a p-value less than 0.0001.
+
+### d.
+
+```{r}
+pairs(grade.emm)
+```
+
+You can also get a CLD:
+
+```{r}
+CLD(grade.emm)
+```
+
+
+### e.
+Fit the model with interaction:
+```{r}
+kids.int = lm(readlev ~ grade.f*tvtime,data=kids, contrasts = list(grade.f="contr.sum"))
+Anova(kids.int,type=3)
+```
+
+No evidence for an interaction (p-value 0.388). Looks like the tvtime affects the kids in different grades in the same manner.
+
+
+
+
+
+
+
+
+
+
+
+
+

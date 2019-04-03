@@ -1,0 +1,10 @@
+---
+title: "Lab9"
+author: "Marty Simonson"
+date: "April 3, 2019"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+
+
