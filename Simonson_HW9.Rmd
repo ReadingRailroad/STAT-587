@@ -11,7 +11,26 @@ editor_options:
 
 Consider a multiple linear regression model with n observations and m continuous predictor variables. Recall that multiple R2 = SSModel / (SSModel + SSError) and the overall F-ratio is F = MSModel/MSError. Use this to express F in terms of R2 (and m and n).
 
-- __Answer:__ 
+- __Answer:__ Let's start with the F-table as we know it (Let Y = :
+
+Source  | DF   | SS              | MS              | F           | p-value
+--------|------|-----------------|-----------------|-------------|---------------
+Model   | m    | $SS_{model} = \sum_{i=1}^n (\hat{y_i} - \bar{y})^2$ | .               | $F = \frac{MS_{model}}{\hat{\sigma}^2}$            | .
+Error   | n-m  | $SS_{error} = \sum_{i=1}^n (y_i - \bar{y})^2$       | .               | .           | . 
+Total   | n-1  | $SS_{total} = \sum_{}               | .               | .           | .
+
+
+\[
+F = \frac{MS_{model}}{\hat{\sigma}^2} 
+\]
+
+Where 
+
+\[
+MS_{model} = \frac{SS_{model}}{DF_{model}} 
+\]
+
+$F = \frac{R^2}{1-R^2} * \frac{n-m-1}{m}$ 
 
 # 2. Drug Costs
 
@@ -43,7 +62,7 @@ summary(fit)
 
 Summarize your results with regard to the importance of _GS_ and _RI_. In particular, can we infer that more use of GS and RI will reduce drug costs?
 
-- __Answer:__ The coefficient for _GS_ has a t-ratio of -4.018 associated with a p-value of 0.000622, providing very strong evidence that an increase in GS will reduce drug costs. On the other hand, _RI_ has a low t-ratio of 0.160 associated with a p-value of 0.874468, providing no evidence that an increase in RI will affect drug cost.
+- __Answer:__ The coefficient for _GS_ has a t-ratio of -4.018 associated with a p-value of 0.000622, providing very strong evidence that an increase in _GS_ will reduce drug costs. On the other hand, _RI_ has a low t-ratio of 0.160 associated with a p-value of 0.874468, providing no evidence that an increase in _RI_ will affect drug cost.
 
 ## C.
 
@@ -68,7 +87,7 @@ data.frame(lower,upper)
 ```
 
 
-- __Answer:__ We are 95% confident that, after accounting for the other variables, the coefficient for _GS_ lies between -0.0172564 and -0.0054836. In other words, with all other variables held constant a one unit increase in _GS_ would correspond with between 0.0172564 and 0.0054836 reduction in drug cost
+- __Answer:__ We are 95% confident that, after accounting for the other variables, the coefficient for _GS_ lies between -0.0172564 and -0.0054836. In other words, with all other variables held constant a one unit increase in _GS_ would correspond with between 0.0172564 and 0.0054836 reduction in drug cost.
 
 ## E.
 
@@ -84,7 +103,7 @@ p2<-ggplot(df,aes(sample=resid))+stat_qq()+stat_qq_line()+theme_classic()
 grid.arrange(p1,p2,ncol=2)
 ```
 
-- __Answer:__ From both diagnostic plots we see that there may be an issue with the normality assumption (curvature of points at upper end of QQ plot) and that the homoskedasticity assumption may be violated due to uneven distribution observed in the residuals vs. fitted scatterplot.
+- __Answer:__ From both diagnostic plots we see that there may be an issue with the normality assumption (curvature of points at upper end of QQ plot) and that the homoskedasticity assumption is met due to a roughly even scatter of points on the residuals vs. fitted values plot.
 
 # 3. Longnose Dace
 
@@ -125,9 +144,9 @@ grid.arrange(p1,p2,ncol=2)
 
 Use an appropriate transformation [log] on the response, fit another MLR and run model diagnostics. Do things look better than A.? Irrespective of the answer, use the model in B. to answer all following questions.
 
-```{r}
+```{r, echo = F}
 fit<-lm(log(longnosedace)~acreage + do2 + maxdepth + no3 + so4 + temp, data = dace)
-summary(fit)
+#summary(fit)
 dace$resid<-resid(fit)
 dace$fitted<-fitted(fit)
 p1<-ggplot(dace,aes(x=fitted,y=resid))+geom_point()+theme_classic()+geom_hline(yintercept = 0)
@@ -135,33 +154,33 @@ p2<-ggplot(dace,aes(sample=resid))+stat_qq()+stat_qq_line()+theme_classic()
 grid.arrange(p1,p2,ncol=2)
 ```
 
-- __Answer:__
+- __Answer:__ Log-transformation of the response variable yielded diagnostic plots that show homoskedasticity and normality are met. 
 
 ## C.
 
 Check for predictive power of each variable after accounting for the rest [That is, test each regression coefficient]. Report the table of estimates, s.e.'s, T-ratios and p-values. Write a short conclusion [1-2 sentences, include direction of an effect if present].
 
 ```{r}
-
+summary(fit)
 ```
 
-- __Answer:__
+- __Answer:__ The variables that have strongest evidence for an additive effect are agreage, do2, maxdepth, no3, and temperature. Each variable has a positive relationship with the response, log(longnosedace).
 
 ## D.
 
-Find a 95% confidence intervals for the coefficients of important predictor variables [i.3. the ones you found "significant" in C.].
+Find a 95% confidence intervals for the coefficients of important predictor variables [i.e. the ones you found "significant" in C.].
 
 ```{r}
-
+confint(fit)
 ```
 
-- __Answer:__
+- __Answer:__ The only variable in this model with a 95% confidence interval for its beta estimate that overlaps 0 is so4.
 
 ## E.
 
 What are the units in the study? Is this an experimental sudy or observational?
 
-- __Answer:__
+- __Answer:__ The units of this \emph{observational} study are the number of longnose dace in a 75m section of stream.
 
 ## F.
 
@@ -175,10 +194,13 @@ Use your model to predict the median abundance of longnose dace and a 95% interv
 - temperature: $20^\circ C$
 
 ```{r}
-
+LD<-data.frame(predict(fit, 
+        newdata = data.frame(acreage=6928,do2=9.7,maxdepth=65,no3=7.5,so4=44,temp=20),
+        interval="predict"))
+exp(LD)
 ```
 
-- __Answer:__
+- __Answer:__ The predicted median abundance of longnose dace for 75 km of stream with these characteristics is 111 (rounded to whole number for individual fish).
 
 # 4. Mammal Brain Weights
 
@@ -188,45 +210,59 @@ The data is given in _brainsize.txt_. Ignore book's questions and answer the fol
 
 Report the overall F-test and the p-value associated with it, multiple R-squared and the estimate of error variance (i.e. $\hat{\sigma}$).
 
-```{r, echo = F}
-
+```{r, include = F}
+brain<-read.table("Data/brainsize.txt",header=T)
+str(brain)
 ```
 
-- __Answer:__
+```{r}
+fit<-lm(log(Brain)~log(Body)+log(Gestation)+log(Litter), data = brain)
+summary(fit)
+```
+
+- __Answer:__ The F-statistic is 631.6 on 3 and 92 DF, with a p-value < 0.0001. $\hat{\sigma}$ is 0.4748 and the multiple $R^2$ is 0.9537.
 
 ## B.
 
 Report the table of estimates for the coefficients. Which predictors seem to be important in predicting brain size?
 
-```{r}
-
-```
+- __Answer:__ [See summary table from A.] All three predictor variables have strong evidence for an additive effect on log-transformed brain size (p-values < 0.001).
 
 ## C.
 
 Suppose we want to construct a 5% interval for the average brain size of red kangaroos. Should it be a confidence interval or prediction interval?
 
-- __Answer:__
+- __Answer:__ We would use a prediction interval because this estimate of the response is based on a single species rather than a group of species.
 
 ## D.
 
 Obtain a 95% interval for C. Use the following information on red kangaroos:
 
-- Average body weight: 63 lb. [ _warning: watch the units_]
+- Average body weight: 63 lb. [\emph{warning: watch the units}]
 - Average gestation period: 34 days
 - Average litter size: 2
 
-[Note: youll not be double benalized if youg et C. wrong and if your answer in D. is consistent with C.]
+[Note: youll not be double penalized if you get C. wrong and if your answer in D. is consistent with C.]
 
 ```{r}
-
+BS<-data.frame(predict(fit,
+                       newdata=data.frame(Body=log(63),Gestation=log(34),Litter=log(2)),
+                       interval="predict"))
+exp(BS)
 ```
 
-- __Answer:__
+- __Answer:__ We would expect the median brain weight to be 10.10. We are 95% confident that the median brain weight for red kangaroos will be between 2.38 and 42.89. 
 
 ## E.
 
-Obtain the plot of residual-vs-fitted valuse. Point out a limitation of your model. [Hint: check the signs of the residuals associated with large body weights.]
+Obtain the plot of residual-vs-fitted values. Point out a limitation of your model. [Hint: check the signs of the residuals associated with large body weights.]
 
+```{r, echo=F}
+brain$resid<-resid(fit)
+brain$fitted<-fitted(fit)
+p1<-ggplot(brain,aes(x=fitted,y=resid))+geom_point()+theme_classic()+geom_hline(yintercept = 0)
+p2<-ggplot(brain,aes(sample=resid))+stat_qq()+stat_qq_line()+theme_classic()
+grid.arrange(p1,p2,ncol=2)
+```
 
-
+- __Answer:__ In the residuals vs. fitted values plot there seem to be disproportionate distributions along zero, perhaps overdispersion is occurring. There is also a pattern of non-normal data for larger animals. These plots together suggest the model is not suitable for predicting brain weights in large animals.
