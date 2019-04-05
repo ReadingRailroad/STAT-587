@@ -11,15 +11,7 @@ editor_options:
 
 Consider a multiple linear regression model with n observations and m continuous predictor variables. Recall that multiple R2 = SSModel / (SSModel + SSError) and the overall F-ratio is F = MSModel/MSError. Use this to express F in terms of R2 (and m and n).
 
-- __Answer:__ Let's start with the F-table as we know it (Let Y = :
-
-Source  | DF   | SS              | MS              | F           | p-value
---------|------|-----------------|-----------------|-------------|---------------
-Model   | m    | $SS_{model} = \sum_{i=1}^n (\hat{y_i} - \bar{y})^2$ | .               | $F = \frac{MS_{model}}{\hat{\sigma}^2}$            | .
-Error   | n-m  | $SS_{error} = \sum_{i=1}^n (y_i - \bar{y})^2$       | .               | .           | . 
-Total   | n-1  | $SS_{total} = \sum_{}               | .               | .           | .
-
-
+- __Answer:__ Let's start with algebra on the F-statistic:
 \[
 F = \frac{MS_{model}}{\hat{\sigma}^2} 
 \]
@@ -27,10 +19,37 @@ F = \frac{MS_{model}}{\hat{\sigma}^2}
 Where 
 
 \[
-MS_{model} = \frac{SS_{model}}{DF_{model}} 
+MS_{model} = \frac{SS_{model}}{DF_{model}} = \frac{SS_{model}}{m}
 \]
 
-$F = \frac{R^2}{1-R^2} * \frac{n-m-1}{m}$ 
+and
+
+$\hat{\sigma}^2 = MSE = \frac{SS_{error}}{DF_{within}} = \frac{SS_{error}}{(n-m-1)}$
+
+therefore,
+
+\[
+F = \frac{\frac{SS_{model}}{m}}{\frac{{SS_{error}}{(n-m-1)}}} = \frac{SS_{model}}*{(n-m-1)}{SS_{error}*m}
+\]
+
+Now the $R^2$ is algebraicly converted as:
+
+\[
+\frac{1}{R^2} = \frac{SS_{model}+SS_{error}}{SS_{model}} = 1 + \frac{SS_{error}{SS_{model}}
+\]
+
+and consequently
+
+\[
+\frac{1}{R^2} - 1 = \frac{SS_{error}}{SS_{model}} = \frac{1-R^2}{R^2}
+\]
+
+And finally, we have a way to express $F$ in terms of $R^2$ and $n$ and $m$:
+
+\[
+F = \frac{R^2*(n-m-1)}{(1-R^2) * m}
+\]
+
 
 # 2. Drug Costs
 
@@ -146,7 +165,7 @@ Use an appropriate transformation [log] on the response, fit another MLR and run
 
 ```{r, echo = F}
 fit<-lm(log(longnosedace)~acreage + do2 + maxdepth + no3 + so4 + temp, data = dace)
-#summary(fit)
+summary(fit)
 dace$resid<-resid(fit)
 dace$fitted<-fitted(fit)
 p1<-ggplot(dace,aes(x=fitted,y=resid))+geom_point()+theme_classic()+geom_hline(yintercept = 0)
@@ -197,10 +216,10 @@ Use your model to predict the median abundance of longnose dace and a 95% interv
 LD<-data.frame(predict(fit, 
         newdata = data.frame(acreage=6928,do2=9.7,maxdepth=65,no3=7.5,so4=44,temp=20),
         interval="predict"))
-exp(LD)
+LD
 ```
 
-- __Answer:__ The predicted median abundance of longnose dace for 75 km of stream with these characteristics is 111 (rounded to whole number for individual fish).
+- __Answer:__ The predicted median abundance of longnose dace for 75 m of stream with these characteristics is 5 (rounded to whole number for practicality: the true observed median would be a whole number: individual fish). We are 95% confident that the median abundance of longnose dace in a 75m reach of stream with these charcateristics would be between 2.28 and 7.14. 
 
 # 4. Mammal Brain Weights
 
@@ -238,7 +257,7 @@ Suppose we want to construct a 5% interval for the average brain size of red kan
 
 Obtain a 95% interval for C. Use the following information on red kangaroos:
 
-- Average body weight: 63 lb. [\emph{warning: watch the units}]
+- Average body weight: 63 lb. [\emph{warning: Use 28.5763 kg instead}]
 - Average gestation period: 34 days
 - Average litter size: 2
 
@@ -246,12 +265,12 @@ Obtain a 95% interval for C. Use the following information on red kangaroos:
 
 ```{r}
 BS<-data.frame(predict(fit,
-                       newdata=data.frame(Body=log(63),Gestation=log(34),Litter=log(2)),
+                       newdata=data.frame(Body=log(28.5763),Gestation=log(34),Litter=log(2)),
                        interval="predict"))
-exp(BS)
+BS
 ```
 
-- __Answer:__ We would expect the median brain weight to be 10.10. We are 95% confident that the median brain weight for red kangaroos will be between 2.38 and 42.89. 
+- __Answer:__ We would expect the median brain weight to be 2.19 kg. We are 95% confident that the median brain weight for red kangaroos will be between 0.75 and 3.63 kg. 
 
 ## E.
 
