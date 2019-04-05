@@ -23,19 +23,20 @@ MS_{model} = \frac{SS_{model}}{DF_{model}} = \frac{SS_{model}}{m}
 \]
 
 and
-
-$\hat{\sigma}^2 = MSE = \frac{SS_{error}}{DF_{within}} = \frac{SS_{error}}{(n-m-1)}$
+\[
+\hat{\sigma}^2 = MSE = \frac{SS_{error}}{DF_{within}} = \frac{SS_{error}}{(n-m-1)}
+\]
 
 therefore,
 
 \[
-F = \frac{\frac{SS_{model}}{m}}{\frac{{SS_{error}}{(n-m-1)}}} = \frac{SS_{model}}*{(n-m-1)}{SS_{error}*m}
+F = \frac{\frac{SS_{model}}{m}}{\frac{SS_{error}}{(n-m-1)}} = \frac{SS_{model}*(n-m-1)}{SS_{error}*m}
 \]
 
-Now the $R^2$ is algebraicly converted as:
+Now the $R^2$ is algebraically converted as:
 
 \[
-\frac{1}{R^2} = \frac{SS_{model}+SS_{error}}{SS_{model}} = 1 + \frac{SS_{error}{SS_{model}}
+\frac{1}{R^2} = \frac{SS_{model}+SS_{error}}{SS_{model}} = 1 + \frac{SS_{error}}{SS_{model}}
 \]
 
 and consequently
@@ -47,7 +48,7 @@ and consequently
 And finally, we have a way to express $F$ in terms of $R^2$ and $n$ and $m$:
 
 \[
-F = \frac{R^2*(n-m-1)}{(1-R^2) * m}
+F = \frac{R^{2}*(n-m-1)}{(1-R^{2}) * m}
 \]
 
 
@@ -58,7 +59,7 @@ Health plans use many tools to try to control the cost of prescription medicines
 The data in the file _drugcost.txt_, can be used to explore the effectiveness of these two strategies in controlling drug costs. The response variable is _COST_, the average cost of drugs per prescription per day, and predictors include GS (the extent to which the plan uses generic substitution, a number between zero, no substitution, and 100, always use a generic substitute if available) and RI (a measure of the restrictiveness of the plan, from zero, no restrictions on the physician, to 100, the maximum possible restrictiveness). Other variables that might impact cost were also collected, and are described in Table 1. The data are from the mid-1990s, and are for 29 plans throughout the United States with pharmacies
 administered by a national insurance company.
 
-The Drug Cost Data
+The Drug Cost Data:
 
 ```{r, echo = F}
 df<-read.table("Data/drugcost.txt", header = T)
@@ -173,7 +174,7 @@ p2<-ggplot(dace,aes(sample=resid))+stat_qq()+stat_qq_line()+theme_classic()
 grid.arrange(p1,p2,ncol=2)
 ```
 
-- __Answer:__ Log-transformation of the response variable yielded diagnostic plots that show homoskedasticity and normality are met. 
+- __Answer:__ Log-transformation of the response variable yielded diagnostic plots that show homoskedasticity and normality are more closely met. 
 
 ## C.
 
