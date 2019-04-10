@@ -1,0 +1,241 @@
+---
+title: "Simonson_HW10"
+author: "Martin Simonson"
+date: "April 10, 2019"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# 1. Bear Weight
+
+```{r, include = F}
+bear<-read.table("Data/bears.txt",header=T)
+str(bear)
+```
+
+
+Animal ecologists wish to track the health of bear populations in the wild. By obtaining physical measurements of bears, researchers can gauge the effects of changes taking place in and around bear habitat (e.g., nearby housing and business development, recreational activities, introduction of non-native plant and animal species, severe storms, harsh winters, etc.). Researchers have studied bears by anesthetizing them in order to obtain vital measurements, such as age, gender, length, and width. A bear’s weight is another important variable that is quite difficult to obtain in the wild because most bears are heavy and difficult to lift. The scientific problem is to develop a method for predicting the weight of a bear, given other more easily obtained measurements. A good method might alleviate the need to weigh bears in the wild and greatly simplify the data collection process.
+
+In one detailed study, researchers were able to obtain weight measurements along with several other variables for each of 48 bears. The file _bears.txt_ contains the data for 48 bears. There is one row for each bear that was anesthetized and measured carefully using a tape measure and scale. There is one column for each variable in the data set. The variables (from left to right) are:
+
+- length: length of body (in inches)
+- sex: male or female
+- weight: weight (in pounds)
+- chest: chest circumference (in inches)
+- headlen: length of head (in inches)
+- headwid: width of head (in inches)
+- month: month of capture
+- neck: neck circumference (in inches)
+
+## A)
+
+Construct a scatterplot matrix of all the variables in the data set. Include the graph obtained and comment on the relationships between Y and the explanatory variables. When possible, describe the strength, direction, and type of relationship.
+
+```{r, echo = F}
+pairs(bear)
+```
+
+- __Answer:__ We see that weight (Y) has a strong positive linear relationship with chest and neck circumference, and a weaker (but still positive and linear) relationship with body length, head width and head length. There appears to be no clear relationship between weight and either sex or month.
+
+## B)
+
+Estimate the parameters in the multiple regression model with weight as the response variable and chest, length, and neck as explanatory variables. Specifically, provide an estimate of the intercept, an estimate of the partial regression coefficient for each explanatory variable, and an estimate of the standard deviation of bear weights for any given values of the explanatory variables (i.e. $\hat{\sigma}$).
+
+```{r, echo = F}
+mod<-lm(weight~chest+length+neck, data = bear)
+```
+
+- __Answer:__
+
+## C)
+
+Conduct one test of the null hypothesis that says that the partial regression coefficients for chest, neck and length are all zero against the alternative that at least one coefficient is not. State the hypotheses, the test statistic, the degrees of freedom, p-value and conclusion.
+
+- __Answer:__
+
+```{r}
+
+```
+
+## D)
+
+Provide an interpretation of the partial regression coefficient associated with the variable _chest_.
+
+- __Answer:__
+
+## E)
+
+Compute a 95% confidence interval for the partial regression coefficient associated with the variable length. Is the partial regression coefficient associated with the variable length significantly different from zero? Explain how your confidence interval can be used to answer this question.
+
+```{r}
+
+```
+
+- __Answer:__
+
+# 2. Bear Weight, revisited
+
+Using the same model as in problem 1 (multiple linear regression of weight on _chest_, _length_, and _neck_):
+
+## A)
+
+What proportion of variation in bear weights is explained by the multiple regression of weight on _chest_, _length_, and _neck_?
+
+- __Answer:__
+
+## B)
+
+Provide an estimate of the mean weight of a captured bear that is 60 inches long, with chest circumference of 35 inches, and neck circumference 24 inches.
+
+```{r}
+
+```
+
+- __Answer:__
+
+## C)
+
+Provide a 95% confidence interval for the mean weight estimated in part (2b).
+
+```{r}
+
+```
+
+## D)
+
+Provide a 95% prediction interval for the weight of the bear described in part (2b).
+
+```{r}
+
+```
+
+- __Answer:__
+
+## E)
+
+Examine the residual plot and the normal probability plot of the residuals from the fit of the multiple regression model with weight as the response variable and _chest_, _length_, and _neck_ as explanatory variables. Which of the assumptions of multiple linear regression is questionable based on these plots?
+
+```{r}
+
+```
+
+- __Answer:__
+
+## F)
+
+### i)
+
+How many categorical variables are provided in the data set? What are these variables?
+
+- __Answer:__
+
+### ii)
+
+How many dummy/indicator variables would you need to construct to incorporate the variable _month_ in a regression model? Define these variables here, using the Indicator coding used by the textbook. What level of this factor was the reference level?
+
+- __Answer:__
+
+## G)
+
+Add the variable _sex_ to the model in question 1b. Use R to fit the new model to the data. Interpret the estimated coefficient associated with the new _sex_ variable within the context of the data.
+
+```{r}
+
+```
+
+- __Answer:__
+
+# 3. Mpi genotypes
+
+The 1989 Nature article titled “Selection component analysis of the Mpi locus in the amphipod” presented a study of data collected on the amphipod crustacean _Platorchestia platensis_ on a beach near Stony Brook, Long Island, in April, 1987. The research group counted the number of eggs each female was carrying, freeze-dried them, weighed them, then used protein electrophoresis to determine the genotype at the locus for mannose-6-phosphate isomerase (Mpi). The data in _MPI.dat_ consist of four columns: the identification number of the individual, the weight (in mg), fertility (quantified by the number of eggs), and the genotype. The biological question is whether the Mpi genotypes differ in size-adjusted fecundity.
+
+## A)
+
+To answer the biological question, fit a parallel regression lines model to all genotypes. Write the estimated regression equation here, clearly explaining any notation or coding used.
+
+```{r}
+
+```
+
+- __Answer:__
+
+\[
+
+\]
+
+## B)
+
+Using the parallel lines model, provide an interpretation of the relationship between weight and fertility. Make sure to include in your interpretation a number quantifying the magnitude of the relationship.
+
+- __Answer:__
+
+## C)
+
+Using the parallel lines model, estimate the mean difference in fertility between genotypes _ff_ and _ss_, after adjusting for the effects of weight. Provide an s.e. of the estimate.
+
+```{r}
+
+```
+
+- __Answer:__
+
+## D)
+
+Using the parallel lines model, test the null hypothesis of no difference between genotypes _ff_ and _ss_, after adjusting for the effects of weight.
+
+```{r}
+
+```
+
+- __Answer:__
+
+## E)
+
+Using the parallel lines model, test the hypothesis of no differences in fertility between the three genotypes, after adjusting for the effects of weight. Write down the null and alternative hypothesis, give the name of the test used, the p-value, and a one sentence conclusion.
+
+```{r}
+
+```
+
+- __Answer:__
+
+# 4. Mpi genotypes, revisited
+
+Consider the same biological question as in Poblem 3, but now fit a regression model that allows the slope of the three regression lines (one for each genotype group) to vary.
+
+## A)
+
+a)	Write out the estimated regression equation, clearly explaining any notation or coding used.
+
+```{r}
+
+```
+
+- __Answer:__
+
+\[
+
+\]
+
+## B)
+
+Using this model, report the three estimates of the slope for the regression lines.
+
+- __Answer:__
+
+## C)
+
+Test the hypothesis that all three regression lines have the same slope. Write the null hypothesis, the p-value and a conclusion.
+
+```{r}
+
+```
+
+- __Answer:__
+
+## D)
+
+Now you are ready to answer the biological question formulated in problem 3. Use any/all of the results obtained before this question to conclude whether the Mpi genotypes differ in size-adjusted fecundity. Be brief but clearly explain your argument.
+
+- __Answer:__ 
