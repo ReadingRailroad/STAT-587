@@ -1,0 +1,240 @@
+---
+title: "Lab10A"
+author: "Marty Simonson"
+date: "April 10, 2019"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(ggplot2)
+library(car)
+```
+
+Read cigarette data:
+
+```{r}
+cig<-read.table("Data/cigarette.dat",header=T)
+head(cig)
+str(cig)
+```
+
+scatterplot matrix:
+
+```{r}
+pairs(cig)
+```
+
+pairwise correlation coefficients:
+
+```{r}
+cor(cig)
+```
+
+Fit the Multiple Linear Regression model
+
+```{r}
+f0<-lm(CO~TAR + Nicotine + Weight, data = cig)
+```
+
+VIF by using the command "vif" from library "car"
+
+```{r}
+vif(f0) # Variance Inflation Factors for each variable
+```
+
+drop the "weight" variable
+
+```{r}
+f1<-lm(CO~TAR+Nicotine,data=cig)
+summary(f1)
+```
+
+drop the "tar" variable
+
+```{r}
+f2<-lm(CO~Nicotine,data=cig)
+summary(f2)
+```
+
+Replace nicotine with TAR
+
+```{r}
+f3<-lm(CO~TAR,data=cig)
+summary(f3)
+```
+
+predict using the goldflake honeydew data
+
+model 1
+
+```{r}
+goldflake<-data.frame(Weight=0.845,Nicotine = 0.7, TAR = 10.3)
+predict(f1, newdata = goldflake, se.fit = T)
+```
+
+model 2
+
+```{r}
+predict(f2, newdata = goldflake, se.fit = T)
+```
+
+model 3
+
+```{r}
+predict(f3, newdata = goldflake, se.fit=T)
+```
+
+check the AICc for each of the three models:
+
+model 1-3
+
+```{r}
+AIC(f1)
+AIC(f2)
+AIC(f3)
+```
+
+check the BIC
+
+```{r}
+BIC(f1)
+BIC(f2)
+BIC(f3)
+```
+
+#2: SAT scores: an observational study
+
+Takers: percent of total eligible students in the state who took the exam;
+Income: is the median income of families of test atkers (100s of dollars)
+Years: number of years that the test-takers had formal studies in test topics
+Public: percentage of test-takers whoa ttend public secondary schools
+Expend: total state expenditure on secondary schools, (100s of dollars per student)
+rank: median percentile raking of the test-takers within their secondary school classes
+
+```{r}
+sat<-read.csv("Data/sat.csv",header=T)
+str(sat)
+```
+
+bare model: just percentage of takers and median class rank
+
+```{r}
+mod0<-lm(sat~takers+rank, data = sat)
+summary(mod0)
+```
+
+first model: fully saturated
+
+```{r}
+mod1<-lm(sat~takers+income+years+public+expend+rank, data = sat)
+summary(mod1)
+```
+
+mod2: no expenditures
+
+```{r}
+mod2<-lm(sat~takers+income+years+public+rank, data = sat)
+summary(mod2)
+```
+
+mod3: no public
+
+```{r}
+mod3<-lm(sat~takers+income+years+expend+rank, data = sat)
+summary(mod3)
+```
+
+mod4: no years
+
+```{r}
+mod4<-lm(sat~takers+income+public+expend+rank, data = sat)
+summary(mod4)
+```
+
+mod5: no income
+
+```{r}
+mod5<-lm(sat~takers+public+years+expend+rank,data = sat)
+summary(mod5)
+```
+
+mod6: no public or expenditures
+
+```{r}
+mod6<-lm(sat~takers+income+years+rank, data = sat)
+summary(mod6)
+```
+
+mod7: no years or expenditures
+
+```{r}
+mod7<-lm(sat~takers+rank+income+public, data = sat)
+summary(mod7)
+```
+
+mod8: no income or expenditures
+
+```{r}
+mod8<-lm(sat~takers+rank+years+public, data = sat)
+summary(mod8)
+```
+
+mod9: no public or years
+
+```{r}
+mod9<-lm(sat~takers+rank+income+expend,data=sat)
+summary(mod9)
+```
+
+mod10: no public or income
+
+```{r}
+mod10<-lm(sat~takers+rank+years+expend, data=sat)
+summary(mod10)
+```
+
+mod11: no years or income
+
+```{r}
+mod11<-lm(sat~takers+rank+expend+public,data=sat)
+summary(mod11)
+```
+
+```{r}
+AIC(mod1)
+AIC(mod2)
+AIC(mod3)
+AIC(mod4)
+AIC(mod5)
+AIC(mod6)
+AIC(mod7)
+AIC(mod8)
+AIC(mod9)
+AIC(mod10)
+AIC(mod11)
+```
+
+model 7 is best AIC value
+
+```{r}
+BIC(mod1)
+BIC(mod2)
+BIC(mod3)
+BIC(mod4)
+BIC(mod5)
+BIC(mod6)
+BIC(mod7)
+BIC(mod8)
+BIC(mod9)
+BIC(mod10)
+BIC(mod11)
+```
+
+model 7 is best BIC value
+
+```{r}
+summary(mod7)
+```
+

@@ -10,6 +10,9 @@ editor_options:
 # 1. Bear Weight
 
 ```{r, include = F}
+library(ggplot2)
+library(car)
+library(gridExtra)
 bear<-read.table("Data/bears.txt",header=T)
 str(bear)
 ```
@@ -44,35 +47,34 @@ Estimate the parameters in the multiple regression model with weight as the resp
 
 ```{r, echo = F}
 mod<-lm(weight~chest+length+neck, data = bear)
+summary(mod)
+anova(mod)
 ```
 
-- __Answer:__
+- __Answer:__ The intercept is estimated to be -276.2881, the estimated partial regression coefficient for _chest_ is 8.8238, the estimated partial regression coefficient for _length_ is 0.3037, and the estimated partial regression coefficient for _neck_ is 6.1419, and the estimated standard deviation is sqrt(31.64), or 5.625. 
 
 ## C)
 
 Conduct one test of the null hypothesis that says that the partial regression coefficients for chest, neck and length are all zero against the alternative that at least one coefficient is not. State the hypotheses, the test statistic, the degrees of freedom, p-value and conclusion.
 
-- __Answer:__
+- __Answer:__ We want to test $H_0: \beta_1 = \beta_2 = \beta_3$ vs. $H_A: H_0$ is false. We can see from the summary table in _B)_ that the F-statistic is 210.1 on 3 and 44 degrees of freedom with a p-value less than 0.0001, providing very strong evidence against the null and we can conclude that the predictor variable coefficients are not all equal to 0.
 
-```{r}
-
-```
 
 ## D)
 
 Provide an interpretation of the partial regression coefficient associated with the variable _chest_.
 
-- __Answer:__
+- __Answer:__ With other variables held constant, a 1-inch increase in _chest_ circumference will result in a mean increase in weight of 8.8238 lbs.
 
 ## E)
 
 Compute a 95% confidence interval for the partial regression coefficient associated with the variable length. Is the partial regression coefficient associated with the variable length significantly different from zero? Explain how your confidence interval can be used to answer this question.
 
 ```{r}
-
+confint(mod)
 ```
 
-- __Answer:__
+- __Answer:__ The 95% confidence interval for the partial regression coefficient for _length_ is between -1.595 and 2.202. Therefore, this estimated coefficient is not signifciantly different from 0 because the interval for the estimate of the coefficient overlaps 0.
 
 # 2. Bear Weight, revisited
 
@@ -82,24 +84,33 @@ Using the same model as in problem 1 (multiple linear regression of weight on _c
 
 What proportion of variation in bear weights is explained by the multiple regression of weight on _chest_, _length_, and _neck_?
 
-- __Answer:__
+- __Answer:__ The multiple $R^2$ from our model in _B)_ 0.9348, which means that 93.48% of the overall variation in bear weights is explained by our model. 
 
 ## B)
 
 Provide an estimate of the mean weight of a captured bear that is 60 inches long, with chest circumference of 35 inches, and neck circumference 24 inches.
 
 ```{r}
-
+bearrr<-data.frame(length=60, chest = 35, neck = 24)
+pred1<-predict(mod,newdata = bearrr,se.fit=T)
+pred1
 ```
 
-- __Answer:__
+- __Answer:__ Our predicted mean weight for a bear in with these measurements would be 198.1687 lbs. 
 
 ## C)
 
 Provide a 95% confidence interval for the mean weight estimated in part (2b).
 
 ```{r}
+y.hat<-198.1687
+se.hat<-9.904018
+t.star<-2.021 # from t-table with 40 degrees of freedom
 
+lower<-y.hat-(t.star*se.hat)
+upper<-y.hat+(t.star*se.hat)
+
+data.frame(lower,upper)
 ```
 
 ## D)
@@ -107,7 +118,7 @@ Provide a 95% confidence interval for the mean weight estimated in part (2b).
 Provide a 95% prediction interval for the weight of the bear described in part (2b).
 
 ```{r}
-
+(pred1)
 ```
 
 - __Answer:__
@@ -117,10 +128,14 @@ Provide a 95% prediction interval for the weight of the bear described in part (
 Examine the residual plot and the normal probability plot of the residuals from the fit of the multiple regression model with weight as the response variable and _chest_, _length_, and _neck_ as explanatory variables. Which of the assumptions of multiple linear regression is questionable based on these plots?
 
 ```{r}
-
+bear$resid<-resid(mod)
+bear$fitted<-fitted(mod)
+p1<-ggplot(bear,aes(x=fitted,y=resid))+geom_point()+theme_classic()+geom_hline(yintercept = 0)
+p2<-ggplot(bear,aes(sample=resid))+stat_qq()+stat_qq_line()+theme_classic()
+grid.arrange(p1,p2,ncol=2)
 ```
 
-- __Answer:__
+- __Answer:__ The normality assumption is questionable because of curvature in the qq-plot. 
 
 ## F)
 
@@ -128,25 +143,37 @@ Examine the residual plot and the normal probability plot of the residuals from 
 
 How many categorical variables are provided in the data set? What are these variables?
 
-- __Answer:__
+- __Answer:__ There are two categorical variables, Sex and Month.
 
 ### ii)
 
 How many dummy/indicator variables would you need to construct to incorporate the variable _month_ in a regression model? Define these variables here, using the Indicator coding used by the textbook. What level of this factor was the reference level?
 
-- __Answer:__
+- __Answer:__ One would need 7 dummy variables. The reference level would be April
+
+Variable              | Sample Mean      | Sample Standard Deviation   
+--------------------- | ---------------  | -------------------------- 
+Crop Size (#fruit)    | 126.702          | 59.924
+% wormy fruits        | 41.539           | 12.070
 
 ## G)
 
-Add the variable _sex_ to the model in question 1b. Use R to fit the new model to the data. Interpret the estimated coefficient associated with the new _sex_ variable within the context of the data.
+Add the variable _sex_ to the model in question _1.B)_. Use R to fit the new model to the data. Interpret the estimated coefficient associated with the new _sex_ variable within the context of the data.
 
 ```{r}
-
+mod<-lm(weight~chest+length+neck+sex, data = bear)
+summary(mod)
 ```
 
-- __Answer:__
+- __Answer:__ The estimated coefficient for the effect of sex on bear weights is -5.0247, meaning that male bears will have an average of 5.0247 fewer pounds than female bears.
 
 # 3. Mpi genotypes
+
+```{r, include = F}
+mpi<-read.table("Data/MPI.dat",header=T)
+str(mpi)
+```
+
 
 The 1989 Nature article titled “Selection component analysis of the Mpi locus in the amphipod” presented a study of data collected on the amphipod crustacean _Platorchestia platensis_ on a beach near Stony Brook, Long Island, in April, 1987. The research group counted the number of eggs each female was carrying, freeze-dried them, weighed them, then used protein electrophoresis to determine the genotype at the locus for mannose-6-phosphate isomerase (Mpi). The data in _MPI.dat_ consist of four columns: the identification number of the individual, the weight (in mg), fertility (quantified by the number of eggs), and the genotype. The biological question is whether the Mpi genotypes differ in size-adjusted fecundity.
 
@@ -155,7 +182,8 @@ The 1989 Nature article titled “Selection component analysis of the Mpi locus 
 To answer the biological question, fit a parallel regression lines model to all genotypes. Write the estimated regression equation here, clearly explaining any notation or coding used.
 
 ```{r}
-
+mod<-lm(Eggs~Genotype + Weight, data = mpi)
+summary(mod)
 ```
 
 - __Answer:__
