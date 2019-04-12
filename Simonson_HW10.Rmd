@@ -165,7 +165,7 @@ mod<-lm(weight~chest+length+neck+sex, data = bear)
 summary(mod)
 ```
 
-- __Answer:__ The estimated coefficient for the effect of sex on bear weights is -5.0247, meaning that male bears will have an average of 5.0247 fewer pounds than female bears.
+- __Answer:__ The estimated coefficient for the effect of sex on bear weights is -5.0247, meaning that male bears will have an average of 5.0247 fewer pounds than female bears _ceteris peribus_. However, the high p-value (0.639) suggests that htere is no evidence that this is a signifciant coefficient.
 
 # 3. Mpi genotypes
 
@@ -258,7 +258,7 @@ summary(mod2)
 ```
 
 \[
-\hat{Y}=12.80+1.61X+3.27D_2+1.4696D_3+-0.68D_2X+-0.36D_3X + \epsilon
+\hat{Y}=12.80+1.61X+3.27D_2+1.4696D_3-0.68D_2X-0.36D_3X + \epsilon
 \]
 
 
