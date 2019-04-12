@@ -35,11 +35,11 @@ In one detailed study, researchers were able to obtain weight measurements along
 
 Construct a scatterplot matrix of all the variables in the data set. Include the graph obtained and comment on the relationships between Y and the explanatory variables. When possible, describe the strength, direction, and type of relationship.
 
+- __Answer:__ We see that weight (Y) has a strong positive linear relationship with chest and neck circumference, and a weaker (but still positive and linear) relationship with body length, head width and head length. There appears to be no clear relationship between weight and either sex or month.
+
 ```{r, echo = F}
 pairs(bear)
 ```
-
-- __Answer:__ We see that weight (Y) has a strong positive linear relationship with chest and neck circumference, and a weaker (but still positive and linear) relationship with body length, head width and head length. There appears to be no clear relationship between weight and either sex or month.
 
 ## B)
 
@@ -48,7 +48,7 @@ Estimate the parameters in the multiple regression model with weight as the resp
 ```{r, echo = F}
 mod<-lm(weight~chest+length+neck, data = bear)
 summary(mod)
-anova(mod)
+#anova(mod)
 ```
 
 - __Answer:__ The intercept is estimated to be -276.2881, the estimated partial regression coefficient for _chest_ is 8.8238, the estimated partial regression coefficient for _length_ is 0.3037, and the estimated partial regression coefficient for _neck_ is 6.1419, and the estimated standard deviation is sqrt(31.64), or 5.625. 
@@ -84,7 +84,7 @@ Using the same model as in problem 1 (multiple linear regression of weight on _c
 
 What proportion of variation in bear weights is explained by the multiple regression of weight on _chest_, _length_, and _neck_?
 
-- __Answer:__ The multiple $R^2$ from our model in _B)_ 0.9348, which means that 93.48% of the overall variation in bear weights is explained by our model. 
+- __Answer:__ The multiple $R^2$ from our model in _1.B)_ is 0.9348, which means that 93.48% of the overall variation in bear weights is explained by our model. 
 
 ## B)
 
@@ -92,8 +92,8 @@ Provide an estimate of the mean weight of a captured bear that is 60 inches long
 
 ```{r}
 bearrr<-data.frame(length=60, chest = 35, neck = 24)
-pred1<-predict(mod,newdata = bearrr,se.fit=T)
-pred1
+pred1<-predict(mod,newdata = bearrr,se.fit=T,interval="conf")
+pred1$fit
 ```
 
 - __Answer:__ Our predicted mean weight for a bear in with these measurements would be 198.1687 lbs. 
@@ -103,14 +103,7 @@ pred1
 Provide a 95% confidence interval for the mean weight estimated in part (2b).
 
 ```{r}
-y.hat<-198.1687
-se.hat<-9.904018
-t.star<-2.021 # from t-table with 40 degrees of freedom
-
-lower<-y.hat-(t.star*se.hat)
-upper<-y.hat+(t.star*se.hat)
-
-data.frame(lower,upper)
+pred1$fit
 ```
 
 ## D)
@@ -118,16 +111,17 @@ data.frame(lower,upper)
 Provide a 95% prediction interval for the weight of the bear described in part (2b).
 
 ```{r}
-(pred1)
+pred2<-predict(mod,newdata = bearrr,se.fit=T,interval="predict")
+pred2$fit
 ```
 
-- __Answer:__
+- __Answer:__ We are 95% confident that a bear that is 60 inches long, with a chest circumference of 35 inches, and a neck circumference of 24 inches will have a mean weight of between 131.36 and 264.98 pounds.
 
 ## E)
 
 Examine the residual plot and the normal probability plot of the residuals from the fit of the multiple regression model with weight as the response variable and _chest_, _length_, and _neck_ as explanatory variables. Which of the assumptions of multiple linear regression is questionable based on these plots?
 
-```{r}
+```{r, echo = F, out.height="200px"}
 bear$resid<-resid(mod)
 bear$fitted<-fitted(mod)
 p1<-ggplot(bear,aes(x=fitted,y=resid))+geom_point()+theme_classic()+geom_hline(yintercept = 0)
@@ -135,10 +129,9 @@ p2<-ggplot(bear,aes(sample=resid))+stat_qq()+stat_qq_line()+theme_classic()
 grid.arrange(p1,p2,ncol=2)
 ```
 
-- __Answer:__ The normality assumption is questionable because of curvature in the qq-plot. 
+- __Answer:__ Both the normality assumption and homoskedasticity assumption are questionable because of curvature in the qq-plot and non-random scatter of data in the residuals vs. fitted plot, respectively.
 
 ## F)
-
 ### i)
 
 How many categorical variables are provided in the data set? What are these variables?
@@ -149,12 +142,19 @@ How many categorical variables are provided in the data set? What are these vari
 
 How many dummy/indicator variables would you need to construct to incorporate the variable _month_ in a regression model? Define these variables here, using the Indicator coding used by the textbook. What level of this factor was the reference level?
 
-- __Answer:__ One would need 7 dummy variables. The reference level would be April
+- __Answer:__ One would need 7 dummy variables. The reference level would be April, compared to the rest of the months in lexicographic order.
 
-Variable              | Sample Mean      | Sample Standard Deviation   
---------------------- | ---------------  | -------------------------- 
-Crop Size (#fruit)    | 126.702          | 59.924
-% wormy fruits        | 41.539           | 12.070
+Month                 | $Dummy_1$  | $Dummy_2$  | $Dummy_3$ | $Dummy_4$ | $Dummy_5$ | $Dummy_6$ | $Dummy_7$
+--------------------- | -----------| -----------| ----------| ----------| ----------| ----------| ---------
+April                 | 0          | 0          | 0         | 0         | 0         | 0         | 0
+August                | 1          | 0          | 0         | 0         | 0         | 0         | 0
+July                  | 0          | 1          | 0         | 0         | 0         | 0         | 0
+June                  | 0          | 0          | 1         | 0         | 0         | 0         | 0
+May                   | 0          | 0          | 0         | 1         | 0         | 0         | 0
+November              | 0          | 0          | 0         | 0         | 1         | 0         | 0
+October               | 0          | 0          | 0         | 0         | 0         | 1         | 0
+September             | 0          | 0          | 0         | 0         | 0         | 0         | 1
+
 
 ## G)
 
@@ -170,10 +170,10 @@ summary(mod)
 # 3. Mpi genotypes
 
 ```{r, include = F}
+library(emmeans)
 mpi<-read.table("Data/MPI.dat",header=T)
 str(mpi)
 ```
-
 
 The 1989 Nature article titled “Selection component analysis of the Mpi locus in the amphipod” presented a study of data collected on the amphipod crustacean _Platorchestia platensis_ on a beach near Stony Brook, Long Island, in April, 1987. The research group counted the number of eggs each female was carrying, freeze-dried them, weighed them, then used protein electrophoresis to determine the genotype at the locus for mannose-6-phosphate isomerase (Mpi). The data in _MPI.dat_ consist of four columns: the identification number of the individual, the weight (in mg), fertility (quantified by the number of eggs), and the genotype. The biological question is whether the Mpi genotypes differ in size-adjusted fecundity.
 
@@ -181,52 +181,62 @@ The 1989 Nature article titled “Selection component analysis of the Mpi locus 
 
 To answer the biological question, fit a parallel regression lines model to all genotypes. Write the estimated regression equation here, clearly explaining any notation or coding used.
 
+- __Answer:__ Let $\hat{Y}$ denote the number of eggs and let $\hat{\beta_0}$ denote the estimated parallel lines regression intercept. Let $X$ denote the weight of the eggs (in mg) with estimated coefficient $\hat{\beta_1}$ (the coefficient for our baseline genotype _ff_), let $D_2$ denote the dummy variable for the genotype _fs_ (1 if _fs_, 0 otherwise) with estimated coefficient $\hat{\beta_2}$, and let $D_3$ denote the dummy variable for the genotype _ss_ (1 if _ss_, 0 otherwise) with estimated coefficient $\hat{\beta_3}$. Random error is denoted by $\epsilon$.
+
+\[
+\hat{Y} = \hat{\beta_0} + \hat{\beta_1}X + \hat{\beta_2}D_2 + \hat{\beta_3}D_3 + \epsilon
+\]
+
 ```{r}
-mod<-lm(Eggs~Genotype + Weight, data = mpi)
+mod<-lm(Eggs~Weight + Genotype, data = mpi)
 summary(mod)
 ```
 
-- __Answer:__
-
 \[
-
+\hat{Y} = 14.12 + 1.444X_1 - 0.689D_2 - 0.374D_3 + \epsilon
 \]
 
 ## B)
 
 Using the parallel lines model, provide an interpretation of the relationship between weight and fertility. Make sure to include in your interpretation a number quantifying the magnitude of the relationship.
 
-- __Answer:__
+- __Answer:__ There is strong evidence that fertility is positively associated with the weight of the eggs (p-value <0.001) for the baseline genotype _ff_. For every 1 mg increase in weight, the mean increase in fertility is 1.444 eggs.
 
 ## C)
 
 Using the parallel lines model, estimate the mean difference in fertility between genotypes _ff_ and _ss_, after adjusting for the effects of weight. Provide an s.e. of the estimate.
 
 ```{r}
+mpi.emm<-emmeans(mod, ~ Genotype)
+mpi.emm
 
+contrast(mpi.emm, list("ff-ss"=c(1,0,-1)))
 ```
 
-- __Answer:__
+- __Answer:__ After controlling for weight, the mean difference in fertility between genotypes _ff_ and _ss_ is 0.374.
 
 ## D)
 
 Using the parallel lines model, test the null hypothesis of no difference between genotypes _ff_ and _ss_, after adjusting for the effects of weight.
 
 ```{r}
-
+contrast(mpi.emm, list("ff-ss"=c(1,0,-1)))
 ```
 
-- __Answer:__
+- __Answer:__ After controlling for weight, we observed a p-value of 0.7537 for the contrast between _ff_ and _ss_, therefore, there is no evidence that there is a true difference in fertility between genotypes. 
 
 ## E)
 
 Using the parallel lines model, test the hypothesis of no differences in fertility between the three genotypes, after adjusting for the effects of weight. Write down the null and alternative hypothesis, give the name of the test used, the p-value, and a one sentence conclusion.
 
-```{r}
+- __Answer:__ Let $\hat{\beta_1}$, $\hat{\beta_2}$, and $\hat{\beta_3}$ denote the regression coefficients for the effect of _ff_, _fs_, and _ss_ respectively. We want to test $H_0: \hat{\beta_1} = \hat{\beta_2} = \hat{\beta_3}$ vs. $H_A: H_0$ is false. Using the parallel lines model, accounting for weight, we yield the joint test result:
 
+```{r}
+joint_tests(mpi.emm)
 ```
 
-- __Answer:__
+With a p-value of 0.7816 we have no evidence to reject the null hypothesis that there is a true difference in egg numbers between the genotypes, after accounting for weight.
+
 
 # 4. Mpi genotypes, revisited
 
@@ -236,34 +246,42 @@ Consider the same biological question as in Poblem 3, but now fit a regression m
 
 a)	Write out the estimated regression equation, clearly explaining any notation or coding used.
 
-```{r}
-
-```
-
-- __Answer:__
+- __Answer:__ Let $\hat{Y}$ denote the number of eggs and let $\hat{\beta_0}$ denote the estimated parallel lines regression intercept. Let $X$ denote the weight of the eggs (in mg) with estimated coefficient $\hat{\beta_1}$ (the coefficient for our baseline genotype _ff_), let $D_2$ denote the dummy variable for the genotype _fs_ (1 if _fs_, 0 otherwise) with estimated coefficient $\hat{\beta_2}$, and let $D_3$ denote the dummy variable for the genotype _ss_ (1 if _ss_, 0 otherwise) with estimated coefficient $\hat{\beta_3}$. Let $\hat{\beta_4}$ and $\hat{\beta_5}$ denote the interaction slope coefficients for genotypes _fs_ and _ss_, respectively. Random error is denoted by $\epsilon$.
 
 \[
-
+\hat{Y}=\hat{\beta_0}+\hat{\beta_1}X+\hat{\beta_2}D_2+\hat{\beta_3}D_3+\hat{\beta_4}D_2X+\hat{\beta_5}D_3X +\epsilon
 \]
+
+```{r}
+mod2<-lm(Eggs ~ Weight * Genotype, data = mpi)
+summary(mod2)
+```
+
+\[
+\hat{Y}=12.80+1.61X+3.27D_2+1.4696D_3+-0.68D_2X+-0.36D_3X + \epsilon
+\]
+
 
 ## B)
 
 Using this model, report the three estimates of the slope for the regression lines.
 
-- __Answer:__
+- __Answer:__ The slope for genotype _ff_ is 1.96, the slope for genotype _fs_ is 1.28, and the slope for genotype _ss_ is 1.60.
 
 ## C)
 
 Test the hypothesis that all three regression lines have the same slope. Write the null hypothesis, the p-value and a conclusion.
 
-```{r}
+- __Answer:__ Let $\hat{\beta_1}$, $\hat{\beta_2}$, and $\hat{\beta_3}$ denote the regression coefficients slope of _ff_, _fs_, and _ss_ respectively. We want to test $H_0: \hat{\beta_1} = \hat{\beta_2} = \hat{\beta_3}$ vs. $H_A: H_0$ is false.
 
+```{r}
+anova(mod2)
 ```
 
-- __Answer:__
+We observe a p-value of 0.6886 so there is no evidence to reject the null hypothesis that there is no difference in slope between genotypes.
 
 ## D)
 
 Now you are ready to answer the biological question formulated in problem 3. Use any/all of the results obtained before this question to conclude whether the Mpi genotypes differ in size-adjusted fecundity. Be brief but clearly explain your argument.
 
-- __Answer:__ 
+- __Answer:__ In the parallel lines model we did not observe evidence that the regression intercept varied by genotype (p-value > 0.1), and in the interaction model we did not observe evidence that the regression slopes varied by genotype (p-value > 0.1)
