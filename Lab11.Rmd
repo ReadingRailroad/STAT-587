@@ -1,0 +1,145 @@
+---
+title: "Lab 11"
+author: "Marty Simonson"
+date: "April 17, 2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+Libraries
+
+```{r}
+library(ggplot2)
+library(emmeans)
+library(car)
+```
+
+EXCEPT in polynomial regression, it is always wise to use sum-contrasts for factors in stead of treatment contrast. This can be globally set by :
+
+```{r}
+options(contrasts=c(unordered="contr.sum",ordered="contr.poly"))
+```
+
+
+1.) 
+
+```{r}
+corn<-read.table("Data/ManureFert.dat",header=T)
+str(corn)
+```
+
+
+find the interaction plot by fitting an interaction model
+
+```{r}
+fit.corn<-lm(Yield~Manure*Fertilizer, data = corn)
+```
+
+interaction plot from "emmip" from the emmeans package
+
+```{r}
+emmip(fit.corn, Manure ~ Fertilizer)+theme_classic()+ylab("Mean Yield")
+```
+
+We see graphical evidence for an interaction between manure and fertilizer. There does not seem to be an effect of fertilizer when manure is high.
+
+The table of partial f-tests can be obtained using the "Anova" command with "type=3" specified. (ignore intercept, not explained why)
+
+```{r}
+Anova(fit.corn, type = 3)
+```
+
+The f-ratio is 1.8053 with 24 and 2 degrees of freedom. The p-value is 0.186 and provides very weak evidence for an interaction.
+
+----
+
+To answer a farmer's question we use all pairwise comparisons among the treatment means (simple ffects) and use a Tukey's adjustment for multiple comparisons. Because the treatments are simply the combinations of two factors, we can obtain them by:
+
+```{r}
+trt.emm<-emmeans(fit.corn, ~ Manure * Fertilizer)
+trt.emm
+# paired comparisons
+pairs(trt.emm)
+# connected letter diagram
+CLD(trt.emm)
+```
+
+no evidence for a clear winner. the farmer can choose any of the treatmens except the control that fits their budget. 
+
+In order to estimate and test for a manure effect in the presenece of ertilizer, we want ot check the contrast .5(high:present)+.5(low:present)-(none:present).
+
+
+
+```{r}
+# Note the ordering of the treatments
+trt.emm
+# the terms involved are the last three in this object
+
+contrast(trt.emm, list("manure effect in presence of fert."=c(0,0,0,.5,.5,-1)))
+# strong evidence that the use of manure increases yield in presence of fertilizer.
+```
+
+to estimate and test for a fertilizer effect at high level of manure
+
+```{r}
+contrast(trt.emm, list("fertilizer effect at high manure"=c(-1,0,0,1,0,0)))
+#no evidence for an effect of fertilizer at high manure doses.
+```
+
+----
+
+2: chromotagraphy
+```{r}
+chrom<-read.table("Data/chromatography.txt",header=T)
+fit.int<-lm(logCounts~Concentration*FlowRate, data = chrom)
+summary(fit.int)
+
+# plot
+emmip(fit.int, FlowRate ~ Concentration) + theme_classic()+ylab("mean log-count")
+
+# Type 3 anova table
+Anova(fit.int, type = 3)
+# appears that here is no evidence of interaction
+```
+
+now without interaction
+
+```{r}
+fit<-lm(logCounts ~ Concentration + FlowRate, data = chrom)
+Anova(fit)
+# seems that there is strong evidence for each of the main effects
+```
+
+compare multiple comparisons to determine which concentrations havae signifciantly different mean(log) counts.
+
+```{r}
+conc.emm<-emmeans(fit,~Concentration)
+
+conc.emm
+
+pairs(conc.emm)
+
+CLD(conc.emm, Letters = LETTERS)
+# it appears that each concentration has different mean (log) counts
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
