@@ -1,0 +1,196 @@
+---
+title: "R tutorial for Lab -- 12"
+author: "Somak Dutta"
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+
+<style type="text/css">
+.main-container {
+max-width: 1800px;
+margin-left: auto;
+margin-right: auto;
+}
+</style>
+
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(fig.width = 8,fig.height = 6)
+options(digits = 6)
+
+```
+
+Load the libraries:
+```{r warning=FALSE,message=FALSE}
+library(ggplot2)
+library(emmeans)
+library(car)
+```
+
+
+
+## Problem 1
+
+First read the data etc:
+
+```{r}
+lipid = read.table("lipid_levels.txt",header = T)
+str(lipid)
+```
+Need to convert `Age` and `Diet` into factors:
+
+```{r}
+lipid$Age = factor(lipid$Age)
+lipid$Diet = factor(lipid$Diet)
+```
+
+One-way ANOVA (one-way means can use anova)
+```{r}
+fit1 = lm(Lipid ~ Diet,data=lipid)
+anova(fit1)
+```
+
+(can also use `joint_tests(fit1)`)
+
+F-ratio is 3.664 with 2 and 12 degrees of freedoms. The p-value of 0.057 gives weak evidence for a difference between the diets.
+
+Two-way analysis (can't use `anova`, either use `Anova` from `car` or `joint_tests` from `emmeans`)
+
+```{r}
+fit2 = lm(Lipid ~ Age + Diet, data=lipid)
+Anova(fit2)
+```
+
+Strong evidence for a difference betwen the Diets!
+
+Do pairwise comparisons between diets:
+```{r}
+diet.emm = emmeans(fit2, ~ Diet)
+pairs(diet.emm)
+```
+
+CLD:
+
+```{r}
+CLD(diet.emm,Letters = LETTERS)
+```
+
+Was blocking useful? -- Yes.  The F-ratio for blocks (i.e. `Age`) is 195.2, suggesting that blocking was immensely useful.
+
+
+
+Obtain the pairwise differences using the one-way analysis:
+```{r}
+diet1.emm = emmeans(fit1,~Diet)
+pairs(diet1.emm)
+```
+
+We see that the model with block effects reduces the s.e.'s of the pairwise differences from 0.202 grams per liter to 0.025 grams per liter.
+
+
+
+
+
+
+## Problem 2
+Read the data:
+
+```{r}
+wheat = read.table("wheat.txt",header = T)
+str(wheat)
+```
+
+Convert appropriate variables into factors:
+
+```{r}
+wheat$Variety = factor(wheat$Variety)
+wheat$Block = factor(wheat$Block)
+```
+
+Fit the RCBD model
+
+```{r}
+sp1 = lm(Yield ~ Block + Variety,data=wheat)
+Anova(sp1)
+```
+
+No evidence for a difference between the varieties.
+
+
+Obtian the residuals
+```{r}
+wheat$resid1 = resid(sp1)
+```
+
+Use `geom_tile` to obtain the spatial plot of residuals:
+
+```{r}
+ggplot(wheat, aes(x = Row, y = Col, fill = resid1)) + geom_tile() + 
+  xlab("") + ylab("") + labs(fill="RCBD Residuals") + 
+  scale_fill_gradient(low = "red", high = "white") + 
+  theme_light(base_size = 14)
+```
+
+
+Fit the models and compute BIC
+
+i.
+```{r}
+sp2 = lm(Yield ~ Block + Variety + Row + Col,data=wheat)
+BIC(sp2)
+```
+
+ii.
+
+```{r}
+sp3 = lm(Yield ~ Block + Variety + poly(Row,2) + poly(Col,2),data=wheat)
+BIC(sp3)
+```
+
+
+iii.
+
+```{r}
+sp4 = lm(Yield ~ Block + Variety + poly(Row,2)*poly(Col,2),data=wheat)
+BIC(sp4)
+```
+
+
+The last model appears to be the best. Can use `joint_tests` to perform partial F-tests for **only** the factor terms (this hides the F-tests for the continuous explanator variables Row and Col)
+```{r}
+joint_tests(sp4)
+```
+
+(note the denominator degrees of freedom is 157)
+
+We can use `CLD` to print the sorted marginal means: `reversed=TRUE` means in decreasing order of marginal means.
+```{r}
+variety.emm = emmeans(sp4,~Variety)
+CLD(variety.emm,sort = TRUE,reversed = TRUE)
+```
+
+Obtain the spatial plot of the residuals. Note first the range of the RCBD residuals:
+
+```{r}
+wheat$resid4 = resid(sp4)
+ggplot(wheat, aes(x = Row, y = Col, fill = resid4)) + geom_tile() + 
+  xlab("") + ylab("") + labs(fill="Spatial Residuals") + 
+  scale_fill_gradient(low = "red", high = "white") + 
+  theme_light(base_size = 14)
+```
+
+Clearly the residual plot looks much better - the range of the residuals is now reduced to approximately between -250 and 250 (earlier it was between -420 and 315). Check:
+
+```{r}
+range(wheat$resid1)
+```
+
+
+```{r}
+range(wheat$resid4)
+```
+
+
+
