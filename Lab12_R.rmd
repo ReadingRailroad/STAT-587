@@ -5,22 +5,9 @@ output:
   html_document: default
   word_document: default
   pdf_document: default
+editor_options: 
+  chunk_output_type: console
 ---
-
-<style type="text/css">
-.main-container {
-max-width: 1800px;
-margin-left: auto;
-margin-right: auto;
-}
-</style>
-
-```{r setup, include=FALSE}
-library(knitr)
-knitr::opts_chunk$set(fig.width = 8,fig.height = 6)
-options(digits = 6)
-
-```
 
 Load the libraries:
 ```{r warning=FALSE,message=FALSE}
@@ -36,7 +23,7 @@ library(car)
 First read the data etc:
 
 ```{r}
-lipid = read.table("lipid_levels.txt",header = T)
+lipid = read.table("Data/lipid_levels.txt",header = T)
 str(lipid)
 ```
 Need to convert `Age` and `Diet` into factors:
@@ -98,7 +85,7 @@ We see that the model with block effects reduces the s.e.'s of the pairwise diff
 Read the data:
 
 ```{r}
-wheat = read.table("wheat.txt",header = T)
+wheat = read.table("Data/wheat.txt",header = T)
 str(wheat)
 ```
 
@@ -140,6 +127,7 @@ i.
 ```{r}
 sp2 = lm(Yield ~ Block + Variety + Row + Col,data=wheat)
 BIC(sp2)
+AIC(sp2)
 ```
 
 ii.
@@ -147,22 +135,25 @@ ii.
 ```{r}
 sp3 = lm(Yield ~ Block + Variety + poly(Row,2) + poly(Col,2),data=wheat)
 BIC(sp3)
+AIC(sp3)
 ```
 
 
 iii.
-
+poly command must indicate polynomial equation (quadratic effects)
 ```{r}
 sp4 = lm(Yield ~ Block + Variety + poly(Row,2)*poly(Col,2),data=wheat)
 BIC(sp4)
+AIC(sp4)
 ```
+
 
 
 The last model appears to be the best. Can use `joint_tests` to perform partial F-tests for **only** the factor terms (this hides the F-tests for the continuous explanator variables Row and Col)
 ```{r}
 joint_tests(sp4)
 ```
-
+See that there is weak evidence to support an effect of variety.
 (note the denominator degrees of freedom is 157)
 
 We can use `CLD` to print the sorted marginal means: `reversed=TRUE` means in decreasing order of marginal means.
@@ -172,6 +163,9 @@ CLD(variety.emm,sort = TRUE,reversed = TRUE)
 ```
 
 Obtain the spatial plot of the residuals. Note first the range of the RCBD residuals:
+
+This spatial plot of residuals describes how the residuals vary across the plots in the study. 
+The darker colors are over estimating the response (obs higher than expected) and the lighter colors are underestimating the response (obs lower than expected).
 
 ```{r}
 wheat$resid4 = resid(sp4)
